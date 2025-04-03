@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Bienvenue sur Moodle Simplifié</h1>
+        <div class="text-center">
+            <p>Connectez-vous pour accéder à votre espace personnel.</p>
+            <div class="mt-4">
+                <a href="{{ path('app_login') }}" class="btn btn-primary me-2">Se connecter</a>
+                {# Si tu n'as pas la fonctionnalité d'inscription, commente ou supprime le lien ci-dessous #}
+                {# <a href="{{ path('app_register') }}" class="btn btn-outline-secondary">S'inscrire</a> #}
+            </div>
+        </div>
+    </div>
+{% endblock %}

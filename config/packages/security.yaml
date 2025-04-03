@@ -17,15 +17,17 @@ security:
             lazy: true
             provider: app_user_provider
             form_login:
-                login_path: login
-                check_path: login
+                # Utilise les noms de routes de ton SecurityController :
+                login_path: app_login
+                check_path: app_login
                 default_target_path: app_home
-                username_parameter: email
-                password_parameter: password
+                # Ces paramètres doivent correspondre aux attributs "name" de tes champs dans le formulaire
+                username_parameter: _username
+                password_parameter: _password
             logout:
-                path: logout
-                target: login
-            custom_authenticator: App\Security\LoginFormAuthenticator
+                # Utilise le nom de la route définie dans ton SecurityController pour la déconnexion
+                path: app_logout
+                target: app_home
 
     access_control:
         - { path: ^/login, roles: PUBLIC_ACCESS }
