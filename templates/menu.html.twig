@@ -8,13 +8,11 @@
         <div class="text-center">
             <p>Bienvenue sur Moodle Simplifié, vous êtes connecté !</p>
             <div class="mt-4">
-                <span class="btn btn-primary me-2">Accueil</span>
-                <span class="btn btn-secondary me-2">Mon Profil</span>
-                <span class="btn btn-success me-2">Cours</span>
-                <span class="btn btn-info me-2">Paramètres</span>
+                <a href="{{ path('ue') }}" class="btn btn-primary me-2">UE_exemple</a>
+                <a href="{{ path('gestion') }}" class="btn btn-secondary me-2">Gestion du Compte</a>
             </div>
             <div class="mt-4">
-                <span class="btn btn-danger">Déconnexion</span>
+                <a href="{{ path('app_logout') }}" class="btn btn-danger">Déconnexion</a>
             </div>
         </div>
     </div>
