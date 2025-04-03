@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Menu Principal{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Menu Principal</h1>
+        <div class="text-center">
+            <p>Bienvenue sur Moodle Simplifié, vous êtes connecté !</p>
+            <div class="mt-4">
+                <span class="btn btn-primary me-2">Accueil</span>
+                <span class="btn btn-secondary me-2">Mon Profil</span>
+                <span class="btn btn-success me-2">Cours</span>
+                <span class="btn btn-info me-2">Paramètres</span>
+            </div>
+            <div class="mt-4">
+                <span class="btn btn-danger">Déconnexion</span>
+            </div>
+        </div>
+    </div>
+{% endblock %}
