@@ -30,3 +30,4 @@ class SecurityController extends AbstractController
         throw new \Exception('Cette méthode peut être vide, elle sera interceptée par la clé de déconnexion dans votre firewall.');
     }
 }
+//
