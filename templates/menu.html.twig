@@ -4,71 +4,168 @@
 
 {% block body %}
     <div class="container mt-5">
-        <!-- Titre et message de bienvenue -->
-        <h1 class="text-center mb-4">Menu Principal</h1>
-        <div class="text-center mb-4">
-            <p>Bienvenue sur Moodle Simplifié, vous êtes connecté !</p>
+        <!-- Section Bienvenue -->
+        <div class="card mb-4 bg-blue-darker text-blue-light">
+            <div class="card-body text-center">
+                <h1 class="card-title">Menu Principal</h1>
+                <p class="card-text">Bienvenue sur Moodle Simplifié, vous êtes connecté !</p>
+            </div>
         </div>
 
-        <!-- Navigation principale : seul le bouton de sélection des UE est conservé -->
-        <div class="text-center mb-5">
-            <a href="{{ path('ue_selection') }}" class="btn btn-warning me-2">Sélection des UE</a>
+        <!-- Section Navigation : bouton Sélection des UE -->
+        <div class="card mb-4 bg-blue-darker text-blue-light">
+            <div class="card-body text-center">
+                <a href="{{ path('ue_selection') }}" class="btn btn-warning">Sélection des UE</a>
+            </div>
         </div>
 
-        <!-- Section des cours : 2 rangées de 3 -->
-        <div class="mb-5">
-            <h2 class="text-center mb-4">Cours</h2>
-            <div class="row justify-content-center">
-                {% for i in 1..6 %}
-                    <div class="col-12 col-sm-6 col-md-4 mb-4">
-                        <div class="card h-100 text-center shadow-sm">
-                            <div class="card-body d-flex flex-column justify-content-between">
-                                <h3 class="card-title">Cours {{ i }}</h3>
-                                <p class="card-text">Description du cours {{ i }}. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                <a href="{{ path('cours_detail', {'id': i}) }}" class="btn btn-success mt-3">Accéder au cours</a>
+        <!-- Section des cours -->
+        {% set courses = [
+            { 'name': 'Mathématiques', 'description': 'Analyse, algèbre et géométrie avancée.' },
+            { 'name': 'Physique', 'description': 'Mécanique, thermodynamique et électromagnétisme.' },
+            { 'name': 'Chimie', 'description': 'Chimie organique, inorganique et analytique.' },
+            { 'name': 'Informatique', 'description': 'Programmation, algorithmique et structures de données.' },
+            { 'name': 'Ingénierie', 'description': 'Conception, innovation et gestion de projets.' },
+            { 'name': 'Anglais', 'description': 'Grammaire, conversation et littérature.' }
+        ] %}
+        <div class="card mb-4 bg-blue-darker text-blue-light">
+            <div class="card-header text-center">
+                <h2>Cours</h2>
+            </div>
+            <div class="card-body">
+                <div class="row justify-content-center">
+                    {% for course in courses %}
+                        <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex justify-content-center">
+                            <div class="card custom-card">
+                                <div class="card-content">
+                                    <h1 class="card-title">{{ course.name }}</h1>
+                                    <p class="card-text">{{ course.description }}</p>
+                                </div>
+                                <div class="card-overlay d-flex align-items-center justify-content-center">
+                                    <a href="{{ path('cours_detail', {'id': loop.index}) }}" class="btn btn-primary">Accéder au cours</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
         </div>
 
-        <!-- Bouton de déconnexion décalé -->
-        <div class="text-center mb-5" style="margin-top: 40px;">
-            <a href="{{ path('app_login') }}" class="btn btn-danger">Déconnexion</a>
+        <!-- Section Déconnexion -->
+        <div class="card mb-4 bg-blue-darker text-blue-light">
+            <div class="card-body text-center">
+                <a href="{{ path('app_login') }}" class="btn btn-danger">Déconnexion</a>
+            </div>
         </div>
 
-        <!-- Section posts (activités récentes) -->
-        <div class="mb-5">
-            <h2 class="text-center mb-4">Activités récentes</h2>
-            <!-- Menu déroulant pour charger plus d'activités -->
-            <div class="dropdown text-center mb-3">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownPosts" data-bs-toggle="dropdown" aria-expanded="false">
-                    Voir plus d'activités
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownPosts">
-                    <li><a class="dropdown-item" href="#">Charger plus d'activités</a></li>
-                </ul>
+        <!-- Section Activités récentes -->
+        <div class="card mb-4 bg-blue-darker text-blue-light">
+            <div class="card-header text-center">
+                <h2>Activités récentes</h2>
             </div>
-            <!-- Liste des posts datés -->
-            <div class="list-group">
-                {% set posts = [
-                    { 'date': '2025-04-01', 'content': 'Mise à jour du cours de Mathématiques.' },
-                    { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
-                    { 'date': '2025-03-25', 'content': 'Correction d\'un exercice dans le cours de Physique.' },
-                    { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
-                    { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
-                    { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
-                    { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
-                    { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' }
-                ] %}
-                {% for post in posts %}
-                    <div class="list-group-item">
-                        <small class="text-muted">{{ post.date }}</small>
-                        <p class="mb-0">{{ post.content }}</p>
-                    </div>
-                {% endfor %}
+            <div class="card-body">
+                <div class="dropdown text-center mb-3">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownPosts" data-bs-toggle="dropdown" aria-expanded="false">
+                        Voir plus d'activités
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownPosts">
+                        <li><a class="dropdown-item" href="#">Charger plus d'activités</a></li>
+                    </ul>
+                </div>
+                <div class="list-group">
+                    {% set posts = [
+                        { 'date': '2025-04-01', 'content': 'Mise à jour du cours de Mathématiques.' },
+                        { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
+                        { 'date': '2025-03-25', 'content': 'Correction d\'un exercice dans le cours de Physique.' }
+                    ] %}
+                    {% for post in posts %}
+                        <div class="list-group-item">
+                            <small class="text-muted">{{ post.date }}</small>
+                            <p class="mb-0">{{ post.content }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Palette de bleu */
+        .bg-blue-darker { background-color: #42a5f5  !important; } /* Bleu foncé */
+        .text-blue-light { color: #e3f2fd !important; } /* Bleu très clair */
+
+        /* Carte de cours personnalisée */
+        .custom-card {
+            width: 220px;
+            height: 220px; /* Conteneur carré */
+            padding: 0.5rem;
+            background: rgba(13, 71, 161, 0.5); /* Nuance de bleu semi-transparente */
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+            border-bottom: 3px solid rgba(187, 222, 251, 0.44); /* Nuance claire de bleu */
+            border-left: 2px solid rgba(187, 222, 251, 0.545);
+            box-shadow: -10px 10px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.4s ease;
+            overflow: hidden;
+            position: relative;
+        }
+        .custom-card:hover {
+            transform: scale(1.05);
+        }
+        /* Contenu centré dans la carte */
+        .card-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 100%;
+            padding: 0 0.5rem;
+        }
+        .card-content h1 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        .card-content p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        /* Overlay qui apparaît lors du survol */
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(13, 71, 161, 0.6);
+            opacity: 0;
+            transition: opacity 0.3s ease, backdrop-filter 0.3s ease;
+            backdrop-filter: blur(0px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .custom-card:hover .card-overlay {
+            opacity: 1;
+            backdrop-filter: blur(4px);
+        }
+        .card-overlay a.btn {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .custom-card:hover .card-overlay a.btn {
+            opacity: 1;
+        }
+        /* Liste des posts en nuance de bleu */
+        .list-group-item {
+            background: rgba(10, 118, 238, 0.2);
+            border: none;
+        }
+        .list-group-item small {
+            color: #e3f2fd;
+        }
+    </style>
 {% endblock %}
