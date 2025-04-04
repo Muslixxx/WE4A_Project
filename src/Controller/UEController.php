@@ -8,11 +8,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UEController extends AbstractController
 {
-    #[Route('/ue', name: 'ue')]
-    public function index(): Response
+    #[Route('/cours/{id}', name: 'cours_detail')]
+    public function show(int $id): Response
     {
-        return $this->render('ue/ue.html.twig', [
-            'controller_name' => 'UEController',
+        // Tu pourras plus tard récupérer le cours depuis la base
+        return $this->render('UE.html.twig', [
+            'id' => $id,
         ]);
     }
 }
