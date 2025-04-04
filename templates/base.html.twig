@@ -10,23 +10,23 @@
     {# ✅ Bootstrap CSS #}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    {# ✅ Ton CSS pour la navbar UIverse #}
+    {# ✅ CSS personnalisé pour la navbar UIverse #}
     <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
 
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
 
-{# ✅ Inclusion du bandeau/navbar UIverse (partiel Twig) #}
+{# Inclusion de la navbar sur toutes les pages via le partiel Twig #}
 {% include 'partials/navbar.html.twig' %}
 
-{# ✅ Contenu principal de la page #}
+{# Contenu principal de chaque page #}
 {% block body %}{% endblock %}
 
-{# ✅ Bootstrap JS #}
+{# ✅ Bootstrap JS (avec bundle) #}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-{# ✅ Scripts supplémentaires #}
+{# Scripts supplémentaires et importmap #}
 {% block javascripts %}
     {% block importmap %}{{ importmap('app') }}{% endblock %}
 {% endblock %}

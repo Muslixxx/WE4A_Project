@@ -1,78 +1,62 @@
-    {% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %}
 
-    {% block title %}Menu Principal{% endblock %}
+{% block title %}Menu Principal{% endblock %}
 
-    {% block body %}
-        <div class="container mt-5">
-            <!-- Titre et message de bienvenue -->
-            <h1 class="text-center mb-4">Menu Principal</h1>
-            <div class="text-center mb-4">
-                <p>Bienvenue sur Moodle Simplifié, vous êtes connecté !</p>
-            </div>
+{% block body %}
+    <div class="container mt-5">
+        <!-- Titre et message de bienvenue -->
+        <h1 class="text-center mb-4">Menu Principal</h1>
+        <div class="text-center mb-4">
+            <p>Bienvenue sur Moodle Simplifié, vous êtes connecté !</p>
+        </div>
 
-            <!-- Navigation principale -->
-            <div class="text-center mb-5">
-                <a href="#" class="btn btn-primary me-2">Accueil</a>
-                <a href="#" class="btn btn-secondary me-2">Mon Profil</a>
-                <a href="#" class="btn btn-info me-2">Paramètres</a>
-            </div>
-
-            <!-- Section des cours : 2 rangées de 3 -->
-            <div class="mb-5">
-                <h2 class="text-center mb-4">Cours</h2>
-                <div class="row justify-content-center">
-                    {% for i in 1..6 %}
-                        <div class="col-12 col-sm-6 col-md-4 mb-4">
-                            <div class="card h-100 text-center shadow-sm">
-                                <div class="card-body d-flex flex-column justify-content-between">
-                                    <h3 class="card-title">Cours {{ i }}</h3>
-                                    <p class="card-text">Description du cours {{ i }}. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                    <a href="{{ path('cours_detail', {'id': i}) }}" class="btn btn-success mt-3">Accéder au cours</a>
-                                </div>
+        <!-- Section des cours : 2 rangées de 3 -->
+        <div class="mb-5">
+            <h2 class="text-center mb-4">Cours</h2>
+            <div class="row justify-content-center">
+                {% for i in 1..6 %}
+                    <div class="col-12 col-sm-6 col-md-4 mb-4">
+                        <div class="card h-100 text-center shadow-sm">
+                            <div class="card-body d-flex flex-column justify-content-between">
+                                <h3 class="card-title">Cours {{ i }}</h3>
+                                <p class="card-text">Description du cours {{ i }}. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                                <a href="{{ path('cours_detail', {'id': i}) }}" class="btn btn-success mt-3">Accéder au cours</a>
                             </div>
                         </div>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <!-- Bouton de déconnexion -->
-            <div class="text-center mb-5">
-                <a href="#" class="btn btn-danger">Déconnexion</a>
-            </div>
-
-            <!-- Section posts (activités récentes) -->
-            <div class="mb-5">
-                <h2 class="text-center mb-4">Activités récentes</h2>
-
-                <!-- Menu déroulant pour charger plus d'activités -->
-                <div class="dropdown text-center mb-3">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownPosts" data-bs-toggle="dropdown" aria-expanded="false">
-                        Voir plus d'activités
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownPosts">
-                        <li><a class="dropdown-item" href="#">Charger plus d'activités</a></li>
-                    </ul>
-                </div>
-
-                <!-- Liste des posts datés -->
-                <div class="list-group">
-                    {% set posts = [
-                        { 'date': '2025-04-01', 'content': 'Mise à jour du cours de Mathématiques.' },
-                        { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
-                        { 'date': '2025-03-25', 'content': 'Correction d\'un exercice dans le cours de Physique.' },
-                        { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
-                        { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
-                        { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
-                        { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
-                        { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' }
-                    ] %}
-                    {% for post in posts %}
-                        <div class="list-group-item">
-                            <small class="text-muted">{{ post.date }}</small>
-                            <p class="mb-0">{{ post.content }}</p>
-                        </div>
-                    {% endfor %}
-                </div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
-    {% endblock %}
+
+        <!-- Bouton de déconnexion -->
+        <div class="text-center mb-5">
+            <a href="#" class="btn btn-danger">Déconnexion</a>
+        </div>
+
+        <!-- Section posts (activités récentes) -->
+        <div class="mb-5">
+            <h2 class="text-center mb-4">Activités récentes</h2>
+            <div class="dropdown text-center mb-3">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownPosts" data-bs-toggle="dropdown" aria-expanded="false">
+                    Voir plus d'activités
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownPosts">
+                    <li><a class="dropdown-item" href="#">Charger plus d'activités</a></li>
+                </ul>
+            </div>
+            <div class="list-group">
+                {% set posts = [
+                    { 'date': '2025-04-01', 'content': 'Mise à jour du cours de Mathématiques.' },
+                    { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
+                    { 'date': '2025-03-25', 'content': 'Correction d\'un exercice dans le cours de Physique.' }
+                ] %}
+                {% for post in posts %}
+                    <div class="list-group-item">
+                        <small class="text-muted">{{ post.date }}</small>
+                        <p class="mb-0">{{ post.content }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
