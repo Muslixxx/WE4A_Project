@@ -12,7 +12,7 @@
 
         <!-- Section des cours : 2 rangées de 3 -->
         <div class="mb-5">
-            <h2 class="text-center mb-4">Cours</h2>
+            <h2 class="text-center mb-4">Liste des cours</h2>
             <div class="row justify-content-center">
                 {% for i in 1..6 %}
                     <div class="col-12 col-sm-6 col-md-4 mb-4">
@@ -30,7 +30,7 @@
 
         <!-- Bouton de déconnexion -->
         <div class="text-center mb-5">
-            <a href="#" class="btn btn-danger">Déconnexion</a>
+            <a href="{{ path('app_login') }}" class="btn btn-danger">Déconnexion</a>
         </div>
 
         <!-- Section posts (activités récentes) -->
