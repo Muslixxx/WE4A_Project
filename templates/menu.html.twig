@@ -10,9 +10,14 @@
             <p>Bienvenue sur Moodle Simplifié, vous êtes connecté !</p>
         </div>
 
+        <!-- Navigation principale : seul le bouton de sélection des UE est conservé -->
+        <div class="text-center mb-5">
+            <a href="{{ path('ue_selection') }}" class="btn btn-warning me-2">Sélection des UE</a>
+        </div>
+
         <!-- Section des cours : 2 rangées de 3 -->
         <div class="mb-5">
-            <h2 class="text-center mb-4">Liste des cours</h2>
+            <h2 class="text-center mb-4">Cours</h2>
             <div class="row justify-content-center">
                 {% for i in 1..6 %}
                     <div class="col-12 col-sm-6 col-md-4 mb-4">
@@ -28,14 +33,15 @@
             </div>
         </div>
 
-        <!-- Bouton de déconnexion -->
-        <div class="text-center mb-5">
+        <!-- Bouton de déconnexion décalé -->
+        <div class="text-center mb-5" style="margin-top: 40px;">
             <a href="{{ path('app_login') }}" class="btn btn-danger">Déconnexion</a>
         </div>
 
         <!-- Section posts (activités récentes) -->
         <div class="mb-5">
             <h2 class="text-center mb-4">Activités récentes</h2>
+            <!-- Menu déroulant pour charger plus d'activités -->
             <div class="dropdown text-center mb-3">
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownPosts" data-bs-toggle="dropdown" aria-expanded="false">
                     Voir plus d'activités
@@ -44,11 +50,17 @@
                     <li><a class="dropdown-item" href="#">Charger plus d'activités</a></li>
                 </ul>
             </div>
+            <!-- Liste des posts datés -->
             <div class="list-group">
                 {% set posts = [
                     { 'date': '2025-04-01', 'content': 'Mise à jour du cours de Mathématiques.' },
                     { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
-                    { 'date': '2025-03-25', 'content': 'Correction d\'un exercice dans le cours de Physique.' }
+                    { 'date': '2025-03-25', 'content': 'Correction d\'un exercice dans le cours de Physique.' },
+                    { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
+                    { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
+                    { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
+                    { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
+                    { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' }
                 ] %}
                 {% for post in posts %}
                     <div class="list-group-item">
