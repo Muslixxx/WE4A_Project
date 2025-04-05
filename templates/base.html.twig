@@ -51,7 +51,9 @@
     {% endblock %}
 </head>
 <body>
-{% include 'partials/navbar.html.twig' %}
+{% if show_navbar is not defined or show_navbar %}
+    {% include 'partials/navbar.html.twig' %}
+{% endif %}
 <div class="page-content" style="padding-top: 70px;">
     {% block body %}{% endblock %}
 </div>
