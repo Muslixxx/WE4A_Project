@@ -1,0 +1,36 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            lazy: true
+            provider: app_user_provider
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                default_target_path: app_home
+                always_use_default_target_path: true
+                username_parameter: _username
+                password_parameter: _password
+            logout:
+                # Utilise le nom de la route définie dans ton SecurityController pour la déconnexion
+                path: app_logout
+                target: app_home
+
+    access_control:
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/prof, roles: ROLE_PROF }
+        - { path: ^/etudiant, roles: ROLE_ETUDIANT }
+

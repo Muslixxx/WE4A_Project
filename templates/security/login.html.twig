@@ -1,0 +1,206 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+    <!-- Container général pour centrer verticalement/horizontalement -->
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+        <!-- Bloc unique avec fond bleu -->
+        <div class="p-4" style="
+      background-color: #42a5f5;
+      border-radius: 15px;
+      max-width: 450px;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    ">
+            <!-- Titre funky -->
+            <h1 style="
+        font-family: 'Luckiest Guy', cursive;
+        font-size: 2.2rem;
+        color: #fff;
+        text-align: center;
+        text-shadow: 2px 2px 0 #0003;
+        margin-bottom: 1rem;
+      ">
+                Connexion à Moodneuille
+            </h1>
+
+            <!-- Sous-texte -->
+            <p style="
+        text-align: center;
+        color: #fff;
+        font-family: 'Comic Neue', cursive;
+        margin-bottom: 2rem;
+      ">
+                Veuillez entrer vos informations pour accéder à la plateforme.
+            </p>
+
+            <!-- Champ Nom d'utilisateur -->
+            <div class="mb-3">
+                <label for="username" style="color: #fff; font-weight: bold;">Nom d'utilisateur :</label>
+                <input type="text"
+                       id="username"
+                       placeholder="Entrez votre nom..."
+                       class="form-control"
+                       style="border-radius: 8px; background-color: #fff;"/>
+            </div>
+
+            <!-- Champ Mot de passe -->
+            <div class="mb-3">
+                <label for="password" style="color: #fff; font-weight: bold;">Mot de passe :</label>
+                <input type="password"
+                       id="password"
+                       placeholder="Entrez votre mot de passe..."
+                       class="form-control"
+                       style="border-radius: 8px; background-color: #fff;"/>
+            </div>
+
+            <!-- Choix du rôle (widget .tabs) -->
+            <div class="text-center mb-4" style="position: relative;">
+                <!-- Conteneur .tabs agrandi -->
+                <div style="
+          display: inline-flex;
+          position: relative;
+          background-color: #fff;
+          box-shadow: 0 0 1px 0 rgba(24,94,224,0.15), 0 6px 12px 0 rgba(24,94,224,0.15);
+          padding: 0.7rem;
+          border-radius: 180px;
+          min-width: 184px;
+        ">
+                    <!-- Radio #1 -->
+                    <input type="radio" id="radio-1" name="tabs" checked style="position: absolute; opacity: 0; width: 0; height: 0;">
+                    <label for="radio-1" style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 40px;
+            font-size: 0.8rem;
+            color: #000;
+            font-weight: 500;
+            border-radius: 99px;
+            cursor: pointer;
+            margin: 0 2px;
+          ">
+                        Élève
+                    </label>
+
+                    <!-- Radio #2 -->
+                    <input type="radio" id="radio-2" name="tabs" style="position: absolute; opacity: 0; width: 0; height: 0;">
+                    <label for="radio-2" style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 40px;
+            font-size: 0.8rem;
+            color: #000;
+            font-weight: 500;
+            border-radius: 99px;
+            cursor: pointer;
+            margin: 0 2px;
+          ">
+                        Prof
+                    </label>
+
+                    <!-- Radio #3 -->
+                    <input type="radio" id="radio-3" name="tabs" style="position: absolute; opacity: 0; width: 0; height: 0;">
+                    <label for="radio-3" style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 40px;
+            font-size: 0.8rem;
+            color: #000;
+            font-weight: 500;
+            border-radius: 99px;
+            cursor: pointer;
+            margin: 0 2px;
+          ">
+                        Admin
+                    </label>
+
+                    <!-- Glider -->
+                    <span id="glider" style="
+            position: absolute;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-end;
+            width: 55px;
+            height: 40px;
+            background-color: rgba(230,238,249,0.3);
+            border-radius: 99px;
+            top: 50%;
+            left: calc(0.7rem);
+            transform: translateY(-50%);
+            z-index: 1;
+            transition: transform 0.25s ease-out;
+          "></span>
+                </div>
+            </div>
+
+            <!-- Bouton de Connexion -->
+            <div class="text-center">
+                <div class="btn-conteiner" style="display: flex; justify-content: center;">
+                    <a class="btn-content" href="{{ path('app_menu') }}" style="
+            display: flex;
+            align-items: center;
+            padding: 5px 20px;
+            text-decoration: none;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 24px;
+            color: #ffffff;
+            background: #001f3f;
+            border-radius: 100px;
+            box-shadow: 0 0 0.2em 0 #001f3f;
+            transition: 0.5s;
+          ">
+                        <span class="btn-title">CONNEXION</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Script pour déplacer le glider et mettre à jour la couleur des labels selon l'onglet sélectionné
+        document.addEventListener('DOMContentLoaded', () => {
+            const radios = [
+                document.getElementById('radio-1'),
+                document.getElementById('radio-2'),
+                document.getElementById('radio-3')
+            ];
+            const glider = document.getElementById('glider');
+
+            function updateGlider() {
+                if (radios[0].checked) {
+                    glider.style.transform = 'translateX(0%) translateY(-50%)';
+                } else if (radios[1].checked) {
+                    glider.style.transform = 'translateX(100%) translateY(-50%)';
+                } else if (radios[2].checked) {
+                    glider.style.transform = 'translateX(200%) translateY(-50%)';
+                }
+                const labels = document.querySelectorAll('label[for^="radio-"]');
+                labels.forEach(label => {
+                    const radio = document.getElementById(label.getAttribute('for'));
+                    if (radio.checked) {
+                        label.style.color = "#185ee0";
+                        label.style.fontWeight = "700";
+                        label.style.fontSize = "1rem";
+                    } else {
+                        label.style.color = "#000";
+                        label.style.fontWeight = "500";
+                        label.style.fontSize = "0.8rem";
+                    }
+                });
+            }
+            radios.forEach(radio => radio.addEventListener('change', updateGlider));
+            updateGlider(); // initial
+        });
+    </script>
+{% endblock %}

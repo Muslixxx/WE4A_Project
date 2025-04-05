@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="card bg-blue-darker text-blue-light shadow-lg border-0">
+            <div class="card-body text-center py-5">
+                <h1 class="display-5 fw-bold mb-4">Bienvenue sur Moodneuille</h1>
+                <p class="lead mb-5">Veuillez choisir une action pour continuer.</p>
+
+                <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap">
+                    <a href="{{ path('app_login') }}" class="btn btn-warning btn-lg px-4">Connexion</a>
+                    <span class="fs-4">|</span>
+                    <a href="{{ path('app_presentation') }}" class="btn btn-outline-light btn-lg px-4">Présentation</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

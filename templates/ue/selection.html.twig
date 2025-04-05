@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sélection des UE{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Sélection des UE</h1>
+        <p class="text-center">Choisissez une matière pour voir les unités d'enseignement disponibles.</p>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle w-100" type="button" id="subjectDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        Sélectionnez une matière
+                    </button>
+                    <ul class="dropdown-menu w-100" aria-labelledby="subjectDropdown">
+                        <li><a class="dropdown-item" href="#">Mathématique</a></li>
+                        <li><a class="dropdown-item" href="#">Physique</a></li>
+                        <li><a class="dropdown-item" href="#">Chimie</a></li>
+                        <li><a class="dropdown-item" href="#">Anglais</a></li>
+                        <li><a class="dropdown-item" href="#">Français</a></li>
+                        <li><a class="dropdown-item" href="#">Histoire</a></li>
+                        <li><a class="dropdown-item" href="#">Economie</a></li>
+                        <!-- Ajoutez d'autres matières ici si besoin -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
