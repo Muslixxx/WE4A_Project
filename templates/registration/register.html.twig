@@ -3,13 +3,215 @@
 {% block title %}Inscription{% endblock %}
 
 {% block body %}
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Inscription</h1>
-        {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword.first) }}
-        {{ form_row(registrationForm.plainPassword.second) }}
-        <button class="btn btn-primary">S'inscrire</button>
-        {{ form_end(registrationForm) }}
+    <!-- Container général pour centrer verticalement/horizontalement -->
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+        <!-- Bloc unique avec fond bleu -->
+        <div class="p-4" style="
+            background-color: #42a5f5;
+            border-radius: 15px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        ">
+            <!-- Titre funky -->
+            <h1 style="
+                font-family: 'Luckiest Guy', cursive;
+                font-size: 2.2rem;
+                color: #fff;
+                text-align: center;
+                text-shadow: 2px 2px 0 #0003;
+                margin-bottom: 1rem;
+            ">
+                Inscription à Moodneuille
+            </h1>
+
+            <!-- Sous-texte -->
+            <p style="
+                text-align: center;
+                color: #fff;
+                font-family: 'Comic Neue', cursive;
+                margin-bottom: 2rem;
+            ">
+                Remplissez les champs pour vous inscrire.
+            </p>
+
+            <!-- Zone de texte Email -->
+            <div class="mb-3">
+                <label for="email" style="color: #fff; font-weight: bold;">Email :</label>
+                <input type="email"
+                       id="email"
+                       placeholder="Entrez votre email..."
+                       class="form-control"
+                       style="border-radius: 8px; background-color: #fff;"/>
+            </div>
+
+            <!-- Zone de texte Mot de passe -->
+            <div class="mb-3">
+                <label for="password" style="color: #fff; font-weight: bold;">Mot de passe :</label>
+                <input type="password"
+                       id="password"
+                       placeholder="Entrez votre mot de passe..."
+                       class="form-control"
+                       style="border-radius: 8px; background-color: #fff;"/>
+            </div>
+
+            <!-- Zone de texte Confirmation du mot de passe -->
+            <div class="mb-3">
+                <label for="confirmPassword" style="color: #fff; font-weight: bold;">Confirmer le mot de passe :</label>
+                <input type="password"
+                       id="confirmPassword"
+                       placeholder="Confirmez votre mot de passe..."
+                       class="form-control"
+                       style="border-radius: 8px; background-color: #fff;"/>
+            </div>
+
+            <!-- Zone pour le choix du rôle et le bouton CONFIRMER sur la même ligne -->
+            <div class="d-flex justify-content-between align-items-center">
+                <!-- Widget radio pour le choix du rôle avec glider -->
+                <div class="tabs" style="
+                    display: inline-flex;
+                    position: relative;
+                    background-color: #fff;
+                    box-shadow: 0 0 1px rgba(24,94,224,0.15), 0 6px 12px rgba(24,94,224,0.15);
+                    padding: 0.2rem;
+                    border-radius: 180px;
+                    min-width: 184px;
+                ">
+                    <!-- Radios et labels identiques à la page de connexion -->
+                    <input type="radio" id="radio-1" name="tabs" checked>
+                    <label for="radio-1">Élève</label>
+
+                    <input type="radio" id="radio-2" name="tabs">
+                    <label for="radio-2">Prof</label>
+
+                    <input type="radio" id="radio-3" name="tabs">
+                    <label for="radio-3">Admin</label>
+
+                    <!-- Glider -->
+                    <span id="glider"></span>
+                </div>
+
+                <!-- Bouton CONFIRMER -->
+                <div class="btn-conteiner" style="display: flex; justify-content: center;">
+                    <!-- Le bouton n'a pas d'href pour permettre la validation en JS -->
+                    <button id="register-button" type="button" style="
+                        display: flex;
+                        align-items: center;
+                        padding: 5px 20px;
+                        text-decoration: none;
+                        font-family: 'Poppins', sans-serif;
+                        font-weight: 600;
+                        font-size: 24px;
+                        color: #ffffff;
+                        background: #007bff;
+                        border: none;
+                        border-radius: 100px;
+                        background: #007bff;
+                        border-radius: 100px;
+                        box-shadow: 0 0 0.2em #007bff;
+                        transition: 0.5s;
+                    ">
+                        <span class="btn-title">CONFIRMER</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Zone d'affichage du message d'erreur -->
+            <div id="error-container" style="text-align: center; margin-top: 15px; color: red;"></div>
+        </div>
     </div>
+
+    <style>
+        /* Masquer les radios */
+        .tabs input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* Style des labels */
+        .tabs label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 40px;
+            font-size: 0.8rem;
+            color: #000;
+            font-weight: 500;
+            border-radius: 99px;
+            cursor: pointer;
+            margin: 0 2px;
+            position: relative;
+            z-index: 1;
+            transition: color 0.25s ease-out;
+        }
+
+        /* Glider par défaut, largeur = 50px + 2px*2 de marge */
+        #glider {
+            position: absolute;
+            width: 54px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.7);
+            border-radius: 99px;
+            top: 50%;
+            left: 0;
+            transform: translateX(0) translateY(-50%);
+            z-index: 0;
+            transition: transform 0.25s ease-out;
+        }
+
+        /* Positionnement du glider en fonction du radio sélectionné */
+        #radio-1:checked ~ #glider {
+            transform: translateX(0) translateY(-50%);
+        }
+        #radio-2:checked ~ #glider {
+            transform: translateX(54px) translateY(-50%);
+        }
+        #radio-3:checked ~ #glider {
+            transform: translateX(108px) translateY(-50%);
+        }
+
+        /* Optionnel : changer le style du label actif */
+        #radio-1:checked ~ label[for="radio-1"],
+        #radio-2:checked ~ label[for="radio-2"],
+        #radio-3:checked ~ label[for="radio-3"] {
+            color: #185ee0;
+            font-weight: 700;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Initialisation avec turbo:load pour Symfony UX Turbo
+        document.addEventListener('turbo:load', function() {
+            // On récupère les zones de texte
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const errorContainer = document.getElementById('error-container');
+            // Bouton d'inscription
+            const registerButton = document.getElementById('register-button');
+
+            if (registerButton) {
+                registerButton.addEventListener('click', function(event) {
+                    // Vérification des champs obligatoires
+                    if (emailInput.value.trim() === "" || passwordInput.value.trim() === "" || confirmPasswordInput.value.trim() === "") {
+                        event.preventDefault();
+                        errorContainer.textContent = "Veuillez remplir tous les champs.";
+                    } else if (passwordInput.value !== confirmPasswordInput.value) {
+                        event.preventDefault();
+                        errorContainer.textContent = "Les mots de passe ne correspondent pas.";
+                    } else {
+                        errorContainer.textContent = "";
+                        // En cas de succès, redirection vers la page de connexion
+                        window.location.href = "{{ path('app_login') }}";
+                    }
+                });
+            }
+        });
+    </script>
 {% endblock %}

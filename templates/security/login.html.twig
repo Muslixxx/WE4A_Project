@@ -57,93 +57,35 @@
 
             <!-- Choix du rôle (widget .tabs) -->
             <div class="text-center mb-4" style="position: relative;">
-                <!-- Conteneur .tabs agrandi -->
-                <div style="
+                <!-- Conteneur .tabs avec hauteur réduite -->
+                <div class="tabs" style="
                     display: inline-flex;
                     position: relative;
                     background-color: #fff;
-                    box-shadow: 0 0 1px 0 rgba(24,94,224,0.15), 0 6px 12px 0 rgba(24,94,224,0.15);
-                    padding: 0.7rem;
+                    box-shadow: 0 0 1px rgba(24,94,224,0.15), 0 6px 12px rgba(24,94,224,0.15);
+                    padding: 0.2rem;
                     border-radius: 180px;
                     min-width: 184px;
                 ">
-                    <!-- Radio #1 -->
-                    <input type="radio" id="radio-1" name="tabs" checked style="position: absolute; opacity: 0; width: 0; height: 0;">
-                    <label for="radio-1" style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        width: 50px;
-                        height: 40px;
-                        font-size: 0.8rem;
-                        color: #000;
-                        font-weight: 500;
-                        border-radius: 99px;
-                        cursor: pointer;
-                        margin: 0 2px;
-                    ">
-                        Élève
-                    </label>
+                    <!-- Radio et labels -->
+                    <input type="radio" id="radio-1" name="tabs" checked>
+                    <label for="radio-1">Élève</label>
 
-                    <!-- Radio #2 -->
-                    <input type="radio" id="radio-2" name="tabs" style="position: absolute; opacity: 0; width: 0; height: 0;">
-                    <label for="radio-2" style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        width: 50px;
-                        height: 40px;
-                        font-size: 0.8rem;
-                        color: #000;
-                        font-weight: 500;
-                        border-radius: 99px;
-                        cursor: pointer;
-                        margin: 0 2px;
-                    ">
-                        Prof
-                    </label>
+                    <input type="radio" id="radio-2" name="tabs">
+                    <label for="radio-2">Prof</label>
 
-                    <!-- Radio #3 -->
-                    <input type="radio" id="radio-3" name="tabs" style="position: absolute; opacity: 0; width: 0; height: 0;">
-                    <label for="radio-3" style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        width: 50px;
-                        height: 40px;
-                        font-size: 0.8rem;
-                        color: #000;
-                        font-weight: 500;
-                        border-radius: 99px;
-                        cursor: pointer;
-                        margin: 0 2px;
-                    ">
-                        Admin
-                    </label>
+                    <input type="radio" id="radio-3" name="tabs">
+                    <label for="radio-3">Admin</label>
 
                     <!-- Glider -->
-                    <span id="glider" style="
-                        position: absolute;
-                        display: flex;
-                        align-items: flex-start;
-                        justify-content: flex-end;
-                        width: 55px;
-                        height: 40px;
-                        background-color: rgba(230,238,249,0.3);
-                        border-radius: 99px;
-                        top: 50%;
-                        left: calc(0.7rem);
-                        transform: translateY(-50%);
-                        z-index: 1;
-                        transition: transform 0.25s ease-out;
-                    "></span>
+                    <span id="glider"></span>
                 </div>
             </div>
 
             <!-- Bouton de Connexion -->
             <div class="text-center">
                 <div class="btn-conteiner" style="display: flex; justify-content: center;">
-                    <a class="btn-content" href="{{ path('app_menu') }}" style="
+                    <a id="login-button" class="btn-content" href="{{ path('app_menu') }}" style="
                         display: flex;
                         align-items: center;
                         padding: 5px 20px;
@@ -154,13 +96,16 @@
                         color: #ffffff;
                         background: #001f3f;
                         border-radius: 100px;
-                        box-shadow: 0 0 0.2em 0 #001f3f;
+                        box-shadow: 0 0 0.2em #001f3f;
                         transition: 0.5s;
                     ">
                         <span class="btn-title">CONNEXION</span>
                     </a>
                 </div>
             </div>
+
+            <!-- Zone d'affichage du message d'erreur -->
+            <div id="error-container" style="text-align: center; margin-top: 15px; color: red;"></div>
 
             <!-- Bouton d'Inscription -->
             <div class="text-center mt-3">
@@ -176,7 +121,7 @@
                         color: #ffffff;
                         background: #007bff;
                         border-radius: 100px;
-                        box-shadow: 0 0 0.2em 0 #007bff;
+                        box-shadow: 0 0 0.2em #007bff;
                         transition: 0.5s;
                     ">
                         <span class="btn-title">INSCRIPTION</span>
@@ -185,44 +130,91 @@
             </div>
         </div>
     </div>
+
+    <style>
+        /* Masquer les radios */
+        .tabs input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* Style des labels */
+        .tabs label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 40px;
+            font-size: 0.8rem;
+            color: #000;
+            font-weight: 500;
+            border-radius: 99px;
+            cursor: pointer;
+            margin: 0 2px;
+            position: relative;
+            z-index: 1;
+            transition: color 0.25s ease-out;
+        }
+
+        /* Glider par défaut, largeur = 50px + 2px*2 de marge */
+        #glider {
+            position: absolute;
+            width: 54px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.7);
+            border-radius: 99px;
+            top: 50%;
+            left: 0;
+            transform: translateX(0) translateY(-50%);
+            z-index: 0;
+            transition: transform 0.25s ease-out;
+        }
+
+        /* Positionnement du glider en fonction du radio sélectionné */
+        #radio-1:checked ~ #glider {
+            transform: translateX(0) translateY(-50%);
+        }
+        #radio-2:checked ~ #glider {
+            transform: translateX(54px) translateY(-50%);
+        }
+        #radio-3:checked ~ #glider {
+            transform: translateX(108px) translateY(-50%);
+        }
+
+        /* Optionnel : changer le style du label actif */
+        #radio-1:checked ~ label[for="radio-1"],
+        #radio-2:checked ~ label[for="radio-2"],
+        #radio-3:checked ~ label[for="radio-3"] {
+            color: #185ee0;
+            font-weight: 700;
+        }
+    </style>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script>
-        // Script pour déplacer le glider et mettre à jour la couleur des labels selon l'onglet sélectionné
-        document.addEventListener('DOMContentLoaded', () => {
-            const radios = [
-                document.getElementById('radio-1'),
-                document.getElementById('radio-2'),
-                document.getElementById('radio-3')
-            ];
-            const glider = document.getElementById('glider');
+        // Utilisation de l'événement turbo:load pour s'assurer que le JS s'initialise
+        // à chaque chargement partiel avec Symfony UX Turbo
+        document.addEventListener('turbo:load', function() {
+            const loginButton = document.getElementById('login-button');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const errorContainer = document.getElementById('error-container');
 
-            function updateGlider() {
-                if (radios[0].checked) {
-                    glider.style.transform = 'translateX(0%) translateY(-50%)';
-                } else if (radios[1].checked) {
-                    glider.style.transform = 'translateX(100%) translateY(-50%)';
-                } else if (radios[2].checked) {
-                    glider.style.transform = 'translateX(200%) translateY(-50%)';
-                }
-                const labels = document.querySelectorAll('label[for^="radio-"]');
-                labels.forEach(label => {
-                    const radio = document.getElementById(label.getAttribute('for'));
-                    if (radio.checked) {
-                        label.style.color = "#185ee0";
-                        label.style.fontWeight = "700";
-                        label.style.fontSize = "1rem";
+            if (loginButton) {
+                loginButton.addEventListener('click', function(event) {
+                    // Vérifie si l'un des champs est vide
+                    if (usernameInput.value.trim() === "" || passwordInput.value.trim() === "") {
+                        event.preventDefault(); // Empêche la navigation
+                        errorContainer.textContent = "Veuillez remplir tous les champs.";
                     } else {
-                        label.style.color = "#000";
-                        label.style.fontWeight = "500";
-                        label.style.fontSize = "0.8rem";
+                        errorContainer.textContent = "";
                     }
                 });
             }
-            radios.forEach(radio => radio.addEventListener('change', updateGlider));
-            updateGlider(); // initial
         });
     </script>
 {% endblock %}

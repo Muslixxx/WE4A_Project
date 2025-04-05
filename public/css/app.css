@@ -343,3 +343,13 @@ h1, h2, h3 {
     transform: translateX(-69px);
 }
 
+#register-button {
+    background: #001f3f;
+    box-shadow: 0 0 0.2em #001f3f;
+    transition: 0.5s;
+}
+
+#register-button:hover {
+    background: #003366;
+    box-shadow: 0 0 0.3em #003366;
+}
