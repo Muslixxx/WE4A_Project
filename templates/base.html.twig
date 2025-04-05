@@ -50,7 +50,10 @@
 {% include 'partials/navbar.html.twig' %}
 
 {# Contenu principal de chaque page #}
-{% block body %}{% endblock %}
+<div class="page-content" style="padding-top: 70px;">
+    {% block body %}{% endblock %}
+</div>
+
 
 {# Scripts supplémentaires et importmap #}
 {% block javascripts %}
