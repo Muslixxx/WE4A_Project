@@ -1,68 +1,145 @@
 {% extends 'base.html.twig' %}
+{% block title %}Paramètres Luke Skywalker{% endblock %}
 
-{% block title %}Mon Profil{% endblock %}
+{% set fixed_page = true %}
 
 {% block body %}
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card shadow">
-                    <div class="card-header text-center bg-primary text-white">
-                        <h2>Paramètres</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <label class="col-sm-4 col-form-label">Nom</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" value="John Doe" disabled>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label class="col-sm-4 col-form-label">Adresse mail</label>
-                            <div class="col-sm-8">
-                                <input type="email" class="form-control" value="john.doe@example.com" disabled>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label class="col-sm-4 col-form-label">Mot de passe</label>
-                            <div class="col-sm-8">
-                                <input type="password" class="form-control" value="********" disabled>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label class="col-sm-4 col-form-label">Préférences</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" value="Thème sombre, Notifications activées" disabled>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label class="col-sm-4 col-form-label">Cours inscrits</label>
-                            <div class="col-sm-8">
-                                <ul class="list-group">
-                                    <li class="list-group-item">Cours de Mathématiques</li>
-                                    <li class="list-group-item">Cours d'Informatique</li>
-                                    <li class="list-group-item">Cours de Physique</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label class="col-sm-4 col-form-label">Classe</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" value="Terminale S" disabled>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label class="col-sm-4 col-form-label">Type d'utilisateur</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" value="Étudiant" disabled>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer text-end">
-                        <button class="btn btn-primary" disabled>Modifier</button>
-                    </div>
+    <div class="container d-flex justify-content-center align-items-center"
+         style="min-height: 60vh; padding: 2rem;">
+
+        <div style="
+            background-color: #42a5f5;
+            border-radius: 15px;
+            width: 80vw;
+            max-width: 800px;
+            min-height: 50vh;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 2rem;
+        ">
+            <!-- Titre -->
+            <h1 style="
+                font-family: 'Luckiest Guy', cursive;
+                font-size: 2.2rem;
+                color: #fff;
+                text-shadow: 2px 2px 0 #0003;
+                text-align: center;
+                margin-bottom: 1rem;
+            ">
+                Paramètres
+            </h1>
+
+            <!-- Contenu principal (texte, champs activés) -->
+            <div style="
+                margin: 0 auto;
+                max-width: 600px;
+                font-family: 'Comic Neue', cursive;
+                color: #fff;
+            ">
+                <!-- Nom -->
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.25rem;">Nom</label>
+                    <input type="text"
+                           value="Luke Skywalker"
+                           style="
+                               width: 100%;
+                               padding: 0.5rem;
+                               border-radius: 8px;
+                               border: none;
+                               background-color: rgba(255,255,255,0.2);
+                               color: #fff;
+                           "
+                    />
+                </div>
+
+                <!-- Identifiant -->
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.25rem;">Identifiant</label>
+                    <input type="Identifiant"
+                           value="luke.skywalker@rebellion.org"
+                           style="
+                               width: 100%;
+                               padding: 0.5rem;
+                               border-radius: 8px;
+                               border: none;
+                               background-color: rgba(255,255,255,0.2);
+                               color: #fff;
+                           "
+                    />
+                </div>
+
+                <!-- Mot de passe -->
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.25rem;">Mot de passe</label>
+                    <input type="password"
+                           value="Force4Ever!"
+                           style="
+                               width: 100%;
+                               padding: 0.5rem;
+                               border-radius: 8px;
+                               border: none;
+                               background-color: rgba(255,255,255,0.2);
+                               color: #fff;
+                           "
+                    />
+                </div>
+
+                <!-- Cours inscrits -->
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.25rem;">Cours inscrits</label>
+                    <ul style="
+                        list-style-type: none;
+                        padding: 0;
+                        margin: 0;
+                    ">
+                        <li style="padding: 0.4rem 0;">Cours de Maîtrise de la Force</li>
+                        <li style="padding: 0.4rem 0;">Cours de Pilotage Avancé</li>
+                        <li style="padding: 0.4rem 0;">Cours d'Astronavigation</li>
+                    </ul>
+                </div>
+
+                <!-- Type d'utilisateur -->
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.25rem;">Type d'utilisateur</label>
+                    <input type="text"
+                           value="Étudiant Jedi"
+                           style="
+                               width: 100%;
+                               padding: 0.5rem;
+                               border-radius: 8px;
+                               border: none;
+                               background-color: rgba(255,255,255,0.2);
+                               color: #fff;
+                           "
+                    />
+                </div>
+
+                <!-- Bouton -->
+                <div style="text-align: right; margin-top: 2rem;">
+                    <button style="
+                        font-family: 'Poppins', sans-serif;
+                        font-weight: 600;
+                        font-size: 1rem;
+                        color: #ffffff;
+                        background: #007bff;
+                        border: 2px solid #007bff;
+                        border-radius: 100px;
+                        box-shadow: 0 0 0.2em #007bff;
+                        transition: 0.5s;
+                        padding: 0.5rem 1.5rem;
+                    ">
+                        Enregistrer
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+
+    <style>
+        /* Petit effet de survol sur le bouton */
+        button:hover {
+            background: #0056b3 !important;
+            box-shadow: 0 0 0.3em #0056b3 !important;
+            transform: translateY(-1px);
+        }
+    </style>
 {% endblock %}

@@ -1,23 +1,54 @@
+/* ===========================
+   ANIMATIONS
+   =========================== */
+
+/* Animation de descente + fade-in de la navbar */
+@keyframes slideDown {
+    0% {
+        transform: translateY(-60px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Animation de rebond (bounce) sur un élément */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+/* ===========================
+   NAVBAR & BOUTONS
+   =========================== */
+
 /* From Uiverse.io by eslam-hany */
 .button-container {
     position: fixed; /* reste visible même en scroll */
-    top: 0;           /* alignée en haut */
-    left: 0;          /* commence à gauche */
-    z-index: 1000;    /* au-dessus du contenu */
+    top: 0;          /* alignée en haut */
+    left: 0;         /* commence à gauche */
+    z-index: 1000;   /* au-dessus du contenu */
     display: flex;
     background-color: #42a5f5;
-    width: 100vw;     /* largeur totale de l'écran */
-    height: 60px;     /* hauteur un peu augmentée pour meilleure lisibilité */
+    width: 100vw;    /* largeur totale de l'écran */
+    height: 60px;    /* hauteur un peu augmentée pour meilleure lisibilité */
     align-items: center;
     justify-content: center; /* centre les boutons au milieu */
-    gap: 20px;        /* espace entre les boutons */
+    gap: 20px;       /* espace entre les boutons */
     border-radius: 0 0 10px 10px; /* arrondi uniquement en bas */
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px,
     rgba(0, 73, 144, 0.5) 5px 10px 15px;
     transition: all 0.5s;
-}
 
-/* Supprimé le hover qui change la largeur (inutile en full screen) */
+    /* Lance l'animation slideDown dès l'apparition de la navbar */
+    animation: slideDown 0.8s ease-in-out;
+}
 
 .button {
     outline: 0 !important;
@@ -35,7 +66,8 @@
 }
 
 .button:hover {
-    transform: translateY(-3px);
+    /* Lance l'animation de rebond lors du survol */
+    animation: bounce 0.6s ease-in-out forwards;
 }
 
 .icon {

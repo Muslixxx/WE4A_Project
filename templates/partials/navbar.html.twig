@@ -1,5 +1,7 @@
-<div class="button-container" title="Acceuil">
-    <a href="{{ path('app_menu') }}" style="text-decoration: none;">
+<div class="button-container" title="Accueil">
+
+    <!-- Accueil -->
+    <a href="{{ path('app_menu') }}">
         <button class="Btn">
             Accueil
             <svg class="svg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
@@ -8,49 +10,48 @@
         </button>
     </a>
 
-
-
-    <a href="{{ path('app_profile') }}" style="text-decoration: none;">
-        <button class="Btn">
-            Mon Profil
-            <svg class="svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path
-                        d="M12 2.5a5.5 5.5 0 0 1 3.096 10.047 9.005 9.005 0 0 1 5.9 8.181.75.75 0 1 1-1.499.044 7.5 7.5 0 0 0-14.993 0 .75.75 0 0 1-1.5-.045 9.005 9.005 0 0 1 5.9-8.18A5.5 5.5 0 0 1 12 2.5ZM8 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z"/>
-            </svg>
-        </button>
-    </a>
-
-
-    <a href="{{ path('app_settings') }}" style="text-decoration: none;">
+    <!-- Paramètres -->
+    <a href="{{ path('app_settings') }}">
         <button class="Btn">
             Paramètres
-            <svg class="svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
+            <svg class="svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                 fill="none" stroke="currentColor" stroke-width="2"
                  stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="3"/>
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33
-                     1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0
-                     1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0
-                     0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09a1.65
-                     1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.09a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2
-                     0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65
-                     1.65 0 0 0-1.51 1z"/>
+                         1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06
+                         a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65
+                         1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0
+                         1.82.33h.09a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.09a1.65 1.65
+                         0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65
+                         0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65
+                         1.65 0 0 0-1.51 1z"/>
             </svg>
         </button>
     </a>
 
+    <!-- Mon Profil : corriger ici pour pointer sur 'app_profil' -->
+    <a href="{{ path('app_gestion') }}">
+        <button class="Btn">
+            Mon Profil
+            <svg class="svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2.5a5.5 5.5 0 0 1 3.096 10.047 9.005 9.005 0 0 1 5.9 8.181.75.75 0 1 1-1.499.044 7.5 7.5 0 0 0-14.993 0 .75.75 0 0 1-1.5-.045 9.005 9.005 0 0 1 5.9-8.18A5.5 5.5 0 0 1 12 2.5ZM8 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z"/>
+            </svg>
+        </button>
+    </a>
 
-    <a href="{{ path('ue_selection') }}" title="Mes UEs" style="text-decoration: none;">
+    <!-- Mes UEs -->
+    <a href="{{ path('ue_selection') }}" title="Mes UEs">
         <button class="Btn">
             Mes UEs
             <svg class="svg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-                <path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"></path>
+                <path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"/>
             </svg>
         </button>
     </a>
 
-
-
-    <a href="{{ path('app_login') }}" style="text-decoration: none;">
+    <!-- Déconnexion -->
+    <a href="{{ path('app_login') }}">
         <button class="Btn">
             Déconnexion
             <svg class="svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
@@ -62,8 +63,44 @@
             </svg>
         </button>
     </a>
-
-
-
-
 </div>
+
+<style>
+    .button-container {
+        /* Personnalisez ce conteneur si nécessaire (fond, marges, etc.) */
+    }
+
+    /* Lien qui enveloppe le bouton */
+    .button-container a {
+        text-decoration: none;
+        color: inherit;
+    }
+    .button-container a:visited {
+        color: inherit;
+    }
+
+    /* Bouton principal */
+    .Btn {
+        background-color: #187BCD;  /* Couleur de fond */
+        color: #fff;                /* Couleur du texte */
+        border: none;               /* Aucune bordure */
+        box-shadow: none;
+        outline: none;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s ease; /* Transition douce */
+    }
+
+    /* Effet au survol */
+    .Btn:hover {
+        background-color: #106BB8;  /* Plus sombre au survol */
+    }
+
+    /* Effet au focus ou clic */
+    .Btn:focus,
+    .Btn:active {
+        outline: none;
+        box-shadow: none;
+    }
+</style>

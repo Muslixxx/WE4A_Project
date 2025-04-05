@@ -33,4 +33,6 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/prof, roles: ROLE_PROF }
         - { path: ^/etudiant, roles: ROLE_ETUDIANT }
+        - { path: ^/profile, roles: PUBLIC_ACCESS }
+
 
