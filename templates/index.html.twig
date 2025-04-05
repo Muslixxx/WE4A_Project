@@ -1,20 +1,100 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Accueil{% endblock %}
-
+{% set fixed_page = true %}
 {% block body %}
-    <div class="container mt-5">
-        <div class="card bg-blue-darker text-blue-light shadow-lg border-0">
-            <div class="card-body text-center py-5">
-                <h1 class="display-5 fw-bold mb-4">Bienvenue sur Moodneuille</h1>
-                <p class="lead mb-5">Veuillez choisir une action pour continuer.</p>
-
-                <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap">
-                    <a href="{{ path('app_login') }}" class="btn btn-warning btn-lg px-4">Connexion</a>
-                    <span class="fs-4">|</span>
-                    <a href="{{ path('app_presentation') }}" class="btn btn-outline-light btn-lg px-4">Présentation</a>
-                </div>
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh; padding: 2rem;">
+        <div style="
+            background-color: #42a5f5;
+            border-radius: 15px;
+            width: 80vw;
+            max-width: 800px;
+            min-height: 50vh;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 2rem;
+            text-align: center;
+        ">
+            <h1 style="
+                font-family: 'Luckiest Guy', cursive;
+                font-size: 2.2rem;
+                color: #fff;
+                text-shadow: 2px 2px 0 #0003;
+                margin-bottom: 1rem;
+            ">
+                Bienvenue sur Moodneuille
+            </h1>
+            <br>
+            <p style="
+                color: #fff;
+                font-family: 'Comic Neue', cursive;
+                margin-bottom: 2rem;
+                font-size: 1.2rem;
+            ">
+                Veuillez choisir une action pour continuer.
+            </p>
+            <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap" style="margin-top: 1.5rem;">
+                <a href="{{ path('app_login') }}" style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: 600;
+                    font-size: 24px;
+                    text-decoration: none;
+                    color: #ffffff;
+                    background: #007bff;
+                    border: 2px solid #007bff;
+                    border-radius: 100px;
+                    box-shadow: 0 0 0.2em #007bff;
+                    transition: 0.5s;
+                    padding: 0.5rem 2rem;
+                    flex: 1;
+                    min-width: 200px;
+                ">
+                    Connexion
+                </a>
+                <span style="font-size: 24px; color: #fff;">|</span>
+                <a href="{{ path('app_presentation') }}" style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: 600;
+                    font-size: 24px;
+                    text-decoration: none;
+                    color: #ffffff;
+                    background: #007bff;
+                    border: 2px solid #007bff;
+                    border-radius: 100px;
+                    box-shadow: 0 0 0.2em #007bff;
+                    transition: 0.5s;
+                    padding: 0.5rem 2rem;
+                    flex: 1;
+                    min-width: 200px;
+                ">
+                    Présentation
+                </a>
             </div>
         </div>
     </div>
+
+    <style>
+        /* Animation générale sur les boutons */
+        a:hover {
+            transform: translateY(-1px);
+        }
+
+        /* Boutons Connexion et Présentation identiques */
+        a[href="{{ path('app_login') }}"],
+        a[href="{{ path('app_presentation') }}"] {
+            background: #007bff !important;
+            border: 2px solid #007bff !important;
+            box-shadow: 0 0 0.2em #007bff;
+        }
+        a[href="{{ path('app_login') }}"]:hover,
+        a[href="{{ path('app_presentation') }}"]:hover {
+            background: #0056b3 !important;
+            box-shadow: 0 0 0.3em #0056b3 !important;
+        }
+    </style>
 {% endblock %}

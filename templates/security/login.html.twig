@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Connexion{% endblock %}
-
+{% set fixed_page = true %}
 {% block body %}
-    <!-- Container général pour centrer verticalement/horizontalement -->
-    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <!-- Container général pour centrer verticalement/horizontalement, déplacé vers le haut -->
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh; margin-top: -50px;">
         <!-- Bloc unique avec fond bleu -->
         <div class="p-4" style="
             background-color: #42a5f5;
@@ -197,7 +197,6 @@
     {{ parent() }}
     <script>
         // Utilisation de l'événement turbo:load pour s'assurer que le JS s'initialise
-        // à chaque chargement partiel avec Symfony UX Turbo
         document.addEventListener('turbo:load', function() {
             const loginButton = document.getElementById('login-button');
             const usernameInput = document.getElementById('username');

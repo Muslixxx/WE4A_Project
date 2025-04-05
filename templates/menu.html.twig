@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Menu Principal{% endblock %}
-
+{% set fixed_page = false %}
 {% block body %}
     <style>
         /* Vos styles spécifiques aux cartes de cours sont ici */
@@ -100,44 +100,4 @@
             </div>
         </div>
     </div>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        // Script pour déplacer le glider et mettre à jour la couleur des labels selon l'onglet sélectionné
-        document.addEventListener('DOMContentLoaded', () => {
-            const radios = [
-                document.getElementById('radio-1'),
-                document.getElementById('radio-2'),
-                document.getElementById('radio-3')
-            ];
-            const glider = document.getElementById('glider');
-
-            function updateGlider() {
-                if (radios[0].checked) {
-                    glider.style.transform = 'translateX(0%) translateY(-50%)';
-                } else if (radios[1].checked) {
-                    glider.style.transform = 'translateX(100%) translateY(-50%)';
-                } else if (radios[2].checked) {
-                    glider.style.transform = 'translateX(200%) translateY(-50%)';
-                }
-                const labels = document.querySelectorAll('label[for^="radio-"]');
-                labels.forEach(label => {
-                    const radio = document.getElementById(label.getAttribute('for'));
-                    if (radio.checked) {
-                        label.style.color = "#185ee0";
-                        label.style.fontWeight = "700";
-                        label.style.fontSize = "1rem";
-                    } else {
-                        label.style.color = "#000";
-                        label.style.fontWeight = "500";
-                        label.style.fontSize = "0.8rem";
-                    }
-                });
-            }
-            radios.forEach(radio => radio.addEventListener('change', updateGlider));
-            updateGlider(); // initial
-        });
-    </script>
 {% endblock %}

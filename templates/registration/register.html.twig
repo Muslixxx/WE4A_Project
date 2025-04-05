@@ -1,10 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Inscription{% endblock %}
+{% set fixed_page = true %}
 
 {% block body %}
-    <!-- Container général pour centrer verticalement/horizontalement -->
-    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <!-- Container général pour centrer verticalement/horizontalement, avec offset négatif -->
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh; margin-top: -50px;">
         <!-- Bloc unique avec fond bleu -->
         <div class="p-4" style="
             background-color: #42a5f5;
@@ -93,7 +94,6 @@
 
                 <!-- Bouton CONFIRMER -->
                 <div class="btn-conteiner" style="display: flex; justify-content: center;">
-                    <!-- Le bouton n'a pas d'href pour permettre la validation en JS -->
                     <button id="register-button" type="button" style="
                         display: flex;
                         align-items: center;
@@ -106,10 +106,9 @@
                         background: #007bff;
                         border: none;
                         border-radius: 100px;
-                        background: #007bff;
-                        border-radius: 100px;
                         box-shadow: 0 0 0.2em #007bff;
                         transition: 0.5s;
+                        cursor: pointer;
                     ">
                         <span class="btn-title">CONFIRMER</span>
                     </button>
@@ -180,6 +179,13 @@
             color: #185ee0;
             font-weight: 700;
         }
+
+        /* Animation sur le bouton CONFIRMER */
+        #register-button:hover {
+            background: #003366;
+            box-shadow: 0 0 0.3em #003366;
+            transform: translateY(-2px);
+        }
     </style>
 {% endblock %}
 
@@ -188,17 +194,14 @@
     <script>
         // Initialisation avec turbo:load pour Symfony UX Turbo
         document.addEventListener('turbo:load', function() {
-            // On récupère les zones de texte
             const emailInput = document.getElementById('email');
             const passwordInput = document.getElementById('password');
             const confirmPasswordInput = document.getElementById('confirmPassword');
             const errorContainer = document.getElementById('error-container');
-            // Bouton d'inscription
             const registerButton = document.getElementById('register-button');
 
             if (registerButton) {
                 registerButton.addEventListener('click', function(event) {
-                    // Vérification des champs obligatoires
                     if (emailInput.value.trim() === "" || passwordInput.value.trim() === "" || confirmPasswordInput.value.trim() === "") {
                         event.preventDefault();
                         errorContainer.textContent = "Veuillez remplir tous les champs.";
@@ -207,7 +210,6 @@
                         errorContainer.textContent = "Les mots de passe ne correspondent pas.";
                     } else {
                         errorContainer.textContent = "";
-                        // En cas de succès, redirection vers la page de connexion
                         window.location.href = "{{ path('app_login') }}";
                     }
                 });
