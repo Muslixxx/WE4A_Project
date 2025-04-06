@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ course.name }}{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <!-- Titre et description -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h1 class="card-title">{{ course.name }}</h1>
+                <p class="card-text">{{ course.description }}</p>
+            </div>
+        </div>
+
+        <!-- Section Ressources -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2>Ressources</h2>
+            </div>
+            <div class="card-body">
+                {% if course.resources|length > 0 %}
+                    <ul>
+                        {% for resource in course.resources %}
+                            <li><a href="{{ resource.link }}" target="_blank">{{ resource.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Aucune ressource disponible.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Section Documents -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2>Documents</h2>
+            </div>
+            <div class="card-body">
+                {% if course.documents|length > 0 %}
+                    <ul>
+                        {% for document in course.documents %}
+                            <li><a href="{{ document.link }}" target="_blank">{{ document.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Aucun document disponible.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Section Posts -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2>Posts</h2>
+            </div>
+            <div class="card-body">
+                {% if course.posts|length > 0 %}
+                    {% for post in course.posts %}
+                        <div class="post mb-3">
+                            <small class="text-muted">{{ post.date }}</small>
+                            <p>{{ post.content }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Aucun post pour le moment.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

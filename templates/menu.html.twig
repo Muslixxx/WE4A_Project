@@ -49,6 +49,15 @@
             { 'name': 'Ingénierie', 'description': 'Conception, innovation et gestion de projets.' },
             { 'name': 'Anglais', 'description': 'Grammaire, conversation et littérature.' }
         ] %}
+        {% set course_routes = {
+            'Mathématiques': 'cours_math',
+            'Physique': 'cours_physique',
+            'Chimie': 'cours_chimie',
+            'Informatique': 'cours_info',
+            'Ingénierie': 'cours_inge',
+            'Anglais': 'cours_anglais'
+        } %}
+
         <div class="card w-100 bg-blue-darker" style="border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
             <div class="card-header text-center" style="background: transparent; border-bottom: none;">
                 <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Cours</h2>
@@ -63,9 +72,10 @@
                                     <p class="card-text" style="font-family: 'Comic Neue', cursive; color: #fff;">{{ course.description }}</p>
                                 </div>
                                 <div class="card-overlay">
-                                    <a href="{{ path('cours_detail', {'id': loop.index}) }}" class="btn btn-primary">
+                                    <a href="{{ path(course_routes[course.name]) }}" class="btn btn-primary">
                                         Accéder au cours
                                     </a>
+
                                 </div>
                             </div>
                         </div>
