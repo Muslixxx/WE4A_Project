@@ -1,30 +1,165 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}Sélection des UE{% endblock %}
 
-{% block body %}
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Sélection des UE</h1>
-        <p class="text-center">Choisissez une matière pour voir les unités d'enseignement disponibles.</p>
+{% set fixed_page = true %}
 
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="dropdown">
-                    <button class="btn btn-outline-primary dropdown-toggle w-100" type="button" id="subjectDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+{% block body %}
+    <div class="container d-flex justify-content-center align-items-center"
+         style="min-height: 60vh; padding: 2rem;">
+        <div style="
+            background-color: #42a5f5;
+            border-radius: 15px;
+            width: 80vw;
+            max-width: 800px;
+            min-height: 50vh;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 2rem;
+        ">
+            <!-- Titre principal -->
+            <h1 style="
+                font-family: 'Luckiest Guy', cursive;
+                font-size: 2.2rem;
+                color: #fff;
+                text-shadow: 2px 2px 0 #0003;
+                text-align: center;
+                margin-bottom: 1rem;
+            ">
+                Sélection des UE
+            </h1>
+
+            <!-- Texte d'instructions -->
+            <p style="text-align: center; color: #fff;">
+                Choisissez une matière pour voir les unités d'enseignement disponibles.
+            </p>
+
+            <!-- Dropdown de sélection -->
+            <div style="margin-bottom: 1.5rem; text-align: center;">
+                <div class="dropdown d-inline-block">
+                    <button class="btn btn-outline-primary dropdown-toggle"
+                            style="min-width: 220px;"
+                            type="button"
+                            id="subjectDropdown"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
                         Sélectionnez une matière
                     </button>
-                    <ul class="dropdown-menu w-100" aria-labelledby="subjectDropdown">
-                        <li><a class="dropdown-item" href="#">Mathématique</a></li>
-                        <li><a class="dropdown-item" href="#">Physique</a></li>
-                        <li><a class="dropdown-item" href="#">Chimie</a></li>
-                        <li><a class="dropdown-item" href="#">Anglais</a></li>
-                        <li><a class="dropdown-item" href="#">Français</a></li>
-                        <li><a class="dropdown-item" href="#">Histoire</a></li>
-                        <li><a class="dropdown-item" href="#">Economie</a></li>
-                        <!-- Ajoutez d'autres matières ici si besoin -->
+                    <ul class="dropdown-menu" aria-labelledby="subjectDropdown">
+                        <li id="subject-item-Mathématique"><a class="dropdown-item" href="#" onclick="selectSubject('Mathématique', this); return false;">Mathématique</a></li>
+                        <li id="subject-item-Physique"><a class="dropdown-item" href="#" onclick="selectSubject('Physique', this); return false;">Physique</a></li>
+                        <li id="subject-item-Chimie"><a class="dropdown-item" href="#" onclick="selectSubject('Chimie', this); return false;">Chimie</a></li>
+                        <li id="subject-item-Anglais"><a class="dropdown-item" href="#" onclick="selectSubject('Anglais', this); return false;">Anglais</a></li>
+                        <li id="subject-item-Français"><a class="dropdown-item" href="#" onclick="selectSubject('Français', this); return false;">Français</a></li>
+                        <li id="subject-item-Histoire"><a class="dropdown-item" href="#" onclick="selectSubject('Histoire', this); return false;">Histoire</a></li>
+                        <li id="subject-item-Economie"><a class="dropdown-item" href="#" onclick="selectSubject('Economie', this); return false;">Economie</a></li>
                     </ul>
                 </div>
             </div>
+
+            <!-- Tableau des matières sélectionnées -->
+            <div style="margin-top: 2rem;">
+                <table class="table" style="color: #fff;">
+                    <thead>
+                    <tr>
+                        <th>Matière</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="selectedSubjectsTable">
+                    {# Les lignes seront ajoutées dynamiquement #}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Bouton Continuer redirigeant vers app_menu -->
+            <div style="text-align: right; margin-top: 2rem;">
+                <a href="{{ path('app_menu') }}" style="
+                        display: inline-block;
+                        font-family: 'Poppins', sans-serif;
+                        font-weight: 600;
+                        font-size: 1rem;
+                        color: #ffffff;
+                        background: #007bff;
+                        border: 2px solid #007bff;
+                        border-radius: 100px;
+                        box-shadow: 0 0 0.2em #007bff;
+                        transition: 0.5s;
+                        padding: 0.5rem 1.5rem;
+                        text-decoration: none;
+                    ">
+                    Continuer
+                </a>
+            </div>
         </div>
     </div>
+
+    <!-- Effet de survol sur le bouton -->
+    <style>
+        a:hover, button:hover {
+            background: #0056b3 !important;
+            box-shadow: 0 0 0.3em #0056b3 !important;
+            transform: translateY(-1px);
+        }
+    </style>
+
+    <!-- Script pour la gestion dynamique des matières -->
+    <script>
+        function selectSubject(subjectName, element) {
+            // Vérifier si la matière n'est pas déjà présente dans le tableau
+            if (!document.getElementById('selected-row-' + subjectName)) {
+                // Création d'une nouvelle ligne de tableau
+                var tbody = document.getElementById('selectedSubjectsTable');
+                var tr = document.createElement('tr');
+                tr.id = 'selected-row-' + subjectName;
+
+                // Colonne affichant la matière sélectionnée
+                var tdSubject = document.createElement('td');
+                tdSubject.textContent = subjectName;
+                tr.appendChild(tdSubject);
+
+                // Colonne avec le bouton pour retirer la matière
+                var tdAction = document.createElement('td');
+                var removeButton = document.createElement('button');
+                removeButton.innerHTML = 'Supprimer'; // Bouton texte pour supprimer
+                removeButton.classList.add('btn', 'btn-danger', 'btn-sm');
+                removeButton.onclick = function() {
+                    removeSubject(subjectName);
+                };
+                tdAction.appendChild(removeButton);
+                tr.appendChild(tdAction);
+
+                tbody.appendChild(tr);
+
+                // Masquer la matière dans le dropdown pour éviter la sélection multiple
+                var li = element.parentNode;
+                li.style.display = 'none';
+            }
+        }
+
+        function removeSubject(subjectName) {
+            // Retirer la ligne correspondante du tableau
+            var row = document.getElementById('selected-row-' + subjectName);
+            if (row) {
+                row.parentNode.removeChild(row);
+            }
+
+            // Réafficher la matière dans le dropdown
+            var li = document.getElementById('subject-item-' + subjectName);
+            if (li) {
+                li.style.display = 'block';
+            }
+        }
+
+        // Réinitialise les instances Bootstrap des dropdowns lors du retour en page
+        window.addEventListener('pageshow', function() {
+            var dropdownElList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+            dropdownElList.forEach(function(dropdownToggleEl) {
+                if (typeof bootstrap !== 'undefined' && bootstrap.Dropdown) {
+                    var instance = bootstrap.Dropdown.getInstance(dropdownToggleEl);
+                    if (!instance) {
+                        new bootstrap.Dropdown(dropdownToggleEl);
+                    }
+                }
+            });
+        });
+    </script>
 {% endblock %}
