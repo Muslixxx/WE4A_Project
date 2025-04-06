@@ -91,9 +91,29 @@
                             <label for="postTitle" class="form-label">Titre du post</label>
                             <input type="text" class="form-control" id="postTitle" placeholder="Titre du post">
                         </div>
+                        <!-- Sélecteur pour le type de contenu -->
                         <div class="mb-3">
-                            <label for="postContent" class="form-label">Contenu</label>
-                            <textarea class="form-control" id="postContent" rows="3" placeholder="Contenu du post"></textarea>
+                            <label for="contentType" class="form-label">Type de contenu</label>
+                            <select class="form-select" id="contentType">
+                                <option value="text" selected>Texte</option>
+                                <option value="link">Lien</option>
+                                <option value="document">Document</option>
+                            </select>
+                        </div>
+                        <!-- Zone de saisie pour le texte -->
+                        <div class="mb-3" id="textContentDiv">
+                            <label for="postText" class="form-label">Contenu (Texte)</label>
+                            <textarea class="form-control" id="postText" rows="3" placeholder="Entrez votre texte"></textarea>
+                        </div>
+                        <!-- Zone de saisie pour le lien -->
+                        <div class="mb-3 d-none" id="linkContentDiv">
+                            <label for="postLink" class="form-label">URL du lien</label>
+                            <input type="url" class="form-control" id="postLink" placeholder="https://exemple.com">
+                        </div>
+                        <!-- Zone pour télécharger un document -->
+                        <div class="mb-3 d-none" id="documentContentDiv">
+                            <label for="postDocument" class="form-label">Choisir un document</label>
+                            <input type="file" class="form-control" id="postDocument">
                         </div>
                     </form>
                 </div>
@@ -110,25 +130,47 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        // Gestion du bouton "Poster" du modal
+        // Gestion du changement de type de contenu
+        document.getElementById('contentType').addEventListener('change', function() {
+            const type = this.value;
+            // Cache tous les champs
+            document.getElementById('textContentDiv').classList.add('d-none');
+            document.getElementById('linkContentDiv').classList.add('d-none');
+            document.getElementById('documentContentDiv').classList.add('d-none');
+
+            // Affiche le champ correspondant
+            if (type === 'text') {
+                document.getElementById('textContentDiv').classList.remove('d-none');
+            } else if (type === 'link') {
+                document.getElementById('linkContentDiv').classList.remove('d-none');
+            } else if (type === 'document') {
+                document.getElementById('documentContentDiv').classList.remove('d-none');
+            }
+        });
+
+        // Gestion du bouton "Poster"
         document.getElementById('submitPost').addEventListener('click', function() {
-            // Récupération des valeurs
             const name = document.getElementById('postName').value;
             const clazz = document.getElementById('postClass').value;
             const title = document.getElementById('postTitle').value;
-            const content = document.getElementById('postContent').value;
+            const contentType = document.getElementById('contentType').value;
+            let content = "";
 
-            // Simulation de la soumission (affichage dans la console)
-            console.log("Post soumis:", { name, clazz, title, content });
+            if (contentType === 'text') {
+                content = document.getElementById('postText').value;
+            } else if (contentType === 'link') {
+                content = document.getElementById('postLink').value;
+            } else if (contentType === 'document') {
+                content = document.getElementById('postDocument').value;
+            }
 
-            // Réinitialiser le formulaire (optionnel)
+            console.log("Post soumis:", { name, clazz, title, contentType, content });
             document.getElementById('postForm').reset();
-
             // Fermer le modal
             const modalEl = document.getElementById('createPostModal');
             const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
             modal.hide();
-
+            alert("Votre post a bien été soumis !");
         });
     </script>
 {% endblock %}
