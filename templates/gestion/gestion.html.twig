@@ -28,18 +28,19 @@
                 Paramètres
             </h1>
 
-            <!-- Contenu principal (texte, champs activés) -->
+            <!-- Contenu principal -->
             <div style="
                 margin: 0 auto;
                 max-width: 600px;
                 font-family: 'Comic Neue', cursive;
                 color: #fff;
             ">
-                <!-- Nom -->
+                <!-- Nom (non modifiable) -->
                 <div style="margin-bottom: 1rem;">
                     <label style="display: block; margin-bottom: 0.25rem;">Nom</label>
                     <input type="text"
                            value="Luke Skywalker"
+                           readonly
                            style="
                                width: 100%;
                                padding: 0.5rem;
@@ -51,11 +52,12 @@
                     />
                 </div>
 
-                <!-- Identifiant -->
+                <!-- Identifiant (non modifiable) -->
                 <div style="margin-bottom: 1rem;">
                     <label style="display: block; margin-bottom: 0.25rem;">Identifiant</label>
-                    <input type="Identifiant"
+                    <input type="text"
                            value="luke.skywalker@rebellion.org"
+                           readonly
                            style="
                                width: 100%;
                                padding: 0.5rem;
@@ -67,20 +69,48 @@
                     />
                 </div>
 
-                <!-- Mot de passe -->
+                <!-- Mot de passe avec boutons "Modifier" et "Afficher" -->
                 <div style="margin-bottom: 1rem;">
                     <label style="display: block; margin-bottom: 0.25rem;">Mot de passe</label>
-                    <input type="password"
-                           value="Force4Ever!"
-                           style="
-                               width: 100%;
-                               padding: 0.5rem;
-                               border-radius: 8px;
-                               border: none;
-                               background-color: rgba(255,255,255,0.2);
-                               color: #fff;
-                           "
-                    />
+                    <div style="position: relative;">
+                        <input type="password"
+                               id="password"
+                               value="Force4Ever!"
+                               readonly
+                               style="
+                                   width: 100%;
+                                   padding: 0.5rem;
+                                   border-radius: 8px;
+                                   border: none;
+                                   background-color: rgba(255,255,255,0.2);
+                                   color: #fff;
+                               "
+                        />
+                        <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem;">
+                            <button type="button" id="toggleEditPassword" style="
+                                font-family: 'Poppins', sans-serif;
+                                font-size: 0.8rem;
+                                padding: 0.3rem 0.6rem;
+                                border: none;
+                                border-radius: 4px;
+                                background: #007bff;
+                                color: #fff;
+                                cursor: pointer;
+                                transition: 0.3s;
+                            ">Modifier</button>
+                            <button type="button" id="toggleShowPassword" style="
+                                font-family: 'Poppins', sans-serif;
+                                font-size: 0.8rem;
+                                padding: 0.3rem 0.6rem;
+                                border: none;
+                                border-radius: 4px;
+                                background: #007bff;
+                                color: #fff;
+                                cursor: pointer;
+                                transition: 0.3s;
+                            ">Afficher</button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Cours inscrits -->
@@ -97,11 +127,12 @@
                     </ul>
                 </div>
 
-                <!-- Type d'utilisateur -->
+                <!-- Type d'utilisateur (non modifiable) fixé à "eleve" -->
                 <div style="margin-bottom: 1rem;">
                     <label style="display: block; margin-bottom: 0.25rem;">Type d'utilisateur</label>
                     <input type="text"
-                           value="Étudiant Jedi"
+                           value="eleve"
+                           readonly
                            style="
                                width: 100%;
                                padding: 0.5rem;
@@ -113,7 +144,7 @@
                     />
                 </div>
 
-                <!-- Bouton -->
+                <!-- Bouton Enregistrer -->
                 <div style="text-align: right; margin-top: 2rem;">
                     <button style="
                         font-family: 'Poppins', sans-serif;
@@ -142,4 +173,42 @@
             transform: translateY(-1px);
         }
     </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('turbo:load', function() {
+            const passwordInput = document.getElementById('password');
+            const toggleEdit = document.getElementById('toggleEditPassword');
+            const toggleShow = document.getElementById('toggleShowPassword');
+
+            // Toggle "Modifier" : active/désactive le readonly pour permettre l'édition
+            toggleEdit.addEventListener('click', function() {
+                if (passwordInput.hasAttribute('readonly')) {
+                    passwordInput.removeAttribute('readonly');
+                    toggleEdit.textContent = 'Verrouiller';
+                    // Modifier le style pour indiquer que le champ est éditable
+                    passwordInput.style.backgroundColor = '#fff';
+                    passwordInput.style.color = '#000';
+                } else {
+                    passwordInput.setAttribute('readonly', true);
+                    toggleEdit.textContent = 'Modifier';
+                    passwordInput.style.backgroundColor = 'rgba(255,255,255,0.2)';
+                    passwordInput.style.color = '#fff';
+                }
+            });
+
+            // Toggle "Afficher" : bascule entre type "password" et "text"
+            toggleShow.addEventListener('click', function() {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleShow.textContent = 'Cacher';
+                } else {
+                    passwordInput.type = 'password';
+                    toggleShow.textContent = 'Afficher';
+                }
+            });
+        });
+    </script>
 {% endblock %}
