@@ -47,15 +47,40 @@
                        style="border-radius: 8px; background-color: #fff;"/>
             </div>
 
-            <!-- Champ Mot de passe -->
+            <!-- Champ Mot de passe avec bouton toggle -->
             <div class="mb-3">
                 <label for="password" style="color: #fff; font-weight: bold;">Mot de passe :</label>
-                <input type="password"
-                       id="password"
-                       placeholder="Entrez votre mot de passe..."
-                       class="form-control"
-                       style="border-radius: 8px; background-color: #fff;"/>
+                <div class="input-group">
+                    <input type="password"
+                           id="password"
+                           placeholder="Entrez votre mot de passe..."
+                           class="form-control"
+                           style="border-radius: 8px; background-color: #fff;"/>
+                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                        <!-- Icône d'œil (Bootstrap Icons) -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8z"/>
+                            <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const togglePassword = document.getElementById('togglePassword');
+                    const passwordInput = document.getElementById('password');
+
+                    togglePassword.addEventListener('click', function() {
+                        // Basculer le type de l'input entre "password" et "text"
+                        if (passwordInput.type === 'password') {
+                            passwordInput.type = 'text';
+                        } else {
+                            passwordInput.type = 'password';
+                        }
+                    });
+                });
+            </script>
+
 
             <!-- Choix du rôle (widget .tabs) -->
             <div class="text-center mb-4" style="position: relative;">
