@@ -26,6 +26,11 @@ class CoursesController extends AbstractController
                 ['date' => '2025-04-01', 'content' => 'Nouveau post sur l’algèbre.'],
                 ['date' => '2025-04-03', 'content' => 'Mise à jour du cours sur la géométrie.'],
             ],
+            'members' => [
+                ['lastName' => 'Dupont', 'firstName' => 'Jean', 'role' => 'Étudiant'],
+                ['lastName' => 'Martin', 'firstName' => 'Claire', 'role' => 'Professeur'],
+                ['lastName' => 'Durand', 'firstName' => 'Sophie', 'role' => 'Étudiant'],
+            ],
         ];
 
         return $this->render('ue/detail.html.twig', [
@@ -47,6 +52,10 @@ class CoursesController extends AbstractController
             ],
             'posts' => [
                 ['date' => '2025-03-25', 'content' => 'Correction d’un exercice en physique.'],
+            ],
+            'members' => [
+                ['lastName' => 'Lefèvre', 'firstName' => 'Paul', 'role' => 'Étudiant'],
+                ['lastName' => 'Bernard', 'firstName' => 'Marie', 'role' => 'Professeur'],
             ],
         ];
 
@@ -71,6 +80,11 @@ class CoursesController extends AbstractController
             'posts' => [
                 ['date' => '2025-03-20', 'content' => 'Introduction aux réactions chimiques.'],
             ],
+            'members' => [
+                ['lastName' => 'Moreau', 'firstName' => 'Julien', 'role' => 'Étudiant'],
+                ['lastName' => 'Roux', 'firstName' => 'Isabelle', 'role' => 'Professeur'],
+                ['lastName' => 'Giraud', 'firstName' => 'Lucie', 'role' => 'Étudiant'],
+            ],
         ];
 
         return $this->render('ue/detail.html.twig', [
@@ -94,6 +108,11 @@ class CoursesController extends AbstractController
             'posts' => [
                 ['date' => '2025-04-05', 'content' => 'Nouveau module sur les algorithmes.'],
             ],
+            'members' => [
+                ['lastName' => 'Petit', 'firstName' => 'Alice', 'role' => 'Étudiant'],
+                ['lastName' => 'Lemoine', 'firstName' => 'Marc', 'role' => 'Professeur'],
+                ['lastName' => 'Durand', 'firstName' => 'Thomas', 'role' => 'Étudiant'],
+            ],
         ];
 
         return $this->render('ue/detail.html.twig', [
@@ -115,6 +134,10 @@ class CoursesController extends AbstractController
             ],
             'posts' => [
                 ['date' => '2025-03-30', 'content' => 'Discussion sur l\'innovation technologique.'],
+            ],
+            'members' => [
+                ['lastName' => 'Mercier', 'firstName' => 'Sébastien', 'role' => 'Étudiant'],
+                ['lastName' => 'Morel', 'firstName' => 'Camille', 'role' => 'Professeur'],
             ],
         ];
 
@@ -138,6 +161,10 @@ class CoursesController extends AbstractController
             ],
             'posts' => [
                 ['date' => '2025-04-07', 'content' => 'Discussion sur la littérature anglaise.'],
+            ],
+            'members' => [
+                ['lastName' => 'Girard', 'firstName' => 'Emma', 'role' => 'Étudiant'],
+                ['lastName' => 'Blanc', 'firstName' => 'Antoine', 'role' => 'Professeur'],
             ],
         ];
 

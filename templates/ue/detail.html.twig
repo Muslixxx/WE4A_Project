@@ -4,7 +4,7 @@
 
 {% block body %}
     <div class="container mt-5">
-        <!-- Titre et description du cours -->
+        <!-- Section Titre et Description du cours -->
         <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
             <div class="card-body">
                 <h1 class="card-title">{{ course.name }}</h1>
@@ -12,39 +12,40 @@
             </div>
         </div>
 
-        <!-- Section Ressources -->
+        <!-- Section Contenu de l'UE (Ressources et Documents groupés) -->
         <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
             <div class="card-header" style="background: transparent; border-bottom: none;">
-                <h2>Ressources</h2>
+                <h2>Contenu de l'UE</h2>
             </div>
             <div class="card-body">
-                {% if course.resources|length > 0 %}
-                    <ul>
-                        {% for resource in course.resources %}
-                            <li><a href="{{ resource.link }}" target="_blank" style="color: #fff;">{{ resource.title }}</a></li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p>Aucune ressource disponible.</p>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Section Documents -->
-        <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
-            <div class="card-header" style="background: transparent; border-bottom: none;">
-                <h2>Documents</h2>
-            </div>
-            <div class="card-body">
-                {% if course.documents|length > 0 %}
-                    <ul>
-                        {% for document in course.documents %}
-                            <li><a href="{{ document.link }}" target="_blank" style="color: #fff;">{{ document.title }}</a></li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p>Aucun document disponible.</p>
-                {% endif %}
+                <div class="row">
+                    <!-- Colonne Ressources -->
+                    <div class="col-md-6">
+                        <h3>Ressources</h3>
+                        {% if course.resources|length > 0 %}
+                            <ul>
+                                {% for resource in course.resources %}
+                                    <li><a href="{{ resource.link }}" target="_blank" style="color: #fff;">{{ resource.title }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>Aucune ressource disponible.</p>
+                        {% endif %}
+                    </div>
+                    <!-- Colonne Documents -->
+                    <div class="col-md-6">
+                        <h3>Documents</h3>
+                        {% if course.documents|length > 0 %}
+                            <ul>
+                                {% for document in course.documents %}
+                                    <li><a href="{{ document.link }}" target="_blank" style="color: #fff;">{{ document.title }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>Aucun document disponible.</p>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -67,9 +68,51 @@
                 {% endif %}
             </div>
         </div>
-    </div>
 
-    <!-- Modal: Créer un post -->
+        <!-- Nouvelle Section Membres de l'UE avec filtre -->
+        <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
+            <div class="card-header" style="background: transparent; border-bottom: none;">
+                <h2>Membres de l'UE</h2>
+                <!-- Menu déroulant pour filtrer par rôle -->
+                <div class="mt-2">
+                    <label for="filterRole" style="margin-right: 8px;">Trier par :</label>
+                    <select id="filterRole" class="form-select" style="max-width: 200px; display: inline-block;">
+                        <option value="Tous" selected>Tous</option>
+                        <option value="Professeur">Professeur</option>
+                        <option value="Étudiant">Étudiant</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if course.members is defined and course.members|length > 0 %}
+                    <div class="table-responsive">
+                        <table id="membersTable" class="table text-white" style="border-collapse: collapse; width: 100%; background-color: #bbdefb; border: 2px solid #2196f3;">
+                            <thead style="background-color: #90caf9;">
+                            <tr>
+                                <th style="border: 1px solid #2196f3;">Nom</th>
+                                <th style="border: 1px solid #2196f3;">Prénom</th>
+                                <th style="border: 1px solid #2196f3;">Rôle</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for member in course.members %}
+                                <tr class="member-row" data-role="{{ member.role }}">
+                                    <td style="border: 1px solid #2196f3;">{{ member.lastName }}</td>
+                                    <td style="border: 1px solid #2196f3;">{{ member.firstName }}</td>
+                                    <td style="border: 1px solid #2196f3;">{{ member.role }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p>Aucun membre enregistré pour cette UE.</p>
+                {% endif %}
+            </div>
+        </div>
+
+
+        <!-- Modal: Créer un post -->
     <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" style="background-color: #f0f0f0;">
@@ -124,7 +167,6 @@
             </div>
         </div>
     </div>
-
 {% endblock %}
 
 {% block javascripts %}
@@ -173,4 +215,25 @@
             alert("Votre post a bien été soumis !");
         });
     </script>
+    <script>
+        document.getElementById('filterRole').addEventListener('change', function() {
+            const selectedRole = this.value;
+            const rows = document.querySelectorAll('#membersTable tbody .member-row');
+
+            rows.forEach(row => {
+                // Récupérer le rôle du membre à partir de l'attribut data-role
+                const role = row.getAttribute('data-role');
+                // Si "Tous" est sélectionné ou si le rôle correspond, afficher la ligne, sinon la masquer.
+                if (selectedRole === "Tous" || role === selectedRole) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    </script>
+
+
+
 {% endblock %}
+
