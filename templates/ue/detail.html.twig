@@ -5,7 +5,7 @@
 {% block body %}
     <div class="container mt-5">
         <!-- Titre et description du cours -->
-        <div class="card mb-4" style="background-color: #64b5f6 ; color: #fff;">
+        <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
             <div class="card-body">
                 <h1 class="card-title">{{ course.name }}</h1>
                 <p class="card-text">{{ course.description }}</p>
@@ -13,7 +13,7 @@
         </div>
 
         <!-- Section Ressources -->
-        <div class="card mb-4" style="background-color: #64b5f6 ; color: #fff;">
+        <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
             <div class="card-header" style="background: transparent; border-bottom: none;">
                 <h2>Ressources</h2>
             </div>
@@ -31,7 +31,7 @@
         </div>
 
         <!-- Section Documents -->
-        <div class="card mb-4" style="background-color: #64b5f6 ; color: #fff;">
+        <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
             <div class="card-header" style="background: transparent; border-bottom: none;">
                 <h2>Documents</h2>
             </div>
@@ -48,10 +48,11 @@
             </div>
         </div>
 
-        <!-- Section Posts -->
-        <div class="card mb-4" style="background-color: #64b5f6 ; color: #fff;">
-            <div class="card-header" style="background: transparent; border-bottom: none;">
+        <!-- Section Posts avec bouton "Créer un post" -->
+        <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
+            <div class="card-header d-flex justify-content-between align-items-center" style="background: transparent; border-bottom: none;">
                 <h2>Posts</h2>
+                <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#createPostModal">Créer un post</button>
             </div>
             <div class="card-body">
                 {% if course.posts|length > 0 %}
@@ -67,4 +68,67 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal: Créer un post -->
+    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="background-color: #f0f0f0;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createPostModalLabel">Créer un post</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="postForm">
+                        <div class="mb-3">
+                            <label for="postName" class="form-label">Nom</label>
+                            <input type="text" class="form-control" id="postName" placeholder="Votre nom">
+                        </div>
+                        <div class="mb-3">
+                            <label for="postClass" class="form-label">Classe</label>
+                            <input type="text" class="form-control" id="postClass" placeholder="Votre classe">
+                        </div>
+                        <div class="mb-3">
+                            <label for="postTitle" class="form-label">Titre du post</label>
+                            <input type="text" class="form-control" id="postTitle" placeholder="Titre du post">
+                        </div>
+                        <div class="mb-3">
+                            <label for="postContent" class="form-label">Contenu</label>
+                            <textarea class="form-control" id="postContent" rows="3" placeholder="Contenu du post"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary" id="submitPost">Poster</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Gestion du bouton "Poster" du modal
+        document.getElementById('submitPost').addEventListener('click', function() {
+            // Récupération des valeurs
+            const name = document.getElementById('postName').value;
+            const clazz = document.getElementById('postClass').value;
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postContent').value;
+
+            // Simulation de la soumission (affichage dans la console)
+            console.log("Post soumis:", { name, clazz, title, content });
+
+            // Réinitialiser le formulaire (optionnel)
+            document.getElementById('postForm').reset();
+
+            // Fermer le modal
+            const modalEl = document.getElementById('createPostModal');
+            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            modal.hide();
+
+        });
+    </script>
 {% endblock %}
