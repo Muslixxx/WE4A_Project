@@ -47,24 +47,42 @@
                        style="border-radius: 8px; background-color: #fff;"/>
             </div>
 
-            <!-- Zone de texte Mot de passe -->
+            <!-- Zone de texte Mot de passe avec bouton toggle -->
             <div class="mb-3">
                 <label for="password" style="color: #fff; font-weight: bold;">Mot de passe :</label>
-                <input type="password"
-                       id="password"
-                       placeholder="Entrez votre mot de passe..."
-                       class="form-control"
-                       style="border-radius: 8px; background-color: #fff;"/>
+                <div class="input-group">
+                    <input type="password"
+                           id="password"
+                           placeholder="Entrez votre mot de passe..."
+                           class="form-control"
+                           style="border-radius: 8px; background-color: #fff;"/>
+                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                        <!-- Icône d'œil -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8z"/>
+                            <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
-            <!-- Zone de texte Confirmation du mot de passe -->
+            <!-- Zone de texte Confirmation du mot de passe avec bouton toggle -->
             <div class="mb-3">
                 <label for="confirmPassword" style="color: #fff; font-weight: bold;">Confirmer le mot de passe :</label>
-                <input type="password"
-                       id="confirmPassword"
-                       placeholder="Confirmez votre mot de passe..."
-                       class="form-control"
-                       style="border-radius: 8px; background-color: #fff;"/>
+                <div class="input-group">
+                    <input type="password"
+                           id="confirmPassword"
+                           placeholder="Confirmez votre mot de passe..."
+                           class="form-control"
+                           style="border-radius: 8px; background-color: #fff;"/>
+                    <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
+                        <!-- Icône d'œil -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8z"/>
+                            <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <!-- Zone pour le choix du rôle et le bouton CONFIRMER sur la même ligne -->
@@ -79,7 +97,7 @@
                     border-radius: 180px;
                     min-width: 184px;
                 ">
-                    <!-- Radios et labels identiques à la page de connexion -->
+                    <!-- Radios et labels -->
                     <input type="radio" id="radio-1" name="tabs" checked>
                     <label for="radio-1">Élève</label>
 
@@ -118,6 +136,25 @@
 
             <!-- Zone d'affichage du message d'erreur -->
             <div id="error-container" style="text-align: center; margin-top: 15px; color: red;"></div>
+
+            <!-- Bouton Retour pour revenir à la page précédente -->
+            <div style="text-align: center; margin-top: 15px;">
+                <button type="button" onclick="window.history.back()" style="
+                    padding: 5px 20px;
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: 600;
+                    font-size: 18px;
+                    color: #ffffff;
+                    background: #6c757d;
+                    border: none;
+                    border-radius: 100px;
+                    box-shadow: 0 0 0.2em #6c757d;
+                    transition: 0.5s;
+                    cursor: pointer;
+                ">
+                    Retour
+                </button>
+            </div>
         </div>
     </div>
 
@@ -193,11 +230,27 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        // Initialisation avec turbo:load pour Symfony UX Turbo
         document.addEventListener('turbo:load', function() {
-            const emailInput = document.getElementById('email');
+            // Gestion du toggle pour le champ "Mot de passe"
+            const togglePassword = document.getElementById('togglePassword');
             const passwordInput = document.getElementById('password');
+            if (togglePassword && passwordInput) {
+                togglePassword.addEventListener('click', function() {
+                    passwordInput.type = (passwordInput.type === 'password') ? 'text' : 'password';
+                });
+            }
+
+            // Gestion du toggle pour le champ "Confirmer le mot de passe"
+            const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
             const confirmPasswordInput = document.getElementById('confirmPassword');
+            if (toggleConfirmPassword && confirmPasswordInput) {
+                toggleConfirmPassword.addEventListener('click', function() {
+                    confirmPasswordInput.type = (confirmPasswordInput.type === 'password') ? 'text' : 'password';
+                });
+            }
+
+            // Validation du bouton d'inscription
+            const emailInput = document.getElementById('email');
             const errorContainer = document.getElementById('error-container');
             const registerButton = document.getElementById('register-button');
 
