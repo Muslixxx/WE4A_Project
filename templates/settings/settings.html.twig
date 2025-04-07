@@ -101,33 +101,52 @@
                     </div>
                 </div>
 
-                <!-- Bouton Enregistrer -->
+                <!-- Bouton Enregistrer qui redirige vers le menu -->
+                <!-- Bouton Enregistrer qui redirige vers le menu après simulation d'enregistrement -->
                 <div style="text-align: right; margin-top: 2rem;">
-                    <button style="
-                        font-family: 'Poppins', sans-serif;
-                        font-weight: 600;
-                        font-size: 1rem;
-                        color: #ffffff;
-                        background: #007bff;
-                        border: 2px solid #007bff;
-                        border-radius: 100px;
-                        box-shadow: 0 0 0.2em #007bff;
-                        transition: 0.5s;
-                        padding: 0.5rem 1.5rem;
-                    ">
+                    <a id="saveButton" style="
+        display: inline-block;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        font-size: 1rem;
+        color: #ffffff;
+        background: #007bff;
+        border: 2px solid #007bff;
+        border-radius: 100px;
+        box-shadow: 0 0 0.2em #007bff;
+        transition: 0.5s;
+        padding: 0.5rem 1.5rem;
+        text-decoration: none;
+        cursor: pointer;
+    ">
                         Enregistrer
-                    </button>
+                    </a>
                 </div>
+
             </div>
         </div>
     </div>
 
     <style>
         /* Petit effet de survol sur le bouton */
-        button:hover {
+        a:hover {
             background: #0056b3 !important;
             box-shadow: 0 0 0.3em #0056b3 !important;
             transform: translateY(-1px);
         }
+
     </style>
 {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.getElementById('saveButton').addEventListener('click', function(e) {
+            e.preventDefault(); // Empêche le comportement par défaut
+            // Simuler le processus d'enregistrement
+            alert("Paramètres enregistrés !");
+            // Rediriger vers le menu
+            window.location.href = "{{ path('app_menu') }}";
+        });
+    </script>
+{% endblock %}
+
