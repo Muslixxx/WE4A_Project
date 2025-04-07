@@ -30,6 +30,17 @@ class CoursesController extends AbstractController
                 ['lastName' => 'Dupont', 'firstName' => 'Jean', 'role' => 'Étudiant'],
                 ['lastName' => 'Martin', 'firstName' => 'Claire', 'role' => 'Professeur'],
                 ['lastName' => 'Durand', 'firstName' => 'Sophie', 'role' => 'Étudiant'],
+                ['lastName' => 'Petit', 'firstName' => 'Lucas', 'role' => 'Étudiant'],
+                ['lastName' => 'Robert', 'firstName' => 'Emma', 'role' => 'Étudiant'],
+                ['lastName' => 'Lefevre', 'firstName' => 'Hugo', 'role' => 'Professeur'],
+                ['lastName' => 'Moreau', 'firstName' => 'Chloé', 'role' => 'Étudiant'],
+                ['lastName' => 'Simon', 'firstName' => 'Nathan', 'role' => 'Étudiant'],
+                ['lastName' => 'Baron', 'firstName' => 'Noémie', 'role' => 'Étudiant'],
+                ['lastName' => 'Rolland', 'firstName' => 'Evan', 'role' => 'Étudiant'],
+                ['lastName' => 'Texier', 'firstName' => 'Iris', 'role' => 'Professeur'],
+                ['lastName' => 'Guillaume', 'firstName' => 'Aaron', 'role' => 'Étudiant'],
+                ['lastName' => 'Bouchet', 'firstName' => 'Clara', 'role' => 'Étudiant'],
+                ['lastName' => 'Schmitt', 'firstName' => 'Valentin', 'role' => 'Professeur'],
             ],
         ];
 
@@ -54,8 +65,17 @@ class CoursesController extends AbstractController
                 ['date' => '2025-03-25', 'content' => 'Correction d’un exercice en physique.'],
             ],
             'members' => [
-                ['lastName' => 'Lefèvre', 'firstName' => 'Paul', 'role' => 'Étudiant'],
-                ['lastName' => 'Bernard', 'firstName' => 'Marie', 'role' => 'Professeur'],
+                ['lastName' => 'Laurent', 'firstName' => 'Camille', 'role' => 'Professeur'],
+                ['lastName' => 'Michel', 'firstName' => 'Léo', 'role' => 'Étudiant'],
+                ['lastName' => 'Garcia', 'firstName' => 'Inès', 'role' => 'Étudiant'],
+                ['lastName' => 'Bernard', 'firstName' => 'Tom', 'role' => 'Professeur'],
+                ['lastName' => 'Roux', 'firstName' => 'Manon', 'role' => 'Étudiant'],
+                ['lastName' => 'David', 'firstName' => 'Noah', 'role' => 'Professeur'],
+                ['lastName' => 'Bertrand', 'firstName' => 'Anna', 'role' => 'Étudiant'],
+                ['lastName' => 'Morel', 'firstName' => 'Clément', 'role' => 'Étudiant'],
+                ['lastName' => 'Philippe', 'firstName' => 'Mathéo', 'role' => 'Étudiant'],
+                ['lastName' => 'Renaud', 'firstName' => 'Lola', 'role' => 'Étudiant'],
+                ['lastName' => 'Michaud', 'firstName' => 'Axelle', 'role' => 'Professeur'],
             ],
         ];
 
@@ -81,9 +101,14 @@ class CoursesController extends AbstractController
                 ['date' => '2025-03-20', 'content' => 'Introduction aux réactions chimiques.'],
             ],
             'members' => [
-                ['lastName' => 'Moreau', 'firstName' => 'Julien', 'role' => 'Étudiant'],
-                ['lastName' => 'Roux', 'firstName' => 'Isabelle', 'role' => 'Professeur'],
-                ['lastName' => 'Giraud', 'firstName' => 'Lucie', 'role' => 'Étudiant'],
+                ['lastName' => 'Fournier', 'firstName' => 'Jade', 'role' => 'Étudiant'],
+                ['lastName' => 'Girard', 'firstName' => 'Ethan', 'role' => 'Professeur'],
+                ['lastName' => 'Bonnet', 'firstName' => 'Sarah', 'role' => 'Étudiant'],
+                ['lastName' => 'Lambert', 'firstName' => 'Arthur', 'role' => 'Étudiant'],
+                ['lastName' => 'Fontaine', 'firstName' => 'Mila', 'role' => 'Professeur'],
+                ['lastName' => 'Rousseau', 'firstName' => 'Axel', 'role' => 'Étudiant'],
+                ['lastName' => 'Blanc', 'firstName' => 'Zoé', 'role' => 'Étudiant'],
+                ['lastName' => 'Henry', 'firstName' => 'Mathis', 'role' => 'Professeur'],
             ],
         ];
 
@@ -109,9 +134,14 @@ class CoursesController extends AbstractController
                 ['date' => '2025-04-05', 'content' => 'Nouveau module sur les algorithmes.'],
             ],
             'members' => [
-                ['lastName' => 'Petit', 'firstName' => 'Alice', 'role' => 'Étudiant'],
-                ['lastName' => 'Lemoine', 'firstName' => 'Marc', 'role' => 'Professeur'],
-                ['lastName' => 'Durand', 'firstName' => 'Thomas', 'role' => 'Étudiant'],
+                ['lastName' => 'Lucas', 'firstName' => 'Léna', 'role' => 'Étudiant'],
+                ['lastName' => 'Masson', 'firstName' => 'Eliott', 'role' => 'Étudiant'],
+                ['lastName' => 'Barbier', 'firstName' => 'Julia', 'role' => 'Professeur'],
+                ['lastName' => 'Renard', 'firstName' => 'Louis', 'role' => 'Étudiant'],
+                ['lastName' => 'Garnier', 'firstName' => 'Élise', 'role' => 'Étudiant'],
+                ['lastName' => 'Chevalier', 'firstName' => 'Noé', 'role' => 'Professeur'],
+                ['lastName' => 'Faure', 'firstName' => 'Margaux', 'role' => 'Étudiant'],
+                ['lastName' => 'Lopez', 'firstName' => 'Adam', 'role' => 'Étudiant'],
             ],
         ];
 
@@ -136,8 +166,20 @@ class CoursesController extends AbstractController
                 ['date' => '2025-03-30', 'content' => 'Discussion sur l\'innovation technologique.'],
             ],
             'members' => [
-                ['lastName' => 'Mercier', 'firstName' => 'Sébastien', 'role' => 'Étudiant'],
-                ['lastName' => 'Morel', 'firstName' => 'Camille', 'role' => 'Professeur'],
+                ['lastName' => 'Marchand', 'firstName' => 'Nina', 'role' => 'Professeur'],
+                ['lastName' => 'Renaud', 'firstName' => 'Enzo', 'role' => 'Étudiant'],
+                ['lastName' => 'Morin', 'firstName' => 'Alice', 'role' => 'Étudiant'],
+                ['lastName' => 'Joly', 'firstName' => 'Timéo', 'role' => 'Professeur'],
+                ['lastName' => 'Gauthier', 'firstName' => 'Lola', 'role' => 'Étudiant'],
+                ['lastName' => 'Perrot', 'firstName' => 'Thomas', 'role' => 'Étudiant'],
+                ['lastName' => 'Lemoine', 'firstName' => 'Eva', 'role' => 'Professeur'],
+                ['lastName' => 'Perrin', 'firstName' => 'Gabriel', 'role' => 'Étudiant'],
+                ['lastName' => 'Henry', 'firstName' => 'Jade', 'role' => 'Étudiant'],
+                ['lastName' => 'Leroux', 'firstName' => 'Héloïse', 'role' => 'Professeur'],
+                ['lastName' => 'Lemoine', 'firstName' => 'Quentin', 'role' => 'Étudiant'],
+                ['lastName' => 'Hubert', 'firstName' => 'Salomé', 'role' => 'Étudiant'],
+                ['lastName' => 'Pascal', 'firstName' => 'Baptiste', 'role' => 'Professeur'],
+                ['lastName' => 'Devaux', 'firstName' => 'Louna', 'role' => 'Étudiant'],
             ],
         ];
 
@@ -163,8 +205,19 @@ class CoursesController extends AbstractController
                 ['date' => '2025-04-07', 'content' => 'Discussion sur la littérature anglaise.'],
             ],
             'members' => [
-                ['lastName' => 'Girard', 'firstName' => 'Emma', 'role' => 'Étudiant'],
-                ['lastName' => 'Blanc', 'firstName' => 'Antoine', 'role' => 'Professeur'],
+                ['lastName' => 'Benoit', 'firstName' => 'Jeanne', 'role' => 'Étudiant'],
+                ['lastName' => 'Marty', 'firstName' => 'Alexis', 'role' => 'Professeur'],
+                ['lastName' => 'Collet', 'firstName' => 'Naël', 'role' => 'Étudiant'],
+                ['lastName' => 'Meyer', 'firstName' => 'Léna', 'role' => 'Étudiant'],
+                ['lastName' => 'Leclerc', 'firstName' => 'Maël', 'role' => 'Professeur'],
+                ['lastName' => 'Da Silva', 'firstName' => 'Lou', 'role' => 'Étudiant'],
+                ['lastName' => 'Legrand', 'firstName' => 'Raphaël', 'role' => 'Étudiant'],
+                ['lastName' => 'Vidal', 'firstName' => 'Jasmine', 'role' => 'Professeur'],
+                ['lastName' => 'Lopez', 'firstName' => 'Maxime', 'role' => 'Étudiant'],
+                ['lastName' => 'Delattre', 'firstName' => 'Amandine', 'role' => 'Professeur'],
+                ['lastName' => 'Albert', 'firstName' => 'Maé', 'role' => 'Étudiant'],
+                ['lastName' => 'Charles', 'firstName' => 'Émile', 'role' => 'Étudiant'],
+                ['lastName' => 'Bourdon', 'firstName' => 'Nina', 'role' => 'Professeur'],
             ],
         ];
 
