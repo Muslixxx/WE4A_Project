@@ -1,34 +1,33 @@
 {% extends '../base.html.twig' %}
 
 {% block title %}Menu Principal Admin{% endblock %}
+
 {% block body %}
     <style>
-        /* Vos styles spécifiques aux cartes de cours sont ici */
-        .custom-card {
-            position: relative;
-            overflow: hidden;
+        /* Styles communs pour les cartes */
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin-bottom: 1rem;
         }
-        .custom-card .card-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .bg-blue-darker {
+            background-color: #001f3f !important;
         }
-        .custom-card:hover .card-overlay {
-            opacity: 1;
+        .list-group-item {
+            background-color: rgba(255,255,255,0.15);
+            border: none;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+        .list-group-item span {
+            /* Pour que le texte reste lisible */
+            color: #fff;
         }
     </style>
 
     <div class="container d-flex flex-column align-items-center" style="min-height: 100vh; gap: 1rem; padding: 2rem;">
         <!-- Section Bienvenue -->
-        <div class="card w-100 bg-blue-darker" style="border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+        <div class="card w-100 bg-blue-darker">
             <div class="card-body text-center">
                 <h1 class="card-title" style="font-family: 'Luckiest Guy', cursive; font-size: 2.2rem; color: #fff; text-shadow: 2px 2px 0 #0003;">
                     Menu Principal
@@ -39,71 +38,66 @@
             </div>
         </div>
 
-        <!-- Section des cours -->
-        {% set courses = [
-            { 'name': 'Mathématiques', 'description': 'Analyse, algèbre et géométrie avancée.' },
-            { 'name': 'Physique', 'description': 'Mécanique, thermodynamique et électromagnétisme.' },
-            { 'name': 'Chimie', 'description': 'Chimie organique, inorganique et analytique.' },
-            { 'name': 'Informatique', 'description': 'Programmation, algorithmique et structures de données.' },
-            { 'name': 'Ingénierie', 'description': 'Conception, innovation et gestion de projets.' },
-            { 'name': 'Anglais', 'description': 'Grammaire, conversation et littérature.' }
+        <!-- Section Liste des Utilisateurs -->
+        {% set users = [
+            { 'name': 'Alice', 'email': 'alice@example.com' },
+            { 'name': 'Bob', 'email': 'bob@example.com' },
+            { 'name': 'Charlie', 'email': 'charlie@example.com' }
         ] %}
-        {% set course_routes = {
-            'Mathématiques': 'cours_math',
-            'Physique': 'cours_physique',
-            'Chimie': 'cours_chimie',
-            'Informatique': 'cours_info',
-            'Ingénierie': 'cours_inge',
-            'Anglais': 'cours_anglais'
-        } %}
-
-        <div class="card w-100 bg-blue-darker" style="border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+        <div class="card w-100 bg-blue-darker">
             <div class="card-header text-center" style="background: transparent; border-bottom: none;">
-                <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Cours</h2>
+                <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Liste des Utilisateurs</h2>
             </div>
             <div class="card-body">
-                <div class="row justify-content-center">
-                    {% for course in courses %}
-                        <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex justify-content-center">
-                            <div class="card custom-card" style="background-color: rgba(255,255,255,0.15); border: none; border-radius: 10px; width: 100%;">
-                                <div class="card-content p-3 text-center">
-                                    <h3 class="card-title" style="font-family: 'Luckiest Guy', cursive; color: #fff;">{{ course.name }}</h3>
-                                    <p class="card-text" style="font-family: 'Comic Neue', cursive; color: #fff;">{{ course.description }}</p>
-                                </div>
-                                <div class="card-overlay">
-                                    <a href="{{ path(course_routes[course.name]) }}" class="btn btn-primary">
-                                        Accéder au cours
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                <ul class="list-group">
+                    {% for user in users %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><strong>{{ user.name }}</strong> - {{ user.email }}</span>
+                            <a href="#" class="btn btn-danger btn-sm">Modifier</a>
+                        </li>
                     {% endfor %}
-                </div>
+                </ul>
+            </div>
+        </div>
 
-                <!-- Boutons supplémentaires pour l'administration -->
-                <div class="text-center mt-3">
-                    <a class="btn btn-secondary" href="#">Modifier les UEs</a>
-                    <a class="btn btn-secondary" href="#">Modifier les membres</a>
-                </div>
+        <!-- Section Liste des UE -->
+        {% set ueList = [
+            { 'name': 'UE Mathématiques', 'description': 'Calcul avancé et algèbre linéaire.' },
+            { 'name': 'UE Informatique', 'description': 'Programmation web et algorithmique.' },
+            { 'name': 'UE Physique', 'description': 'Mécanique et thermodynamique.' }
+        ] %}
+        <div class="card w-100 bg-blue-darker">
+            <div class="card-header text-center" style="background: transparent; border-bottom: none;">
+                <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Liste des UE</h2>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for ue in ueList %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><strong>{{ ue.name }}</strong>: {{ ue.description }}</span>
+                            <a href="#" class="btn btn-danger btn-sm">Modifier</a>
+                        </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
 
         <!-- Section Activités récentes -->
-        <div class="card w-100 bg-blue-darker" style="border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+        {% set posts = [
+            { 'date': '2025-04-01', 'content': 'Mise à jour du cours de Mathématiques.' },
+            { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
+            { 'date': '2025-03-25', 'content': 'Correction d\'un exercice dans le cours de Physique.' }
+        ] %}
+        <div class="card w-100 bg-blue-darker">
             <div class="card-header text-center" style="background: transparent; border-bottom: none;">
                 <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Activités récentes</h2>
             </div>
             <div class="card-body">
                 <div class="list-group">
-                    {% set posts = [
-                        { 'date': '2025-04-01', 'content': 'Mise à jour du cours de Mathématiques.' },
-                        { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
-                        { 'date': '2025-03-25', 'content': 'Correction d\'un exercice dans le cours de Physique.' }
-                    ] %}
                     {% for post in posts %}
-                        <div class="list-group-item" style="background-color: rgba(255,255,255,0.15); border: none; margin-bottom: 0.5rem;">
+                        <div class="list-group-item" style="background-color: rgba(255,255,255,0.15); border: none; margin-bottom: 0.5rem; color: #fff;">
                             <small class="text-muted">{{ post.date }}</small>
-                            <p class="mb-0" style="color: #fff;">{{ post.content }}</p>
+                            <p class="mb-0">{{ post.content }}</p>
                         </div>
                     {% endfor %}
                 </div>
@@ -112,7 +106,5 @@
                 </div>
             </div>
         </div>
-
-        {# Vous pouvez conserver ou retirer la section Administration si vous souhaitez uniquement afficher les boutons dans la section des cours #}
     </div>
 {% endblock %}
