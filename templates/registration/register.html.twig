@@ -5,148 +5,211 @@
 {% set show_navbar = false %}
 
 {% block body %}
-    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh; margin-top: -50px;">
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 92vh;">
         <div class="p-4" style="
         background-color: #42a5f5;
-        border-radius: 15px;
-        max-width: 450px;
+        border-radius: 20px;
         width: 100%;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        max-width: 720px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
     ">
-            <h1 style="
+            <h2 style="
             font-family: 'Luckiest Guy', cursive;
-            font-size: 2.2rem;
+            font-size: 2rem;
             color: #fff;
             text-align: center;
-            text-shadow: 2px 2px 0 #0003;
-            margin-bottom: 1rem;
+            text-shadow: 1px 1px 0 #0003;
         ">
-                Inscription à Moodneuille
-            </h1>
+                Moodneuille - Inscription
+            </h2>
 
             <p style="
             text-align: center;
             color: #fff;
             font-family: 'Comic Neue', cursive;
-            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            margin-bottom: 1.8rem;
         ">
-                Remplissez les champs pour vous inscrire.
+                Remplissez tous les champs pour créer votre compte.
             </p>
 
-            <form method="POST" action="{{ path('app_register') }}">
-                <div class="mb-3">
-                    <label for="email" style="color: #fff; font-weight: bold;">Email :</label>
-                    <input type="email" id="email" name="email" placeholder="Entrez votre email..." class="form-control"
-                           style="border-radius: 8px; background-color: #fff;" required />
-                </div>
+            <form method="POST" action="{{ path('app_register') }}" id="register-form">
+                <div class="row gy-3 gx-4">
+                    {% set labelStyle = 'color: #fff; font-weight: bold; font-size: 0.85rem;' %}
+                    {% set inputStyle = 'border-radius: 8px; background-color: #fff;' %}
 
-                <div class="mb-3">
-                    <label for="password" style="color: #fff; font-weight: bold;">Mot de passe :</label>
-                    <div class="input-group">
-                        <input type="password" id="password" name="password" placeholder="Entrez votre mot de passe..."
-                               class="form-control" style="border-radius: 8px; background-color: #fff;" required />
-                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-eye" viewBox="0 0 16 16">
-                                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8z"/>
-                                <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                            </svg>
-                        </button>
+                    <!-- Prénom / Nom -->
+                    <div class="col-md-6">
+                        <label for="first_name" style="{{ labelStyle }}">Prénom :</label>
+                        <input type="text" id="first_name" name="first_name" class="form-control" placeholder="Prénom" style="{{ inputStyle }}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="last_name" style="{{ labelStyle }}">Nom :</label>
+                        <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Nom" style="{{ inputStyle }}" required>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-md-12">
+                        <label for="email" style="{{ labelStyle }}">Email :</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="nom@domaine.com" style="{{ inputStyle }}" required>
+                    </div>
+
+                    <!-- Téléphone -->
+                    <div class="col-md-6">
+                        <label for="phone_number" style="{{ labelStyle }}">Téléphone :</label>
+                        <input type="tel"
+                               id="phone_number"
+                               name="phone_number"
+                               class="form-control"
+                               placeholder="0612345678"
+                               style="{{ inputStyle }}"
+                               maxlength="10"
+                               pattern="\d{10}"
+                               inputmode="numeric"
+                               required>
+                    </div>
+
+                    <!-- Date de naissance -->
+                    <div class="col-md-3">
+                        <label for="birth_date" style="{{ labelStyle }}">Date de naissance :</label>
+                        <input type="date" id="birth_date" name="birth_date" class="form-control" style="{{ inputStyle }}" required>
+                    </div>
+
+                    <!-- Rôle -->
+                    <div class="col-md-3">
+                        <label style="{{ labelStyle }}">Rôle :</label>
+                        <div class="tabs" style="background-color: #fff; border-radius: 999px; padding: 0.2rem; display: flex; position: relative;">
+                            <input type="radio" id="radio-1" name="role" value="eleve" checked>
+                            <label for="radio-1">Élève</label>
+                            <input type="radio" id="radio-2" name="role" value="prof">
+                            <label for="radio-2">Prof</label>
+                            <input type="radio" id="radio-3" name="role" value="admin">
+                            <label for="radio-3">Admin</label>
+                            <span id="glider"></span>
+                        </div>
+                    </div>
+
+                    <!-- Mot de passe / Confirmation -->
+                    <div class="col-md-6">
+                        <label for="password" style="{{ labelStyle }}">Mot de passe :</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Mot de passe" style="{{ inputStyle }}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="confirm_password" style="{{ labelStyle }}">Confirmer :</label>
+                        <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Confirmer mot de passe" style="{{ inputStyle }}" required>
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <label for="confirmPassword" style="color: #fff; font-weight: bold;">Confirmer le mot de passe :</label>
-                    <div class="input-group">
-                        <input type="password" id="confirmPassword" name="confirm_password"
-                               placeholder="Confirmez votre mot de passe..." class="form-control"
-                               style="border-radius: 8px; background-color: #fff;" required />
-                        <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-eye" viewBox="0 0 16 16">
-                                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8z"/>
-                                <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
+                <div id="error-container" style="text-align: center; color: red; font-size: 0.9rem;" class="mt-3"></div>
 
-                <div class="mb-3">
-                    <label for="first_name" style="color: #fff; font-weight: bold;">Prénom :</label>
-                    <input type="text" id="first_name" name="first_name" class="form-control"
-                           placeholder="Entrez votre prénom..." style="border-radius: 8px; background-color: #fff;" required />
-                </div>
+                <!-- Boutons -->
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <button type="button" onclick="window.history.back()" style="
+                    padding: 8px 24px;
+                    font-size: 0.9rem;
+                    color: #fff;
+                    background: #6c757d;
+                    border: none;
+                    border-radius: 999px;
+                    box-shadow: 0 0 0.2em #6c757d;
+                    cursor: pointer;
+                ">
+                        Retour
+                    </button>
 
-                <div class="mb-3">
-                    <label for="last_name" style="color: #fff; font-weight: bold;">Nom :</label>
-                    <input type="text" id="last_name" name="last_name" class="form-control"
-                           placeholder="Entrez votre nom..." style="border-radius: 8px; background-color: #fff;" required />
-                </div>
-
-                <div class="mb-3">
-                    <label for="phone_number" style="color: #fff; font-weight: bold;">Téléphone :</label>
-                    <input type="tel" id="phone_number" name="phone_number" class="form-control"
-                           placeholder="Ex: 0612345678" style="border-radius: 8px; background-color: #fff;" required />
-                </div>
-
-                <div class="mb-3">
-                    <label for="birth_date" style="color: #fff; font-weight: bold;">Date de naissance :</label>
-                    <input type="date" id="birth_date" name="birth_date" class="form-control"
-                           style="border-radius: 8px; background-color: #fff;" required />
-                </div>
-
-                <div class="mb-3">
-                    <label style="color: #fff; font-weight: bold;">Rôle :</label><br/>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="role" id="radio-1" value="eleve" checked>
-                        <label class="form-check-label text-white" for="radio-1">Élève</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="role" id="radio-2" value="prof">
-                        <label class="form-check-label text-white" for="radio-2">Prof</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="role" id="radio-3" value="admin">
-                        <label class="form-check-label text-white" for="radio-3">Admin</label>
-                    </div>
-                </div>
-
-                <div class="text-center">
-                    <button type="submit" id="register-button" class="btn btn-light btn-lg mt-3 px-5">
+                    <button id="register-button" type="submit" style="
+                    padding: 8px 24px;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    font-family: 'Poppins', sans-serif;
+                    color: #fff;
+                    background: #007bff;
+                    border: none;
+                    border-radius: 999px;
+                    box-shadow: 0 0 0.2em #007bff;
+                    transition: 0.3s;
+                ">
                         CONFIRMER
                     </button>
                 </div>
             </form>
-
-            <div id="error-container" style="text-align: center; margin-top: 15px; color: red;"></div>
-
-            <div style="text-align: center; margin-top: 15px;">
-                <button type="button" onclick="window.history.back()" class="btn btn-secondary">Retour</button>
-            </div>
         </div>
     </div>
+
+    <style>
+        .tabs input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .tabs label {
+            flex: 1;
+            text-align: center;
+            padding: 6px 0;
+            font-size: 0.75rem;
+            color: #000;
+            font-weight: 500;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        #glider {
+            position: absolute;
+            width: 33.3%;
+            height: 100%;
+            background-color: rgba(255,255,255,0.5);
+            border-radius: 999px;
+            top: 0;
+            left: 0;
+            transition: transform 0.25s ease-out;
+            z-index: 0;
+        }
+
+        #radio-1:checked ~ #glider { transform: translateX(0%); }
+        #radio-2:checked ~ #glider { transform: translateX(100%); }
+        #radio-3:checked ~ #glider { transform: translateX(200%); }
+
+        #radio-1:checked ~ label[for="radio-1"],
+        #radio-2:checked ~ label[for="radio-2"],
+        #radio-3:checked ~ label[for="radio-3"] {
+            color: #185ee0;
+            font-weight: 700;
+        }
+
+        #register-button:hover {
+            background: #0056b3;
+            box-shadow: 0 0 0.3em #0056b3;
+        }
+    </style>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script>
-        document.addEventListener('turbo:load', function () {
-            const togglePassword = document.getElementById('togglePassword');
-            const passwordInput = document.getElementById('password');
-            const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
-            const confirmPasswordInput = document.getElementById('confirmPassword');
+        document.addEventListener('turbo:load', () => {
+            const form = document.getElementById('register-form');
+            const password = document.getElementById('password');
+            const confirm = document.getElementById('confirm_password');
+            const email = document.getElementById('email');
+            const errorContainer = document.getElementById('error-container');
 
-            if (togglePassword && passwordInput) {
-                togglePassword.addEventListener('click', function () {
-                    passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
-                });
-            }
+            form.addEventListener('submit', function (e) {
+                errorContainer.textContent = "";
 
-            if (toggleConfirmPassword && confirmPasswordInput) {
-                toggleConfirmPassword.addEventListener('click', function () {
-                    confirmPasswordInput.type = confirmPasswordInput.type === 'password' ? 'text' : 'password';
-                });
-            }
+                const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+                if (!emailRegex.test(email.value)) {
+                    e.preventDefault();
+                    errorContainer.textContent = "L'adresse email doit être au format nom@domaine.com.";
+                    return;
+                }
+
+                if (password.value !== confirm.value) {
+                    e.preventDefault();
+                    errorContainer.textContent = "Les mots de passe ne correspondent pas.";
+                }
+            });
         });
     </script>
 {% endblock %}
