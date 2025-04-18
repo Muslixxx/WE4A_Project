@@ -15,32 +15,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $em): Response
     {
-        $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        if ($request->isMethod('POST')) {
+            $user = new User();
+            $user->setEmail($request->request->get('email'));
+            $user->setRole($request->request->get('role')); // Assure-toi que le champ existe
+            $hashedPassword = $passwordHasher->hashPassword($user, $request->request->get('password'));
+            $user->setPassword($hashedPassword);
+            $em->persist($user);
+            $em->flush();
 
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Encodage du mot de passe
-            $user->setPassword(
-                $passwordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
-
-            // Sauvegarde de l'utilisateur en base
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            // Optionnel : connecter automatiquement l'utilisateur ou rediriger vers la page d'accueil
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form->createView(),
-        ]);
+        return $this->render('registration/register.html.twig');
     }
+
 }
