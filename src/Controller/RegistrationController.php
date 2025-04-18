@@ -14,22 +14,34 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RegistrationController extends AbstractController
 {
-    #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $em): Response
+    #[Route('/register', name: 'app_register', methods: ['GET', 'POST'])]
+    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
     {
         if ($request->isMethod('POST')) {
             $user = new User();
-            $user->setEmail($request->request->get('email'));
-            $user->setRole($request->request->get('role')); // Assure-toi que le champ existe
-            $hashedPassword = $passwordHasher->hashPassword($user, $request->request->get('password'));
-            $user->setPassword($hashedPassword);
-            $em->persist($user);
-            $em->flush();
 
-            return $this->redirectToRoute('app_login');
+            $user->setEmail($request->request->get('email'));
+            $user->setFirstName($request->request->get('first_name'));
+            $user->setLastName($request->request->get('last_name'));
+            $user->setPhoneNumber($request->request->get('phone_number'));
+            $user->setBirthDate(new \DateTime($request->request->get('birth_date')));
+            $user->setDateCreation(new \DateTime());
+
+            $role = $request->request->get('role');
+            $user->setRole($role); // Attention : vérifie que ce champ est bien string(5)
+
+            $password = $passwordHasher->hashPassword($user, $request->request->get('password'));
+            $user->setPassword($password);
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_login'); // ou app_home
         }
 
         return $this->render('registration/register.html.twig');
     }
+
+
 
 }
