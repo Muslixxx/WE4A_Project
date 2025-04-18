@@ -136,15 +136,25 @@
 
     </style>
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script>
         document.getElementById('saveButton').addEventListener('click', function(e) {
             e.preventDefault(); // Empêche le comportement par défaut
-            // Simuler le processus d'enregistrement
             alert("Paramètres enregistrés !");
-            // Rediriger vers le menu
-            window.location.href = "{{ path('app_menu') }}";
+
+            // Récupère le rôle injecté depuis Symfony
+            const role = "{{ app.user.role }}"; // si tu utilises getRole()
+
+            // Redirige selon le rôle
+            if (role === 'ROLE_ADMIN') {
+                window.location.href = "{{ path('app_admin') }}";
+            } else if (role === 'ROLE_PROF' || role === 'ROLE_ETUDIANT') {
+                window.location.href = "{{ path('app_menu') }}";
+            } else {
+                window.location.href = "{{ path('app_login') }}"; // sécurité fallback
+            }
         });
     </script>
 {% endblock %}
