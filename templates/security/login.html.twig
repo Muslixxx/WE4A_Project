@@ -5,251 +5,64 @@
 {% set show_navbar = false %}
 
 {% block body %}
-    <!-- Container général pour centrer verticalement/horizontalement, déplacé vers le haut -->
     <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh; margin-top: -50px;">
         <div class="p-4" style="
-            background-color: #42a5f5;
-            border-radius: 15px;
-            max-width: 450px;
-            width: 100%;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        ">
-            <!-- Titre funky -->
+        background-color: #42a5f5;
+        border-radius: 15px;
+        max-width: 450px;
+        width: 100%;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    ">
             <h1 style="
-                font-family: 'Luckiest Guy', cursive;
-                font-size: 2.2rem;
-                color: #fff;
-                text-align: center;
-                text-shadow: 2px 2px 0 #0003;
-                margin-bottom: 1rem;
-            ">
+            font-family: 'Luckiest Guy', cursive;
+            font-size: 2.2rem;
+            color: #fff;
+            text-align: center;
+            text-shadow: 2px 2px 0 #0003;
+            margin-bottom: 1rem;
+        ">
                 Connexion à Moodneuille
             </h1>
 
-            <!-- Sous-texte -->
-            <p style="
-                text-align: center;
-                color: #fff;
-                font-family: 'Comic Neue', cursive;
-                margin-bottom: 2rem;
-            ">
+            <p style="text-align: center; color: #fff; font-family: 'Comic Neue', cursive; margin-bottom: 2rem;">
                 Veuillez entrer vos informations pour accéder à la plateforme.
             </p>
 
-            <!-- Champ Nom d'utilisateur -->
-            <div class="mb-3">
-                <label for="username" style="color: #fff; font-weight: bold;">Nom d'utilisateur :</label>
-                <input type="text"
-                       id="username"
-                       placeholder="Entrez votre nom..."
-                       class="form-control"
-                       style="border-radius: 8px; background-color: #fff;"/>
-            </div>
+            {% if error %}
+                <div class="alert alert-danger text-center">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
 
-            <!-- Champ Mot de passe avec bouton toggle -->
-            <div class="mb-3">
-                <label for="password" style="color: #fff; font-weight: bold;">Mot de passe :</label>
-                <div class="input-group">
-                    <input type="password"
-                           id="password"
-                           placeholder="Entrez votre mot de passe..."
-                           class="form-control"
-                           style="border-radius: 8px; background-color: #fff;"/>
-                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                        <!-- Icône d'œil (Bootstrap Icons) -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
-                            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8z"/>
-                            <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                        </svg>
+            <form method="post" action="{{ path('app_login') }}">
+                <input type="hidden" name="_csrf_token"
+                       value="{{ csrf_token('authenticate') }}">
+                <div class="mb-3">
+                    <label for="username" style="color: #fff; font-weight: bold;">Nom d'utilisateur :</label>
+                    <input type="text" id="username" name="_username" value="{{ last_username }}"
+                           placeholder="Entrez votre nom..." class="form-control"
+                           style="border-radius: 8px; background-color: #fff;" required autofocus/>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" style="color: #fff; font-weight: bold;">Mot de passe :</label>
+                    <input type="password" id="password" name="_password"
+                           placeholder="Entrez votre mot de passe..." class="form-control"
+                           style="border-radius: 8px; background-color: #fff;" required/>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-dark" style="width: 100%; border-radius: 100px; font-weight: bold;">
+                        CONNEXION
                     </button>
                 </div>
-            </div>
+            </form>
 
-            <!-- Choix du rôle (widget .tabs) -->
-            <div class="text-center mb-4" style="position: relative;">
-                <!-- Conteneur .tabs avec hauteur réduite -->
-                <div class="tabs" style="
-                    display: inline-flex;
-                    position: relative;
-                    background-color: #fff;
-                    box-shadow: 0 0 1px rgba(24,94,224,0.15), 0 6px 12px rgba(24,94,224,0.15);
-                    padding: 0.2rem;
-                    border-radius: 180px;
-                    min-width: 184px;
-                ">
-                    <!-- Radio et labels -->
-                    <input type="radio" id="radio-1" name="tabs" checked>
-                    <label for="radio-1">Élève</label>
-
-                    <input type="radio" id="radio-2" name="tabs">
-                    <label for="radio-2">Prof</label>
-
-                    <input type="radio" id="radio-3" name="tabs">
-                    <label for="radio-3">Admin</label>
-
-                    <!-- Glider -->
-                    <span id="glider"></span>
-                </div>
-            </div>
-
-            <!-- Bouton de Connexion -->
-            <div class="text-center">
-                <div class="btn-conteiner" style="display: flex; justify-content: center;">
-                    <a id="login-button" class="btn-content" href="{{ path('app_menu') }}" style="
-                        display: flex;
-                        align-items: center;
-                        padding: 5px 20px;
-                        text-decoration: none;
-                        font-family: 'Poppins', sans-serif;
-                        font-weight: 600;
-                        font-size: 24px;
-                        color: #ffffff;
-                        background: #001f3f;
-                        border-radius: 100px;
-                        box-shadow: 0 0 0.2em #001f3f;
-                        transition: 0.5s;
-                    ">
-                        <span class="btn-title">CONNEXION</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Zone d'affichage du message d'erreur -->
-            <div id="error-container" style="text-align: center; margin-top: 15px; color: red;"></div>
-
-            <!-- Bouton d'Inscription -->
             <div class="text-center mt-3">
-                <div class="btn-conteiner" style="display: flex; justify-content: center;">
-                    <a class="btn-content" href="{{ path('app_register') }}" style="
-                        display: flex;
-                        align-items: center;
-                        padding: 5px 20px;
-                        text-decoration: none;
-                        font-family: 'Poppins', sans-serif;
-                        font-weight: 600;
-                        font-size: 24px;
-                        color: #ffffff;
-                        background: #007bff;
-                        border-radius: 100px;
-                        box-shadow: 0 0 0.2em #007bff;
-                        transition: 0.5s;
-                    ">
-                        <span class="btn-title">INSCRIPTION</span>
-                    </a>
-                </div>
+                <a class="btn btn-outline-light" href="{{ path('app_register') }}" style="border-radius: 100px;">
+                    INSCRIPTION
+                </a>
             </div>
         </div>
     </div>
-
-    <style>
-        /* Masquer les radios */
-        .tabs input[type="radio"] {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        /* Style des labels */
-        .tabs label {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 40px;
-            font-size: 0.8rem;
-            color: #000;
-            font-weight: 500;
-            border-radius: 99px;
-            cursor: pointer;
-            margin: 0 2px;
-            position: relative;
-            z-index: 1;
-            transition: color 0.25s ease-out;
-        }
-
-        /* Glider par défaut, largeur = 50px + 2px*2 de marge */
-        #glider {
-            position: absolute;
-            width: 54px;
-            height: 40px;
-            background-color: rgba(255,255,255,0.7);
-            border-radius: 99px;
-            top: 50%;
-            left: 0;
-            transform: translateX(0) translateY(-50%);
-            z-index: 0;
-            transition: transform 0.25s ease-out;
-        }
-
-        /* Positionnement du glider en fonction du radio sélectionné */
-        #radio-1:checked ~ #glider {
-            transform: translateX(0) translateY(-50%);
-        }
-        #radio-2:checked ~ #glider {
-            transform: translateX(54px) translateY(-50%);
-        }
-        #radio-3:checked ~ #glider {
-            transform: translateX(108px) translateY(-50%);
-        }
-
-        /* Optionnel : changer le style du label actif */
-        #radio-1:checked ~ label[for="radio-1"],
-        #radio-2:checked ~ label[for="radio-2"],
-        #radio-3:checked ~ label[for="radio-3"] {
-            color: #185ee0;
-            font-weight: 700;
-        }
-    </style>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        document.addEventListener('turbo:load', function() {
-            // Toggle du mot de passe
-            const togglePassword = document.getElementById('togglePassword');
-            const passwordInput = document.getElementById('password');
-            if (togglePassword && passwordInput) {
-                togglePassword.addEventListener('click', function() {
-                    passwordInput.type = (passwordInput.type === 'password') ? 'text' : 'password';
-                });
-            }
-
-            // Validation du bouton de connexion
-            const loginButton = document.getElementById('login-button');
-            const usernameInput = document.getElementById('username');
-            const errorContainer = document.getElementById('error-container');
-
-            if (loginButton) {
-                loginButton.addEventListener('click', function(event) {
-                    if (usernameInput.value.trim() === "" || passwordInput.value.trim() === "") {
-                        event.preventDefault();
-                        errorContainer.textContent = "Veuillez remplir tous les champs.";
-                    } else {
-                        errorContainer.textContent = "";
-                    }
-                });
-            }
-
-            // Routes de redirection
-            const defaultRoute = "{{ path('app_menu') }}";
-            const adminRoute = "{{ path('app_admin') }}";
-            const radio1 = document.getElementById('radio-1');
-            const radio2 = document.getElementById('radio-2');
-            const radio3 = document.getElementById('radio-3');
-
-            const updateLoginButtonRoute = function() {
-                loginButton.href = radio3.checked ? adminRoute : defaultRoute;
-            };
-
-            // Appel initial pour mettre à jour le lien dès le chargement
-            updateLoginButtonRoute();
-
-            // Écouteurs sur le changement des radios
-            radio1.addEventListener('change', updateLoginButtonRoute);
-            radio2.addEventListener('change', updateLoginButtonRoute);
-            radio3.addEventListener('change', updateLoginButtonRoute);
-        });
-    </script>
 {% endblock %}

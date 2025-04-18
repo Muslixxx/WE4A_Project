@@ -8,19 +8,17 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-
-
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User implements PasswordAuthenticatedUserInterface
-
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
@@ -42,7 +40,7 @@ class User implements PasswordAuthenticatedUserInterface
     private ?\DateTimeInterface $dateCreation = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $role = null;
+    private ?string $role = null; // rôle unique : ROLE_ADMIN, ROLE_PROF, etc.
 
     /**
      * @var Collection<int, Post>
@@ -60,6 +58,7 @@ class User implements PasswordAuthenticatedUserInterface
     {
         $this->posts = new ArrayCollection();
         $this->courses = new ArrayCollection();
+        $this->dateCreation = new \DateTime();
     }
 
     public function getId(): ?int
@@ -70,7 +69,6 @@ class User implements PasswordAuthenticatedUserInterface
     public function setId(int $id): static
     {
         $this->id = $id;
-
         return $this;
     }
 
@@ -82,7 +80,6 @@ class User implements PasswordAuthenticatedUserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -94,7 +91,6 @@ class User implements PasswordAuthenticatedUserInterface
     public function setPassword(string $password): static
     {
         $this->password = $password;
-
         return $this;
     }
 
@@ -106,7 +102,6 @@ class User implements PasswordAuthenticatedUserInterface
     public function setFirstName(string $firstName): static
     {
         $this->firstName = $firstName;
-
         return $this;
     }
 
@@ -118,7 +113,6 @@ class User implements PasswordAuthenticatedUserInterface
     public function setLastName(string $lastName): static
     {
         $this->lastName = $lastName;
-
         return $this;
     }
 
@@ -130,7 +124,6 @@ class User implements PasswordAuthenticatedUserInterface
     public function setPhoneNumber(string $phoneNumber): static
     {
         $this->phoneNumber = $phoneNumber;
-
         return $this;
     }
 
@@ -142,7 +135,6 @@ class User implements PasswordAuthenticatedUserInterface
     public function setBirthDate(\DateTimeInterface $birthDate): static
     {
         $this->birthDate = $birthDate;
-
         return $this;
     }
 
@@ -154,7 +146,6 @@ class User implements PasswordAuthenticatedUserInterface
     public function setDateCreation(\DateTimeInterface $dateCreation): static
     {
         $this->dateCreation = $dateCreation;
-
         return $this;
     }
 
@@ -166,8 +157,30 @@ class User implements PasswordAuthenticatedUserInterface
     public function setRole(string $role): static
     {
         $this->role = $role;
-
         return $this;
+    }
+
+    /**
+     * Obligatoire pour le système de sécurité Symfony
+     */
+    public function getRoles(): array
+    {
+        return [$this->role ?? 'ROLE_USER'];
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // Si tu stockes des données temporaires sensibles : $this->plainPassword = null;
+    }
+
+    public function getSalt(): ?string
+    {
+        return null;
     }
 
     /**
@@ -191,7 +204,6 @@ class User implements PasswordAuthenticatedUserInterface
     public function removePost(Post $post): static
     {
         if ($this->posts->removeElement($post)) {
-            // set the owning side to null (unless already changed)
             if ($post->getUserId() === $this) {
                 $post->setUserId(null);
             }
@@ -220,7 +232,6 @@ class User implements PasswordAuthenticatedUserInterface
     public function removeCourse(Course $course): static
     {
         $this->courses->removeElement($course);
-
         return $this;
     }
 }
