@@ -26,13 +26,15 @@
                 </h1>
                 <p style="color: #fff;">
                     Bienvenue sur Moodneuille, vous êtes connecté en tant que
-                    {% if app.session.get('role') == 'admin' %}
+                    {% if app.user.role == 'ROLE_ADMIN' %}
                         administrateur.
-                    {% elseif app.session.get('role') == 'prof' %}
+                    {% elseif app.user.role == 'ROLE_PROF' %}
                         professeur.
                     {% else %}
                         élève.
                     {% endif %}
+                </p>
+
                 </p>
             </div>
         </div>

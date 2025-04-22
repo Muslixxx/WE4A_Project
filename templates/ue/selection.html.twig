@@ -11,7 +11,7 @@
             </h1>
             <p class="text-center text-white">
                 {% if app.user.role == 'ROLE_PROF' %}
-                    Vous pouvez choisir jusqu'à 3 UE parmi celles ayant moins de 3 élèves inscrits.
+                    Vous pouvez choisir jusqu'à 3 UE parmi celles ayant moins de 3 professeurs inscrits.
                 {% else %}
                     Vous pouvez sélectionner jusqu'à 5 UE.
                 {% endif %}
@@ -20,22 +20,21 @@
             <h3 class="text-white mt-4">UE disponibles</h3>
             <div class="mb-3">
                 {% for course in courses %}
-                    {% if course not in userCourses %}
-                        {% set studentCount = course.users|filter(u => u.role == 'ROLE_ELEVE')|length %}
-                        {% if app.user.role != 'ROLE_PROF' or studentCount < 3 %}
-                            <form action="{{ path('ue_selection') }}" method="post" class="d-inline-block mb-2 me-2">
-                                <input type="hidden" name="course_id" value="{{ course.id }}">
-                                <input type="hidden" name="action" value="add">
-                                <button type="submit"
-                                        class="btn btn-light btn-sm"
-                                        {% if userCourses|length >= maxUE %}disabled{% endif %}>
-                                    {{ course.name }} ➕
-                                </button>
-                            </form>
-                        {% endif %}
+                    {% set profCount = course.users|filter(u => u.role == 'ROLE_PROF')|length %}
+                    {% if course not in userCourses and profCount < 3 %}
+                        <form action="{{ path('ue_selection') }}" method="post" class="d-inline-block mb-2 me-2">
+                            <input type="hidden" name="course_id" value="{{ course.id }}">
+                            <input type="hidden" name="action" value="add">
+                            <button type="submit"
+                                    class="btn btn-light btn-sm"
+                                    {% if userCourses|length >= maxUE %}disabled{% endif %}>
+                                {{ course.name }} ➕
+                            </button>
+                        </form>
                     {% endif %}
                 {% endfor %}
             </div>
+
 
             <h3 class="text-white mt-4">UE sélectionnées</h3>
             <ul class="list-group">

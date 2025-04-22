@@ -1,0 +1,242 @@
+[33mcommit 5c1e45392011f86fc5e35e8d3822d3c9a8a6a843[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mLucas4[m[33m, [m[1;31morigin/Lucas4[m[33m)[m
+Author: Lucas Vigny <Lucas.vigny@gmail.com>
+Date:   Sat Apr 19 00:21:14 2025 +0200
+
+    ajout de la connexion de l'admin
+
+[33mcommit eb91b292e1716c3932d831e3b865eba36207d5bf[m
+Author: Lucas Vigny <Lucas.vigny@gmail.com>
+Date:   Fri Apr 18 17:54:22 2025 +0200
+
+    ajout de la connexion du prof et de l'eleve.
+
+[33mcommit 29ccf2bd2cab9228f66693ce5bb83300b3843e2f[m[33m ([m[1;32mLucas3[m[33m)[m
+Author: Lucas Vigny <Lucas.vigny@gmail.com>
+Date:   Fri Apr 18 17:53:31 2025 +0200
+
+    ajout de la connexion du prof et de l'eleve.
+
+[33mcommit 8512b87aad6e3ff4d9e0067dabe21b6020a85384[m[33m ([m[1;31morigin/Lucas3[m[33m)[m
+Author: Lucas Vigny <Lucas.vigny@gmail.com>
+Date:   Fri Apr 18 09:35:43 2025 +0200
+
+    finition de la page d'inscription
+
+[33mcommit 15c80ebe0346018683b6fd9fbfa63a3542fdab4c[m
+Author: Lucas Vigny <Lucas.vigny@gmail.com>
+Date:   Fri Apr 18 09:28:46 2025 +0200
+
+    finition de la page d'inscription
+
+[33mcommit 811679efc471895a4612ae40e95e613a4240733c[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Fri Apr 18 09:06:30 2025 +0200
+
+    Connexion User Database
+
+[33mcommit b39274b19fc8511509452f174cc71c7420ea4269[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Fri Apr 18 08:49:34 2025 +0200
+
+    Update du controller d'inscription
+
+[33mcommit 12c9739d1d596d536c4db35fb0b20309f6b14e2f[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Fri Apr 18 08:34:36 2025 +0200
+
+    Update du controller d'inscription
+
+[33mcommit e0da2572e9683b7f69f05a8abfe6dcde03dfb50c[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Thu Apr 17 18:55:08 2025 +0200
+
+    Database 2eme push
+
+[33mcommit dae73dfe24ece2ef932ac053683cab3ca0ee5659[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Thu Apr 17 18:54:39 2025 +0200
+
+    Database
+
+[33mcommit 0ac46f1af668b663f96d049f11f26b22c10fe540[m
+Merge: dbc51d1 e8bd9e8
+Author: Lucas Vigny <Lucas.vigny@gmail.com>
+Date:   Mon Apr 7 23:57:35 2025 +0200
+
+    Merge remote-tracking branch 'origin/Lucas3' into Lucas3
+
+[33mcommit dbc51d1c483565534461695ee425c07026d354a0[m
+Author: Lucas Vigny <Lucas.vigny@gmail.com>
+Date:   Mon Apr 7 23:57:07 2025 +0200
+
+    pas l;e temps
+
+[33mcommit e8bd9e87bceceb31fd64ee2c9fa6ec3543d5c7bd[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Mon Apr 7 23:39:14 2025 +0200
+
+    Admin mode
+
+[33mcommit 990e11eb5797b7df770954f1df7f26295484449b[m
+Merge: bc1e9dd 12b323f
+Author: Lucas Vigny <Lucas.vigny@gmail.com>
+Date:   Mon Apr 7 23:28:08 2025 +0200
+
+    Merge remote-tracking branch 'origin/Lucas3' into Lucas3
+
+[33mcommit 12b323f1ca9d32598832eec51a4267cd68006a04[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Mon Apr 7 23:27:51 2025 +0200
+
+    Bouton enregistrer pour profil
+
+[33mcommit bc1e9dd6571abd2099ff1c884fd1ae43de67cf35[m
+Merge: 1c10d52 45cf975
+Author: Lucas Vigny <Lucas.vigny@gmail.com>
+Date:   Mon Apr 7 23:23:39 2025 +0200
+
+    Merge remote-tracking branch 'origin/Lucas3' into Lucas3
+
+[33mcommit 1c10d529a59f049e2801afa1cd5bec8d6459c328[m
+Author: Lucas Vigny <Lucas.vigny@gmail.com>
+Date:   Mon Apr 7 23:23:22 2025 +0200
+
+    ajout lien vers admin et controller menu admin
+
+[33mcommit 45cf975e0e673ed5819cb167b98b017a64f5d610[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Mon Apr 7 23:23:08 2025 +0200
+
+    Bouton enregistrer pour profil
+
+[33mcommit 2337fccc28a1c04e7f5dc74f442e10493f50cd55[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Mon Apr 7 08:25:05 2025 +0200
+
+    Bouton enregistrer pour profil
+
+[33mcommit be0473a7817cac3233e7fe3ce5fd1fa32fc3a7aa[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Mon Apr 7 08:20:03 2025 +0200
+
+    Bouton enregistrer pour paramètre
+
+[33mcommit 4cd7aa133176d829bf09bfd1f8248f0f21163afb[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Mon Apr 7 08:11:22 2025 +0200
+
+    Amélioration membre de l'UE
+
+[33mcommit 788a2cf40ace7cc5eb3ad076c1127d76dc186145[m
+Author: Lucas Vigny <Lucas.vigny@gmail.com>
+Date:   Sun Apr 6 18:01:18 2025 +0200
+
+    modif page profile et implémentation session (pas finis)
+
+[33mcommit f43cd5d12a1bd94b9f77099ffc1508cb1695ba8d[m
+Author: Lucas Vigny <Lucas.vigny@gmail.com>
+Date:   Sun Apr 6 14:57:43 2025 +0200
+
+    amélioration page inscription 'afficher/cacher mdp) et bgouton retour page de connexion'
+
+[33mcommit 6f91a32e3897c199480c3407dba58921581f702a[m
+Author: Lucas Vigny <Lucas.vigny@gmail.com>
+Date:   Sun Apr 6 14:45:35 2025 +0200
+
+    correction bouton mdp, modif page settings et pasge séléctions d'UEs
+
+[33mcommit c5aae7e9165725e909d1ad09dc95a0c4ca79d783[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Sun Apr 6 12:34:51 2025 +0200
+
+    Ajout des membres de l'UE
+
+[33mcommit bae26dec7c5351d7a918981e1eb5e48d07a162ef[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Sun Apr 6 12:00:04 2025 +0200
+
+    Bouton pour cacher le mot de passe
+
+[33mcommit 4219c607d8b03d61a721af0d8ceb5916d1fa64f4[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Sun Apr 6 11:43:00 2025 +0200
+
+    Amélioration du type de posts
+
+[33mcommit e16b272d621caac257ec209b95cfe863916dccac[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Sun Apr 6 11:17:25 2025 +0200
+
+    Ajout des postes
+
+[33mcommit a491a530294014aec7630df9fb862131b9224a37[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Sun Apr 6 10:53:15 2025 +0200
+
+    Amélioration des couleurs détails de cour
+
+[33mcommit d6864f2a94f40e3316a22ab6902c07710aac5485[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Sun Apr 6 10:45:58 2025 +0200
+
+    Détail des cours
+
+[33mcommit c18d169af8a12e5bd7ec50c0d3955adc7d77f01d[m
+Author: Lucas Vigny <Lucas.vigny@gmail.com>
+Date:   Sun Apr 6 01:28:03 2025 +0200
+
+    nouvelle branche pour dimanche
+
+[33mcommit 9c2b7d83da854bd481824497e90c44eb17cd874c[m
+Author: Lucas Vigny <Lucas.vigny@gmail.com>
+Date:   Sun Apr 6 01:22:20 2025 +0200
+
+    changement de la nav bar, amélioration de la page de profil.
+
+[33mcommit 23baf7d2faa6ec07268992c85ee97f1dce9240a4[m[33m ([m[1;31morigin/Ivann2[m[33m)[m
+Author: Lucas Vigny <Lucas.vigny@gmail.com>
+Date:   Sat Apr 5 17:55:03 2025 +0200
+
+    ajout d'une balise pour enlever la navbar (true by default)
+
+[33mcommit ada87ff3c9c246d9379190851d42c964f8983991[m
+Author: Lucas Vigny <Lucas.vigny@gmail.com>
+Date:   Sat Apr 5 17:50:08 2025 +0200
+
+    refonte de l'index dans notre style, ajout d'une balise pour fixer le pages ou pas, animation des boutons d'index et d'inscription
+
+[33mcommit 3f42b468483caee689fed8ed5803f052931890f1[m
+Author: Lucas Vigny <Lucas.vigny@gmail.com>
+Date:   Sat Apr 5 17:18:43 2025 +0200
+
+    java script inscription et connexion + refonte de page inscription
+
+[33mcommit 8212f862215e272cacb8feaf0c528d4d14d5c8dd[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Sat Apr 5 15:54:15 2025 +0200
+
+    Mes activites
+
+[33mcommit e5fb21f662e813681e60d2c7b7c92709578b38dd[m[33m ([m[1;31morigin/Lucas2[m[33m)[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Sat Apr 5 11:47:03 2025 +0200
+
+    Mes activites
+
+[33mcommit ac97322b07a2d9c1f46e11210d17b24ac6ae80c3[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Sat Apr 5 11:35:20 2025 +0200
+
+    Nouvelle NeuilleNavBar
+
+[33mcommit 7b5089b5f96c94b18e5a029f93d4c11d7ac9e0f6[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Sat Apr 5 11:08:45 2025 +0200
+
+    Bouton inscription
+
+[33mcommit f07aa6021adb0fd9a4cf7aa5593a23adf19a56eb[m
+Author: Ivann <ivann.vasic@utbm.fr>
+Date:   Sat Apr 5 10:00:42 2025 +0200
+
+    Ajout du projet sur la branche Lucas2
