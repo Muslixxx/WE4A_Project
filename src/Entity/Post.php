@@ -29,11 +29,12 @@ class Post
     #[ORM\Column]
     private ?bool $isImportant = null;
 
-    #[ORM\ManyToOne(inversedBy: 'posts')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\ManyToOne(inversedBy: 'posts')]
+
+    #[ORM\ManyToOne(targetEntity: Course::class, inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Course $course = null;
 

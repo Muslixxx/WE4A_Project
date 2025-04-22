@@ -3,51 +3,30 @@
 {% block title %}{{ course.name }}{% endblock %}
 
 {% block body %}
-    <div class="container mt-5">
-        <!-- Section Titre et Description du cours -->
-        <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
-            <div class="card-body">
-                <h1 class="card-title">{{ course.name }}</h1>
-                <p class="card-text">{{ course.description }}</p>
-            </div>
+<div class="container mt-5">
+    <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
+        <div class="card-body">
+            <h1>{{ course.name }}</h1>
+            <p>{{ course.description }}</p>
         </div>
+    </div>
 
-        <!-- Section Contenu de l'UE (Ressources et Documents groupés) -->
-        <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
-            <div class="card-header" style="background: transparent; border-bottom: none;">
-                <h2>Contenu de l'UE</h2>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <!-- Colonne Ressources -->
-                    <div class="col-md-6">
-                        <h3>Ressources</h3>
-                        {% if course.resources|length > 0 %}
-                            <ul>
-                                {% for resource in course.resources %}
-                                    <li><a href="{{ resource.link }}" target="_blank" style="color: #fff;">{{ resource.title }}</a></li>
-                                {% endfor %}
-                            </ul>
-                        {% else %}
-                            <p>Aucune ressource disponible.</p>
-                        {% endif %}
-                    </div>
-                    <!-- Colonne Documents -->
-                    <div class="col-md-6">
-                        <h3>Documents</h3>
-                        {% if course.documents|length > 0 %}
-                            <ul>
-                                {% for document in course.documents %}
-                                    <li><a href="{{ document.link }}" target="_blank" style="color: #fff;">{{ document.title }}</a></li>
-                                {% endfor %}
-                            </ul>
-                        {% else %}
-                            <p>Aucun document disponible.</p>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
+    <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
+        <div class="card-header">
+            <h2>Contenu de l'UE</h2>
         </div>
+        <div class="card-body">
+            {% if course.contents|length > 0 %}
+                <ul>
+                    {% for content in course.contents %}
+                        <li>{{ content.name }} ({{ content.type }})</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Aucun contenu disponible.</p>
+            {% endif %}
+        </div>
+    </div>
 
         <!-- Section Posts avec bouton "Créer un post" -->
         <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">

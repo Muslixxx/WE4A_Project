@@ -24,8 +24,9 @@ class Course
     /**
      * @var Collection<int, Post>
      */
-    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'courseId', orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'course', targetEntity: Post::class, orphanRemoval: true)]
     private Collection $posts;
+
 
     /**
      * @var Collection<int, User>
@@ -152,8 +153,8 @@ class Course
     {
         if (!$this->contents->contains($content)) {
             $this->contents->add($content);
+            $content->addCourse($this);
         }
-
         return $this;
     }
 

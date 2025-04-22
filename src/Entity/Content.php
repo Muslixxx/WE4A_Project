@@ -82,7 +82,6 @@ class Content
             $this->courses->add($course);
             $course->addContent($this);
         }
-
         return $this;
     }
 
