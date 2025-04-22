@@ -53,6 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var Collection<int, Course>
      */
     #[ORM\ManyToMany(targetEntity: Course::class, inversedBy: 'users')]
+    #[ORM\JoinTable(name: 'user_course')]
     private Collection $courses;
 
     public function __construct()
@@ -225,14 +226,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->courses->contains($course)) {
             $this->courses->add($course);
+            $course->addUser($this); // <-- important pour synchroniser les deux côtés
         }
-
         return $this;
     }
 
     public function removeCourse(Course $course): static
     {
-        $this->courses->removeElement($course);
+        if ($this->courses->removeElement($course)) {
+            $course->removeUser($this);
+        }
         return $this;
     }
 }

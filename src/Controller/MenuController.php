@@ -5,18 +5,25 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\CourseRepository;
-
 
 class MenuController extends AbstractController
 {
     #[Route('/menu', name: 'app_menu')]
-    public function index(CourseRepository $courseRepository): Response
+    public function index(): Response
     {
-        $courses = $courseRepository->findAll(); // récupère tous les cours en base
+        // Récupère l'utilisateur connecté
+        $user = $this->getUser();
+
+        // Vérifie qu'on a bien un utilisateur (sécurité)
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour accéder au menu.');
+        }
+
+        // Récupère uniquement les cours auxquels le user est inscrit
+        $userCourses = $user->getCourses();
 
         return $this->render('menu.html.twig', [
-            'courses' => $courses,
+            'courses' => $userCourses,
         ]);
     }
 }

@@ -44,21 +44,23 @@
             </div>
             <div class="card-body">
                 <div class="row justify-content-center">
-                    {% for course in courses %}
-                        <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex justify-content-center">
-                            <div class="card custom-card" style="background-color: rgba(255,255,255,0.15); width: 100%;">
-                                <div class="card-content p-3 text-center">
-                                    <h3 style="color: #fff;">{{ course.name }}</h3>
-                                    <p style="color: #fff;">{{ course.description }}</p>
-                                </div>
-                                <div class="card-overlay">
-                                    <a href="{{ path('course_detail', {'id': course.id}) }}" class="btn btn-primary">
-                                        Accéder au cours
-                                    </a>
+                    {% if courses is empty %}
+                        <div class="col-12 text-center text-white">
+                            <p style="font-size: 1.3rem;">⚠️ Vous n'êtes inscrit à aucun cours.</p>
+                            <p>Veuillez vous inscrire à des UEs pour accéder aux contenus.</p>
+                        </div>
+                    {% else %}
+                        {% for course in courses %}
+                            <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex justify-content-center">
+                                <div class="card custom-card" style="background-color: rgba(255,255,255,0.15); width: 100%;">
+                                    <div class="card-content p-3 text-center">
+                                        <h3 style="color: #fff;">{{ course.name }}</h3>
+                                        <p style="color: #fff;">{{ course.description }}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         </div>
