@@ -26,8 +26,6 @@
                 </h1>
                 <p style="color: #fff;">
                     Bienvenue sur Moodneuille, vous êtes connecté en tant que
-                    {% if app.user.role == 'ROLE_ADMIN' %}
-                        administrateur.
                     {% elseif app.user.role == 'ROLE_PROF' %}
                         professeur.
                     {% else %}
