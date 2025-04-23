@@ -26,17 +26,23 @@ class GestionController extends AbstractController
         EntityManagerInterface $em
     ): JsonResponse {
         $user = $this->getUser();
-        $data = json_decode($request->getContent(), true);
 
-        if (isset($data['password']) && strlen($data['password']) >= 6) {
-            $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
-            $user->setPassword($hashedPassword);
-            $em->flush();
-
-            return new JsonResponse(['status' => 'success']);
+        if (!$user) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Utilisateur non connecté'], 403);
         }
 
-        return new JsonResponse(['status' => 'error', 'message' => 'Mot de passe invalide ou trop court.'], 400);
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['password']) || strlen($data['password']) < 6) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Mot de passe invalide'], 400);
+        }
+
+        $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
+        $user->setPassword($hashedPassword);
+
+        $em->flush();
+
+        return new JsonResponse(['status' => 'success']);
     }
 
 

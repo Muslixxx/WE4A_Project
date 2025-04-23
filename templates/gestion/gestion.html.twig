@@ -64,15 +64,22 @@
             const passwordInput = document.getElementById('password');
             const toggleEdit = document.getElementById('toggleEditPassword');
             const toggleShow = document.getElementById('toggleShowPassword');
+            const saveButton = document.getElementById('saveButton');
+
+            let tempPassword = ''; // Variable pour stocker le mot de passe modifié
 
             toggleEdit.addEventListener('click', () => {
-                if (passwordInput.hasAttribute('readonly')) {
+                const isReadonly = passwordInput.hasAttribute('readonly');
+
+                if (isReadonly) {
                     passwordInput.removeAttribute('readonly');
                     passwordInput.value = '';
+                    passwordInput.focus();
                     toggleEdit.textContent = 'Verrouiller';
                     passwordInput.style.backgroundColor = '#fff';
                     passwordInput.style.color = '#000';
                 } else {
+                    tempPassword = passwordInput.value.trim(); // on stocke ce que l'utilisateur a écrit
                     passwordInput.setAttribute('readonly', true);
                     passwordInput.value = '********';
                     toggleEdit.textContent = 'Modifier';
@@ -91,61 +98,37 @@
                 }
             });
 
-            document.getElementById('saveButton').addEventListener('click', () => {
-                if (!passwordInput.hasAttribute('readonly') && passwordInput.value.trim() !== '') {
-                    fetch('{{ path('update_password') }}', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({password: passwordInput.value})
-                    })
-                        .then(response => response.json())
-                        .then(data => alert('Mot de passe mis à jour !'));
-                } else {
-                    alert('Aucun changement à enregistrer.');
-                }
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const saveButton = document.getElementById('saveButton');
-            const passwordInput = document.getElementById('password');
-
-            saveButton.addEventListener('click', async function (e) {
+            saveButton.addEventListener('click', async (e) => {
                 e.preventDefault();
 
-                const password = passwordInput.value;
+                // Vérifie si l'utilisateur a cliqué sur Modifier -> entré un mdp -> puis verrouillé
+                if (passwordInput.hasAttribute('readonly') && tempPassword.length >= 6) {
+                    try {
+                        const response = await fetch('{{ path('update_password') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest',
+                            },
+                            body: JSON.stringify({ password: tempPassword })
+                        });
 
-                if (!password || password.length < 6) {
-                    alert("Le mot de passe doit contenir au moins 6 caractères.");
-                    return;
-                }
+                        const data = await response.json();
 
-                try {
-                    const response = await fetch('{{ path('update_password') }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest',
-                        },
-                        body: JSON.stringify({ password })
-                    });
-
-                    const result = await response.json();
-
-                    if (result.status === 'success') {
-                        alert("Mot de passe mis à jour avec succès !");
-                        window.location.href = "{{ path('app_menu') }}";
-                    } else {
-                        alert("Erreur : " + result.message);
+                        if (data.status === 'success') {
+                            alert("Mot de passe mis à jour avec succès !");
+                            window.location.href = '{{ path("app_menu") }}';
+                        } else {
+                            alert("Erreur : " + data.message);
+                        }
+                    } catch (err) {
+                        alert("Erreur de communication avec le serveur.");
+                        console.error(err);
                     }
-
-                } catch (err) {
-                    alert("Erreur de communication avec le serveur.");
-                    console.error(err);
+                } else {
+                    alert("Aucun changement valide à enregistrer.");
                 }
             });
         });
     </script>
-
 {% endblock %}
