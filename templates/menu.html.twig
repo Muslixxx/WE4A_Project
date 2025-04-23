@@ -17,6 +17,7 @@
         }
         .custom-card:hover .card-overlay { opacity: 1; }
     </style>
+
     <div class="container d-flex flex-column align-items-center" style="min-height: 100vh; gap: 1rem; padding: 2rem;">
         <div class="card w-100 bg-blue-darker" style="border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
             <div class="card-body text-center">
@@ -25,9 +26,7 @@
                 </h1>
                 <p style="color: #fff;">
                     Bienvenue sur Moodneuille, vous êtes connecté en tant que
-                    {% if 'ROLE_ADMIN' in app.user.roles %}
-                        administrateur.
-                    {% elseif 'ROLE_PROF' in app.user.roles %}
+                    {% if app.user.role == 'ROLE_PROF' %}
                         professeur.
                     {% else %}
                         élève.
@@ -35,7 +34,6 @@
                 </p>
             </div>
         </div>
-    </div>
 
         <!-- Section des cours dynamique -->
         <div class="card w-100 bg-blue-darker">
@@ -87,21 +85,5 @@
                 </div>
             </div>
         </div>
-
-        {# Section spécifique aux administrateurs #}
-        {% if app.session.get('role') == 'admin' %}
-            <div class="card w-100 bg-blue-darker" style="border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-                <div class="card-header text-center" style="background: transparent; border-bottom: none;">
-                    <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Administration</h2>
-                </div>
-                <div class="card-body">
-                    <ul class="list-unstyled" style="color: #fff; font-family: 'Comic Neue', cursive;">
-                        <li><a href="{{ path('admin_dashboard') }}" class="text-white">Dashboard Admin</a></li>
-                        <li><a href="{{ path('admin_users') }}" class="text-white">Gestion des utilisateurs</a></li>
-                        <li><a href="{{ path('admin_settings') }}" class="text-white">Paramètres</a></li>
-                    </ul>
-                </div>
-            </div>
-        {% endif %}
     </div>
 {% endblock %}
