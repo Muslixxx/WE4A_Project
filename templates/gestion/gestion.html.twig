@@ -39,6 +39,24 @@
                         <button type="button" id="toggleShowPassword" class="btn btn-primary btn-sm">Afficher</button>
                     </div>
                 </div>
+                <!-- Numéro de téléphone (non modifiable) -->
+                <div style="margin-bottom: 1rem;">
+                    <label>Numéro de téléphone</label>
+                    <input type="text"
+                           value="{{ app.user.phoneNumber }}"
+                           readonly
+                           style="width: 100%; padding: 0.5rem; border-radius: 8px; border: none; background-color: rgba(255,255,255,0.2); color: #fff;"/>
+                </div>
+
+                <!-- Date de création du compte (non modifiable) -->
+                <div style="margin-bottom: 1rem;">
+                    <label>Date de création du compte</label>
+                    <input type="text"
+                           value="{{ app.user.dateCreation|date('d/m/Y à H:i') }}"
+                           readonly
+                           style="width: 100%; padding: 0.5rem; border-radius: 8px; border: none; background-color: rgba(255,255,255,0.2); color: #fff;"/>
+                </div>
+
 
                 <!-- Type d'utilisateur (non modifiable) -->
                 <div style="margin-bottom: 1rem;">
