@@ -199,17 +199,26 @@
                 errorContainer.textContent = "";
 
                 const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
                 if (!emailRegex.test(email.value)) {
                     e.preventDefault();
                     errorContainer.textContent = "L'adresse email doit être au format nom@domaine.com.";
                     return;
                 }
 
+                if (password.value.length < 6) {
+                    e.preventDefault();
+                    errorContainer.textContent = "Le mot de passe doit contenir au moins 6 caractères.";
+                    return;
+                }
+
                 if (password.value !== confirm.value) {
                     e.preventDefault();
                     errorContainer.textContent = "Les mots de passe ne correspondent pas.";
+                    return;
                 }
             });
         });
     </script>
 {% endblock %}
+

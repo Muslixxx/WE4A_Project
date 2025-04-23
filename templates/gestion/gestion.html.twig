@@ -2,12 +2,10 @@
 
 {% block title %}Paramètres {{ app.user.firstName }} {{ app.user.lastName }}{% endblock %}
 
-{% set fixed_page = true %}
-
 {% block body %}
-    <div class="container d-flex justify-content-center align-items-center" style="min-height: 60vh; padding: 2rem;">
+    <div class="container d-flex justify-content-center align-items-start" style="min-height: 5vh; padding: 2rem; margin-top: 1rem;">
 
-        <div style="background-color: #42a5f5; border-radius: 15px; width: 80vw; max-width: 800px; min-height: 50vh; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); padding: 2rem;">
+        <div style="background-color: #42a5f5; border-radius: 15px; width: 80vw; max-width: 800px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); padding: 2rem;">
             <!-- Titre -->
             <h1 style="font-family: 'Luckiest Guy', cursive; font-size: 2.2rem; color: #fff; text-shadow: 2px 2px 0 #0003; text-align: center; margin-bottom: 1rem;">
                 Mon Profil
@@ -15,50 +13,48 @@
 
             <div style="margin: 0 auto; max-width: 600px; font-family: 'Comic Neue', cursive; color: #fff;">
 
-                <!-- Nom complet (non modifiable) -->
+                <!-- Nom complet -->
                 <div style="margin-bottom: 1rem;">
                     <label>Nom complet</label>
                     <input type="text" value="{{ app.user.firstName }} {{ app.user.lastName }}" readonly
                            style="width: 100%; padding: 0.5rem; border-radius: 8px; border: none; background-color: rgba(255,255,255,0.2); color: #fff;"/>
                 </div>
 
-                <!-- Identifiant (email, non modifiable) -->
+                <!-- Email -->
                 <div style="margin-bottom: 1rem;">
                     <label>Identifiant (email)</label>
                     <input type="email" value="{{ app.user.email }}" readonly
                            style="width: 100%; padding: 0.5rem; border-radius: 8px; border: none; background-color: rgba(255,255,255,0.2); color: #fff;"/>
                 </div>
 
-                <!-- Mot de passe avec boutons "Modifier" et "Afficher" -->
+                <!-- Mot de passe -->
                 <div style="margin-bottom: 1rem;">
-                    <label>Mot de passe</label>
+                    <label for="password">Mot de passe</label>
                     <input type="password" id="password" value="********" readonly
-                           style="width: 100%; padding: 0.5rem; border-radius: 8px; border: none; background-color: rgba(255,255,255,0.2); color: #fff;"/>
-                    <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
-                        <button type="button" id="toggleEditPassword" class="btn btn-primary btn-sm">Modifier</button>
-                        <button type="button" id="toggleShowPassword" class="btn btn-primary btn-sm">Afficher</button>
+                           style="width: 100%; padding: 0.5rem; border-radius: 8px; border: none; background-color: rgba(255,255,255,0.2); color: #fff;" />
+                    <small id="passwordStatus" class="text-success d-none">Mot de passe validé ✅</small>
+                    <div class="mt-2 d-flex gap-2">
+                        <button type="button" id="editBtn" class="btn btn-warning btn-sm">Modifier</button>
+                        <button type="button" id="validateBtn" class="btn btn-success btn-sm d-none">Valider</button>
+                        <button type="button" id="cancelBtn" class="btn btn-secondary btn-sm d-none">Annuler</button>
                     </div>
                 </div>
-                <!-- Numéro de téléphone (non modifiable) -->
+
+                <!-- Téléphone -->
                 <div style="margin-bottom: 1rem;">
                     <label>Numéro de téléphone</label>
-                    <input type="text"
-                           value="{{ app.user.phoneNumber }}"
-                           readonly
+                    <input type="text" value="{{ app.user.phoneNumber }}" readonly
                            style="width: 100%; padding: 0.5rem; border-radius: 8px; border: none; background-color: rgba(255,255,255,0.2); color: #fff;"/>
                 </div>
 
-                <!-- Date de création du compte (non modifiable) -->
+                <!-- Date création -->
                 <div style="margin-bottom: 1rem;">
                     <label>Date de création du compte</label>
-                    <input type="text"
-                           value="{{ app.user.dateCreation|date('d/m/Y à H:i') }}"
-                           readonly
+                    <input type="text" value="{{ app.user.dateCreation|date('d/m/Y à H:i') }}" readonly
                            style="width: 100%; padding: 0.5rem; border-radius: 8px; border: none; background-color: rgba(255,255,255,0.2); color: #fff;"/>
                 </div>
 
-
-                <!-- Type d'utilisateur (non modifiable) -->
+                <!-- Rôle -->
                 <div style="margin-bottom: 1rem;">
                     <label>Type d'utilisateur</label>
                     <input type="text"
@@ -67,6 +63,7 @@
                            style="width: 100%; padding: 0.5rem; border-radius: 8px; border: none; background-color: rgba(255,255,255,0.2); color: #fff;"/>
                 </div>
 
+                <!-- Bouton Enregistrer -->
                 <div style="text-align: right; margin-top: 2rem;">
                     <button id="saveButton" class="btn btn-success">Enregistrer</button>
                 </div>
@@ -80,47 +77,62 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const passwordInput = document.getElementById('password');
-            const toggleEdit = document.getElementById('toggleEditPassword');
-            const toggleShow = document.getElementById('toggleShowPassword');
-            const saveButton = document.getElementById('saveButton');
+            const editBtn = document.getElementById('editBtn');
+            const validateBtn = document.getElementById('validateBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const saveBtn = document.getElementById('saveButton');
 
-            let tempPassword = ''; // Variable pour stocker le mot de passe modifié
+            let newPassword = '';
 
-            toggleEdit.addEventListener('click', () => {
-                const isReadonly = passwordInput.hasAttribute('readonly');
+            // Affiche les boutons de validation/annulation
+            editBtn.addEventListener('click', () => {
+                passwordInput.removeAttribute('readonly');
+                passwordInput.value = '';
+                passwordInput.focus();
+                passwordInput.style.backgroundColor = '#fff';
+                passwordInput.style.color = '#000';
 
-                if (isReadonly) {
-                    passwordInput.removeAttribute('readonly');
-                    passwordInput.value = '';
-                    passwordInput.focus();
-                    toggleEdit.textContent = 'Verrouiller';
-                    passwordInput.style.backgroundColor = '#fff';
-                    passwordInput.style.color = '#000';
-                } else {
-                    tempPassword = passwordInput.value.trim(); // on stocke ce que l'utilisateur a écrit
-                    passwordInput.setAttribute('readonly', true);
-                    passwordInput.value = '********';
-                    toggleEdit.textContent = 'Modifier';
-                    passwordInput.style.backgroundColor = 'rgba(255,255,255,0.2)';
-                    passwordInput.style.color = '#fff';
-                }
+                editBtn.classList.add('d-none');
+                validateBtn.classList.remove('d-none');
+                cancelBtn.classList.remove('d-none');
             });
 
-            toggleShow.addEventListener('click', () => {
-                if (passwordInput.type === 'password') {
-                    passwordInput.type = 'text';
-                    toggleShow.textContent = 'Cacher';
-                } else {
-                    passwordInput.type = 'password';
-                    toggleShow.textContent = 'Afficher';
+            // Valide le nouveau mot de passe
+            validateBtn.addEventListener('click', () => {
+                newPassword = passwordInput.value.trim();
+                if (newPassword.length < 6) {
+                    alert("Le mot de passe doit contenir au moins 6 caractères.");
+                    return;
                 }
+
+                passwordInput.setAttribute('readonly', true);
+                passwordInput.value = '********';
+                passwordInput.style.backgroundColor = 'rgba(255,255,255,0.2)';
+                passwordInput.style.color = '#fff';
+
+                editBtn.classList.remove('d-none');
+                validateBtn.classList.add('d-none');
+                cancelBtn.classList.add('d-none');
             });
 
-            saveButton.addEventListener('click', async (e) => {
+            // Annule la modification
+            cancelBtn.addEventListener('click', () => {
+                passwordInput.setAttribute('readonly', true);
+                passwordInput.value = '********';
+                passwordInput.style.backgroundColor = 'rgba(255,255,255,0.2)';
+                passwordInput.style.color = '#fff';
+                newPassword = '';
+
+                editBtn.classList.remove('d-none');
+                validateBtn.classList.add('d-none');
+                cancelBtn.classList.add('d-none');
+            });
+
+            // Sauvegarde
+            saveBtn.addEventListener('click', async (e) => {
                 e.preventDefault();
 
-                // Vérifie si l'utilisateur a cliqué sur Modifier -> entré un mdp -> puis verrouillé
-                if (passwordInput.hasAttribute('readonly') && tempPassword.length >= 6) {
+                if (newPassword.length >= 6) {
                     try {
                         const response = await fetch('{{ path('update_password') }}', {
                             method: 'POST',
@@ -128,23 +140,23 @@
                                 'Content-Type': 'application/json',
                                 'X-Requested-With': 'XMLHttpRequest',
                             },
-                            body: JSON.stringify({ password: tempPassword })
+                            body: JSON.stringify({ password: newPassword })
                         });
 
                         const data = await response.json();
 
                         if (data.status === 'success') {
-                            alert("Mot de passe mis à jour avec succès !");
+                            alert("Mot de passe mis à jour !");
                             window.location.href = '{{ path("app_menu") }}';
                         } else {
-                            alert("Erreur : " + data.message);
+                            alert("Erreur : " + (data.message || "Impossible de mettre à jour le mot de passe."));
                         }
                     } catch (err) {
-                        alert("Erreur de communication avec le serveur.");
+                        alert("Erreur serveur.");
                         console.error(err);
                     }
                 } else {
-                    alert("Aucun changement valide à enregistrer.");
+                    alert("Aucun mot de passe valide à enregistrer.");
                 }
             });
         });

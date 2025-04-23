@@ -3,43 +3,46 @@
 {% block title %}{{ course.name }}{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
-        <div class="card-body">
-            <h1>{{ course.name }}</h1>
-            <p>{{ course.description }}</p>
-        </div>
-    </div>
+    <div class="container mt-5">
 
-    <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
-        <div class="card-header">
-            <h2>Contenu de l'UE</h2>
+        <!-- Titre et Description -->
+        <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
+            <div class="card-body">
+                <h1>{{ course.name }}</h1>
+                <p>{{ course.description }}</p>
+            </div>
         </div>
-        <div class="card-body">
-            {% if course.contents|length > 0 %}
-                <ul>
-                    {% for content in course.contents %}
-                        <li>{{ content.name }} ({{ content.type }})</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>Aucun contenu disponible.</p>
-            {% endif %}
-        </div>
-    </div>
 
-        <!-- Section Posts avec bouton "Créer un post" -->
+        <!-- Contenu de l'UE -->
+        <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
+            <div class="card-header"><h2>Contenu de l'UE</h2></div>
+            <div class="card-body">
+                {% if course.contents|length > 0 %}
+                    <ul>
+                        {% for content in course.contents %}
+                            <li>{{ content.name }} ({{ content.type }})</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Aucun contenu disponible.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Section Posts -->
         <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
             <div class="card-header d-flex justify-content-between align-items-center" style="background: transparent; border-bottom: none;">
                 <h2>Posts</h2>
-                <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#createPostModal">Créer un post</button>
+                {% if app.user.role == 'ROLE_PROF' %}
+                    <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#createPostModal">Créer un post ➕</button>
+                {% endif %}
             </div>
             <div class="card-body">
                 {% if course.posts|length > 0 %}
                     {% for post in course.posts %}
                         <div class="post mb-3">
-                            <small class="text-muted">{{ post.date }}</small>
-                            <p>{{ post.content }}</p>
+                            <small class="text-muted">{{ post.dateCreation|date('d/m/Y H:i') }}</small>
+                            <p>{{ post.description }}</p>
                         </div>
                     {% endfor %}
                 {% else %}
@@ -48,11 +51,10 @@
             </div>
         </div>
 
-        <!-- Nouvelle Section Membres de l'UE avec filtre -->
+        <!-- Membres de l'UE -->
         <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
             <div class="card-header" style="background: transparent; border-bottom: none;">
                 <h2>Membres de l'UE</h2>
-                <!-- Menu déroulant pour filtrer par rôle -->
                 <div class="mt-2">
                     <label for="filterRole" style="margin-right: 8px;">Trier par :</label>
                     <select id="filterRole" class="form-select" style="max-width: 200px; display: inline-block;">
@@ -65,7 +67,7 @@
             <div class="card-body">
                 {% if course.members is defined and course.members|length > 0 %}
                     <div class="table-responsive">
-                        <table id="membersTable" class="table text-white" style="border-collapse: collapse; width: 100%; background-color: #bbdefb; border: 2px solid #2196f3;">
+                        <table id="membersTable" class="table text-white" style="background-color: #bbdefb; border: 2px solid #2196f3;">
                             <thead style="background-color: #90caf9;">
                             <tr>
                                 <th style="border: 1px solid #2196f3;">Nom</th>
@@ -90,125 +92,98 @@
             </div>
         </div>
 
-
-        <!-- Modal: Créer un post -->
-    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content" style="background-color: #f0f0f0;">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="createPostModalLabel">Créer un post</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="postForm">
-                        <div class="mb-3">
-                            <label for="postName" class="form-label">Nom</label>
-                            <input type="text" class="form-control" id="postName" placeholder="Votre nom">
-                        </div>
-                        <div class="mb-3">
-                            <label for="postClass" class="form-label">Classe</label>
-                            <input type="text" class="form-control" id="postClass" placeholder="Votre classe">
-                        </div>
-                        <div class="mb-3">
-                            <label for="postTitle" class="form-label">Titre du post</label>
-                            <input type="text" class="form-control" id="postTitle" placeholder="Titre du post">
-                        </div>
-                        <!-- Sélecteur pour le type de contenu -->
-                        <div class="mb-3">
-                            <label for="contentType" class="form-label">Type de contenu</label>
-                            <select class="form-select" id="contentType">
-                                <option value="text" selected>Texte</option>
-                                <option value="link">Lien</option>
-                                <option value="document">Document</option>
-                            </select>
-                        </div>
-                        <!-- Zone de saisie pour le texte -->
-                        <div class="mb-3" id="textContentDiv">
-                            <label for="postText" class="form-label">Contenu (Texte)</label>
-                            <textarea class="form-control" id="postText" rows="3" placeholder="Entrez votre texte"></textarea>
-                        </div>
-                        <!-- Zone de saisie pour le lien -->
-                        <div class="mb-3 d-none" id="linkContentDiv">
-                            <label for="postLink" class="form-label">URL du lien</label>
-                            <input type="url" class="form-control" id="postLink" placeholder="https://exemple.com">
-                        </div>
-                        <!-- Zone pour télécharger un document -->
-                        <div class="mb-3 d-none" id="documentContentDiv">
-                            <label for="postDocument" class="form-label">Choisir un document</label>
-                            <input type="file" class="form-control" id="postDocument">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary" id="submitPost">Poster</button>
+        <!-- Modal Créer un post -->
+        <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" style="background-color: #f0f0f0;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createPostModalLabel">Créer un post</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="postForm">
+                            <div class="mb-3">
+                                <label for="postTitle" class="form-label">Titre du post</label>
+                                <input type="text" class="form-control" id="postTitle" placeholder="Titre du post">
+                            </div>
+                            <div class="mb-3">
+                                <label for="postText" class="form-label">Description</label>
+                                <textarea class="form-control" id="postText" rows="3" placeholder="Entrez votre texte"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="contentType" class="form-label">Type</label>
+                                <select class="form-select" id="contentType">
+                                    <option value="text" selected>Texte</option>
+                                    <option value="link">Lien</option>
+                                    <option value="document">Document</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="isImportant" class="form-label">Important ?</label>
+                                <select class="form-select" id="isImportant">
+                                    <option value="0" selected>Non</option>
+                                    <option value="1">Oui</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-primary" id="submitPost">Poster</button>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script>
-        // Gestion du changement de type de contenu
-        document.getElementById('contentType').addEventListener('change', function() {
-            const type = this.value;
-            // Cache tous les champs
-            document.getElementById('textContentDiv').classList.add('d-none');
-            document.getElementById('linkContentDiv').classList.add('d-none');
-            document.getElementById('documentContentDiv').classList.add('d-none');
-
-            // Affiche le champ correspondant
-            if (type === 'text') {
-                document.getElementById('textContentDiv').classList.remove('d-none');
-            } else if (type === 'link') {
-                document.getElementById('linkContentDiv').classList.remove('d-none');
-            } else if (type === 'document') {
-                document.getElementById('documentContentDiv').classList.remove('d-none');
-            }
-        });
-
-        // Gestion du bouton "Poster"
-        document.getElementById('submitPost').addEventListener('click', function() {
-            const name = document.getElementById('postName').value;
-            const clazz = document.getElementById('postClass').value;
+        document.getElementById('submitPost').addEventListener('click', function () {
             const title = document.getElementById('postTitle').value;
-            const contentType = document.getElementById('contentType').value;
-            let content = "";
+            const description = document.getElementById('postText').value;
+            const type = document.getElementById('contentType').value;
+            const isImportant = document.getElementById('isImportant').value;
 
-            if (contentType === 'text') {
-                content = document.getElementById('postText').value;
-            } else if (contentType === 'link') {
-                content = document.getElementById('postLink').value;
-            } else if (contentType === 'document') {
-                content = document.getElementById('postDocument').value;
-            }
-
-            console.log("Post soumis:", { name, clazz, title, contentType, content });
-            document.getElementById('postForm').reset();
-            // Fermer le modal
-            const modalEl = document.getElementById('createPostModal');
-            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-            modal.hide();
-            alert("Votre post a bien été soumis !");
+            // ➕ ICI : courseId est injecté depuis Twig dans l'URL
+            fetch('/post/create?courseId={{ course.id }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({
+                    title,
+                    description,
+                    type,
+                    is_important: isImportant
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Post créé avec succès');
+                    document.getElementById('postForm').reset();
+                    bootstrap.Modal.getInstance(document.getElementById('createPostModal')).hide();
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la création du post:', error);
+                    alert("Erreur lors de la création du post.");
+                });
         });
-    </script>
-    <script>
-        document.getElementById('filterRole').addEventListener('change', function() {
+
+        // Filtrage des rôles
+        document.getElementById('filterRole').addEventListener('change', function () {
             const selectedRole = this.value;
             const rows = document.querySelectorAll('#membersTable tbody .member-row');
 
             rows.forEach(row => {
-                // Récupérer le rôle du membre à partir de l'attribut data-role
                 const role = row.getAttribute('data-role');
-                // Si "Tous" est sélectionné ou si le rôle correspond, afficher la ligne, sinon la masquer.
-                if (selectedRole === "Tous" || role === selectedRole) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
+                row.style.display = (selectedRole === "Tous" || role === selectedRole) ? "" : "none";
             });
         });
     </script>
 {% endblock %}
+

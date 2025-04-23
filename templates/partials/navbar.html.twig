@@ -1,7 +1,7 @@
-<div class="button-container" title="Accueil">
-
+<div class="button-container" title="Accueil"
+     style="background-color: {{ is_granted('ROLE_ADMIN') ? '#002171' : '#42a5f5' }};">
     <!-- Accueil -->
-    <a href="{{ path('app_menu') }}">
+    <a href="{{ is_granted('ROLE_ADMIN') ? path('app_admin') : path('app_menu') }}">
         <button class="Btn">
             Accueil
             <svg class="svg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
@@ -67,10 +67,23 @@
 
 <style>
     .button-container {
-        /* Personnalisez ce conteneur si nécessaire (fond, marges, etc.) */
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        display: flex;
+        width: 100vw;
+        height: 60px;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        border-radius: 0 0 10px 10px;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px,
+        rgba(0, 73, 144, 0.5) 5px 10px 15px;
+        animation: slideDown 0.8s ease-in-out;
+        transition: all 0.5s;
     }
 
-    /* Lien qui enveloppe le bouton */
     .button-container a {
         text-decoration: none;
         color: inherit;
@@ -79,28 +92,53 @@
         color: inherit;
     }
 
-    /* Bouton principal */
     .Btn {
-        background-color: #187BCD;  /* Couleur de fond */
-        color: #fff;                /* Couleur du texte */
-        border: none;               /* Aucune bordure */
+        background-color: #187BCD;
+        color: #fff;
+        border: none;
         box-shadow: none;
         outline: none;
         padding: 0.5rem 1rem;
         cursor: pointer;
         border-radius: 4px;
-        transition: background-color 0.3s ease; /* Transition douce */
+        transition: background-color 0.3s ease;
     }
 
-    /* Effet au survol */
     .Btn:hover {
-        background-color: #106BB8;  /* Plus sombre au survol */
+        background-color: #106BB8;
     }
 
-    /* Effet au focus ou clic */
     .Btn:focus,
     .Btn:active {
         outline: none;
         box-shadow: none;
+    }
+
+    @keyframes slideDown {
+        0% {
+            transform: translateY(-60px);
+            opacity: 0;
+        }
+        100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-6px);
+        }
+    }
+
+    .button:hover {
+        animation: bounce 0.6s ease-in-out forwards;
+    }
+
+    .icon {
+        font-size: 20px;
     }
 </style>

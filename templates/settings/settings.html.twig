@@ -150,7 +150,7 @@
             // Redirige selon le rôle
             if (role === 'ROLE_ADMIN') {
                 window.location.href = "{{ path('app_admin') }}";
-            } else if (role === 'ROLE_PROF' || role === 'ROLE_ETUDIANT') {
+            } else if (role === 'ROLE_PROF' || role === 'ROLE_ELEVE') {
                 window.location.href = "{{ path('app_menu') }}";
             } else {
                 window.location.href = "{{ path('app_login') }}"; // sécurité fallback
