@@ -17,7 +17,6 @@
         }
         .custom-card:hover .card-overlay { opacity: 1; }
     </style>
-
     <div class="container d-flex flex-column align-items-center" style="min-height: 100vh; gap: 1rem; padding: 2rem;">
         <div class="card w-100 bg-blue-darker" style="border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
             <div class="card-body text-center">
@@ -26,7 +25,9 @@
                 </h1>
                 <p style="color: #fff;">
                     Bienvenue sur Moodneuille, vous êtes connecté en tant que
-                    {% elseif app.user.role == 'ROLE_PROF' %}
+                    {% if 'ROLE_ADMIN' in app.user.roles %}
+                        administrateur.
+                    {% elseif 'ROLE_PROF' in app.user.roles %}
                         professeur.
                     {% else %}
                         élève.
@@ -34,6 +35,7 @@
                 </p>
             </div>
         </div>
+    </div>
 
         <!-- Section des cours dynamique -->
         <div class="card w-100 bg-blue-darker">
