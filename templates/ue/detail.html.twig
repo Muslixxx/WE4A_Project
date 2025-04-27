@@ -2,16 +2,39 @@
 
 {% block title %}{{ course.name }}{% endblock %}
 
+{% set courseImages = {
+    'Mathématiques': '/images/courses/math.png',
+    'Physique': '/images/courses/physique.png',
+    'Chimie': '/images/courses/chimie.png',
+    'Informatique': '/images/courses/informatique.png',
+    'Ingénierie': '/images/courses/ingenierie.png',
+    'Anglais': '/images/courses/anglais.png'
+} %}
+
+
 {% block body %}
     <div class="container mt-5">
 
         <!-- Titre et Description -->
-        <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
-            <div class="card-body">
-                <h1>{{ course.name }}</h1>
-                <p>{{ course.description }}</p>
+        <div class="card mb-4" style="background-color: #64b5f6; color: #fff; overflow: hidden; padding: 2rem;">
+            <div class="row align-items-center">
+                <!-- Partie gauche : Titre + Description -->
+                <div class="col-md-6">
+                    <h1 style="font-size: 2.5rem;">{{ course.name }}</h1>
+                    <p style="font-size: 1.2rem;">{{ course.description }}</p>
+                </div>
+
+                <!-- Partie droite : Image -->
+                <div class="col-md-6 d-flex justify-content-center">
+                    {% if courseImages[course.name] is defined %}
+                        <img src="{{ courseImages[course.name] }}" alt="{{ course.name }}"
+                             style="width: 100%; max-width: 300px; height: auto; border-radius: 10px;">
+                    {% endif %}
+                </div>
             </div>
         </div>
+
+
 
         <!-- Contenu de l'UE -->
         <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
