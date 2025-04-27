@@ -34,10 +34,12 @@ class MenuController extends AbstractController
                 ->join('p.course', 'c')
                 ->where('c.id IN (:courseIds)')
                 ->setParameter('courseIds', $courseIds)
-                ->orderBy('p.dateCreation', 'DESC')
-                ->setMaxResults(3) // <= seulement 3 posts ici
+                ->orderBy('p.pinned', 'DESC')
+                ->addOrderBy('p.dateCreation', 'DESC')
+                ->setMaxResults(3)
                 ->getQuery()
                 ->getResult();
+
         }
 
         return $this->render('menu.html.twig', [
@@ -69,7 +71,8 @@ class MenuController extends AbstractController
                 ->join('p.course', 'c')
                 ->where('c.id IN (:courseIds)')
                 ->setParameter('courseIds', $courseIds)
-                ->orderBy('p.dateCreation', 'DESC')
+                ->orderBy('p.pinned', 'DESC')
+                ->addOrderBy('p.dateCreation', 'DESC')
                 ->getQuery()
                 ->getResult();
         }

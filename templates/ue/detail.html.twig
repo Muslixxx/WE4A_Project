@@ -67,7 +67,9 @@
                                 <th style="padding: 1rem;">Auteur</th>
                                 <th style="padding: 1rem;">Titre</th>
                                 <th style="padding: 1rem;">Description</th>
-                                <th style="padding: 1rem;">Important</th> <!-- Nouvelle colonne -->
+                                {% if app.user.role in ['ROLE_PROF', 'ROLE_PROF_ADMIN'] %}
+                                    <th style="padding: 1rem;">Actions</th>
+                                {% endif %}
                             </tr>
                             </thead>
                             <tbody>
@@ -76,14 +78,20 @@
                                     <td style="padding: 1rem;">{{ post.user.firstName }} {{ post.user.lastName }}</td>
                                     <td style="padding: 1rem;">{{ post.title }}</td>
                                     <td style="padding: 1rem;">{{ post.description }}</td>
-                                    <td style="padding: 1rem;">
-                                        {% if post.isImportant %}
-                                            🚨
-                                        {% endif %}
-                                    </td>
+                                    {% if app.user.role in ['ROLE_PROF', 'ROLE_PROF_ADMIN'] %}
+                                        <td style="padding: 1rem;">
+                                            <button
+                                                    class="btn btn-sm {{ post.pinned ? 'btn-danger' : 'btn-success' }} toggle-pin"
+                                                    data-post-id="{{ post.id }}"
+                                            >
+                                                {{ post.pinned ? 'Désépingler' : 'Épingler' }}
+                                            </button>
+                                        </td>
+                                    {% endif %}
                                 </tr>
                             {% endfor %}
                             </tbody>
+
                         </table>
                     </div>
                 {% else %}
@@ -231,4 +239,33 @@
             }
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.toggle-pin').forEach(button => {
+                button.addEventListener('click', async () => {
+                    const postId = button.getAttribute('data-post-id');
+
+                    try {
+                        const response = await fetch(`/course/pin-post/${postId}`, {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+                        const result = await response.json();
+
+                        if (result.status === 'success') {
+                            location.reload(); // Recharge la page pour voir les changements
+                        } else {
+                            alert('Erreur : ' + result.message);
+                        }
+                    } catch (error) {
+                        console.error('Erreur lors de l\'épingle :', error);
+                        alert('Erreur de communication avec le serveur.');
+                    }
+                });
+            });
+        });
+    </script>
+
 {% endblock %}

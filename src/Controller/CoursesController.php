@@ -14,10 +14,20 @@ use Symfony\Component\Routing\Annotation\Route;
 class CoursesController extends AbstractController
 {
     #[Route('/course/{id}', name: 'course_detail', methods: ['GET'])]
-    public function courseDetail(Course $course): Response
+    public function courseDetail(Course $course, EntityManagerInterface $em): Response
     {
+        $posts = $em->getRepository(Post::class)
+            ->createQueryBuilder('p')
+            ->where('p.course = :course')
+            ->setParameter('course', $course)
+            ->orderBy('p.pinned', 'DESC')
+            ->addOrderBy('p.dateCreation', 'DESC')
+            ->getQuery()
+            ->getResult();
+
         return $this->render('ue/detail.html.twig', [
             'course' => $course,
+            'posts' => $posts,
         ]);
     }
 
@@ -49,4 +59,19 @@ class CoursesController extends AbstractController
 
         return new JsonResponse(['status' => 'success']);
     }
+    #[Route('/course/pin-post/{id}', name: 'course_toggle_pin_post', methods: ['POST'])]
+    public function togglePinPost(Post $post, EntityManagerInterface $em): JsonResponse
+    {
+        // Vérifie que seul les profs peuvent épingler
+        $user = $this->getUser();
+        if (!$user || !in_array($user->getRole(), ['ROLE_PROF', 'ROLE_PROF_ADMIN'])) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Accès refusé.'], 403);
+        }
+
+        $post->setPinned(!$post->isPinned());
+        $em->flush();
+
+        return new JsonResponse(['status' => 'success']);
+    }
+
 }

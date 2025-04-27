@@ -95,7 +95,11 @@
                                     {% else %}
                                         un message
                                     {% endif %}
-                                    « {{ post.title }} » dans {{ post.course.name }}
+                                    « {{ post.title }}
+                                    {% if post.pinned %}
+                                        <span title="Post Épinglé">📌</span>
+                                    {% endif %}
+                                    » dans {{ post.course.name }}
                                 </p>
                             </div>
                         {% endfor %}
