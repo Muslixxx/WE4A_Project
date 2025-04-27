@@ -11,24 +11,19 @@
     'Anglais': '/images/courses/anglais.png'
 } %}
 
-
 {% block body %}
     <div class="container mt-5">
 
         <!-- Titre et Description -->
         <div class="card mb-4" style="background-color: #64b5f6; color: #fff; overflow: hidden; padding: 2rem;">
             <div class="row align-items-center">
-                <!-- Partie gauche : Titre + Description -->
                 <div class="col-md-6">
                     <h1 style="font-size: 2.5rem;">{{ course.name }}</h1>
                     <p style="font-size: 1.2rem;">{{ course.description }}</p>
                 </div>
-
-                <!-- Partie droite : Image -->
                 <div class="col-md-6 d-flex justify-content-center">
                     {% if courseImages[course.name] is defined %}
-                        <img src="{{ courseImages[course.name] }}" alt="{{ course.name }}"
-                             style="width: 100%; max-width: 300px; height: auto; border-radius: 10px;">
+                        <img src="{{ courseImages[course.name] }}" alt="{{ course.name }}" style="width: 100%; max-width: 300px; height: auto; border-radius: 10px;">
                     {% endif %}
                 </div>
             </div>
@@ -54,7 +49,7 @@
         <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
             <div class="card-header d-flex justify-content-between align-items-center" style="background: transparent; border-bottom: none;">
                 <h2>Posts</h2>
-                {% if app.user.role == 'ROLE_PROF' or app.user.role == 'ROLE_PROF_ADMIN' %}
+                {% if app.user.role in ['ROLE_PROF', 'ROLE_PROF_ADMIN'] %}
                     <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#createPostModal">Créer un post ➕</button>
                 {% endif %}
             </div>
@@ -160,51 +155,54 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
     <script>
-        document.getElementById('submitPost').addEventListener('click', function () {
-            const title = document.getElementById('postTitle').value;
-            const description = document.getElementById('postText').value;
-            const type = document.getElementById('contentType').value;
-            const isImportant = document.getElementById('isImportant').value;
+        document.addEventListener('DOMContentLoaded', () => {
+            const submitButton = document.getElementById('submitPost');
 
-            // ➕ ICI : courseId est injecté depuis Twig dans l'URL
-            fetch('/post/create?courseId={{ course.id }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify({
-                    title,
-                    description,
-                    type,
-                    is_important: isImportant
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    alert('Post créé avec succès');
-                    document.getElementById('postForm').reset();
-                    bootstrap.Modal.getInstance(document.getElementById('createPostModal')).hide();
-                    location.reload();
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la création du post:', error);
-                    alert("Erreur lors de la création du post.");
+            if (submitButton) {
+                submitButton.addEventListener('click', async () => {
+                    const title = document.getElementById('postTitle').value.trim();
+                    const description = document.getElementById('postText').value.trim();
+                    const type = document.getElementById('contentType').value;
+                    const isImportant = document.getElementById('isImportant').value;
+                    const courseId = {{ course.id }};
+
+                    if (!title || !description) {
+                        alert('Merci de remplir tous les champs.');
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('{{ path('course_create_post', {'id': course.id}) }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({
+                                title,
+                                description,
+                                type,
+                                is_important: isImportant
+                            })
+                        });
+
+                        const result = await response.json();
+
+                        if (response.ok && result.status === 'success') {
+                            alert('Post créé avec succès.');
+                            document.getElementById('postForm').reset();
+                            bootstrap.Modal.getInstance(document.getElementById('createPostModal')).hide();
+                            location.reload();
+                        } else {
+                            alert('Erreur serveur : ' + (result.message || 'Erreur inconnue.'));
+                        }
+                    } catch (error) {
+                        console.error('Erreur communication:', error);
+                        alert('Erreur de communication avec le serveur.');
+                    }
                 });
-        });
-
-        // Filtrage des rôles
-        document.getElementById('filterRole').addEventListener('change', function () {
-            const selectedRole = this.value;
-            const rows = document.querySelectorAll('#membersTable tbody .member-row');
-
-            rows.forEach(row => {
-                const role = row.getAttribute('data-role');
-                row.style.display = (selectedRole === "Tous" || role === selectedRole) ? "" : "none";
-            });
+            }
         });
     </script>
 {% endblock %}
-

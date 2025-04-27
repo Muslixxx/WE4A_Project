@@ -23,8 +23,14 @@ class UESelectionController extends AbstractController
             $course = $courseRepository->find($courseId);
 
             if ($course && $user) {
+                // Correction ici
+                if (in_array($user->getRole(), ['ROLE_PROF', 'ROLE_PROF_ADMIN'])) {
+                    $maxUE = 3;
+                } else {
+                    $maxUE = 5;
+                }
+
                 if ($action === 'add') {
-                    $maxUE = $user->getRole() === 'ROLE_PROF' ? 3 : 5;
                     if (!$user->getCourses()->contains($course) && count($user->getCourses()) < $maxUE) {
                         $user->addCourse($course);
                         $em->persist($user);
