@@ -22,6 +22,8 @@ security:
                 target: app_login
 
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
+        # Les admins et les profs-admin peuvent accéder à /admin*
+        - { path: ^/admin, roles: [ 'ROLE_ADMIN', 'ROLE_PROF_ADMIN' ] }
 
-
+        # Seuls les profs-admin peuvent accéder à /choice*
+        - { path: ^/choice, roles: [ 'ROLE_PROF_ADMIN' ] }

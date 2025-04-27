@@ -41,12 +41,26 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     {
         $user = $token->getUser();
 
-        if (method_exists($user, 'getRole')) {
-            return match($user->getRole()) {
-                'ROLE_ADMIN' => new RedirectResponse($this->urlGenerator->generate('app_admin')),
-                default => new RedirectResponse($this->urlGenerator->generate('app_menu')),
-            };
+        // Récupération uniforme des rôles en tableau
+        $roles = [];
+        if (method_exists($user, 'getRoles')) {
+            $roles = $user->getRoles();
+        } elseif (method_exists($user, 'getRole')) {
+            // Si votre User expose une méthode getRole() unique
+            $roles = [$user->getRole()];
         }
+
+        // Priorité : ROLE_ADMIN
+        if (in_array('ROLE_ADMIN', $roles, true)) {
+            return new RedirectResponse($this->urlGenerator->generate('app_admin'));
+        }
+
+        // Cas spécial : ROLE_PROF_ADMIN
+        if (in_array('ROLE_PROF_ADMIN', $roles, true)) {
+            return new RedirectResponse($this->urlGenerator->generate('app_choice'));
+        }
+
+        // Tout autre rôle
         return new RedirectResponse($this->urlGenerator->generate('app_menu'));
     }
 

@@ -30,10 +30,10 @@
                 </h1>
                 <p style="color: #fff;">
                     Bienvenue sur Moodneuille, vous êtes connecté en tant que
-                    {% if app.user.role == 'ROLE_PROF' %}
-                        professeur.
-                    {% else %}
+                    {% if app.user.role == 'ROLE_ELEVE' %}
                         élève.
+                    {% else %}
+                        prof.
                     {% endif %}
                 </p>
             </div>

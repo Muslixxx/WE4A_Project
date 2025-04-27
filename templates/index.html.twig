@@ -3,6 +3,7 @@
 {% block title %}Accueil{% endblock %}
 {% set fixed_page = true %}
 {% set show_navbar = false %}
+
 {% block body %}
     <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh; padding: 2rem;">
         <div style="
@@ -15,24 +16,14 @@
             padding: 2rem;
             text-align: center;
         ">
-            <h1 style="
-                font-family: 'Luckiest Guy', cursive;
-                font-size: 2.2rem;
-                color: #fff;
-                text-shadow: 2px 2px 0 #0003;
-                margin-bottom: 1rem;
-            ">
+            <h1 style="font-family: 'Luckiest Guy', cursive; font-size: 2.2rem; color: #fff; text-shadow: 2px 2px 0 #0003; margin-bottom: 1rem;">
                 Bienvenue sur Moodneuille
             </h1>
-            <br>
-            <p style="
-                color: #fff;
-                font-family: 'Comic Neue', cursive;
-                margin-bottom: 2rem;
-                font-size: 1.2rem;
-            ">
+
+            <p style="color: #fff; font-family: 'Comic Neue', cursive; margin-bottom: 2rem; font-size: 1.2rem;">
                 Veuillez choisir une action pour continuer.
             </p>
+
             <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap" style="margin-top: 1.5rem;">
                 <a href="{{ path('app_login') }}" style="
                     display: flex;
@@ -80,12 +71,9 @@
     </div>
 
     <style>
-        /* Animation générale sur les boutons */
         a:hover {
             transform: translateY(-1px);
         }
-
-        /* Boutons Connexion et Présentation identiques */
         a[href="{{ path('app_login') }}"],
         a[href="{{ path('app_presentation') }}"] {
             background: #007bff !important;
