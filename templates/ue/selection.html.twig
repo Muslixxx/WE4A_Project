@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block title %}Sélection des UE{% endblock %}
 
-{% set maxUE = app.user.role == 'ROLE_PROF' ? 3 : 5 %}
+{% set maxUE = (app.user.role == 'ROLE_PROF' or app.user.role == 'ROLE_PROF_ADMIN') ? 3 : 5 %}
 
 {% block body %}
     <div class="container py-4">
@@ -10,10 +10,10 @@
                 Sélection des UE
             </h1>
             <p class="text-center text-white">
-                {% if app.user.role == 'ROLE_PROF' %}
-                    Vous pouvez choisir jusqu'à 3 UE parmi celles ayant moins de 3 professeurs inscrits.
-                {% else %}
+                {% if not app.user.role == 'ROLE_PROF' %}
                     Vous pouvez sélectionner jusqu'à 5 UE.
+                {% else %}
+                    Vous pouvez choisir jusqu'à 3 UE parmi celles ayant moins de 3 professeurs inscrits.
                 {% endif %}
             </p>
 

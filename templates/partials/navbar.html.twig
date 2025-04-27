@@ -79,7 +79,7 @@
     </a>
 
     {# Mes UEs pour PROF_ADMIN uniquement #}
-    {% if is_granted('ROLE_PROF_ADMIN') %}
+    {% if not is_granted('ROLE_ADMIN') %}
         <a href="{{ path('ue_selection') }}" title="Mes UEs">
             <button class="Btn">
                 Mes UEs
