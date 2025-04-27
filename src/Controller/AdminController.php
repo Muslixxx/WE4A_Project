@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Course;
+use App\Entity\Post;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,7 +14,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-
 class AdminController extends AbstractController
 {
     #[Route('/admin', name: 'app_admin')]
@@ -22,10 +22,46 @@ class AdminController extends AbstractController
         $users = $em->getRepository(User::class)->findAll();
         $courses = $em->getRepository(Course::class)->findAll();
 
+        // Charger seulement les 3 dernières activités
+        $recentPosts = $em->getRepository(Post::class)
+            ->createQueryBuilder('p')
+            ->orderBy('p.pinned', 'DESC')    // 🔥 d'abord épinglés
+            ->addOrderBy('p.dateCreation', 'DESC') // 🔥 ensuite date
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getResult();
+
+
         return $this->render('admin/admin.html.twig', [
             'users' => $users,
             'courses' => $courses,
+            'recentPosts' => $recentPosts,
         ]);
+    }
+
+    #[Route('/admin/load-more-posts', name: 'admin_load_more_posts', methods: ['GET'])]
+    public function loadMorePosts(EntityManagerInterface $em): JsonResponse
+    {
+        $posts = $em->getRepository(Post::class)
+            ->createQueryBuilder('p')
+            ->orderBy('p.dateCreation', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        $data = [];
+        foreach ($posts as $post) {
+            $data[] = [
+                'date' => $post->getDateCreation()->format('d/m/Y H:i'),
+                'firstName' => $post->getUser()->getFirstName(),
+                'lastName' => $post->getUser()->getLastName(),
+                'type' => $post->getType(),
+                'title' => $post->getTitle(),
+                'courseName' => $post->getCourse()->getName(),
+                'pinned' => $post->isPinned() ? true : false,
+            ];
+        }
+
+        return $this->json($data);
     }
 
     #[Route('/admin/delete-user/{id}', name: 'admin_delete_user', methods: ['POST'])]
@@ -51,7 +87,7 @@ class AdminController extends AbstractController
         $course = $em->getRepository(Course::class)->find($id);
 
         if (!$course) {
-            return new JsonResponse(['status' => 'error', 'message' => 'Cours non trouvé.'], 404);
+            return new JsonResponse(['status' => 'error', 'message' => 'UE non trouvée.'], 404);
         }
 
         $em->remove($course);
@@ -136,6 +172,7 @@ class AdminController extends AbstractController
 
         return new JsonResponse(['status' => 'success']);
     }
+
     #[Route('/admin/create-course', name: 'admin_create_course', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function createCourse(Request $request, EntityManagerInterface $em): JsonResponse
@@ -155,6 +192,7 @@ class AdminController extends AbstractController
 
         return new JsonResponse(['status' => 'success']);
     }
+
     #[Route('/admin/update-course/{id}', name: 'admin_update_course', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function updateCourse(int $id, Request $request, EntityManagerInterface $em): JsonResponse
@@ -178,5 +216,4 @@ class AdminController extends AbstractController
 
         return new JsonResponse(['status' => 'success']);
     }
-
 }

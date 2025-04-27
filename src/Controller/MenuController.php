@@ -34,11 +34,12 @@ class MenuController extends AbstractController
                 ->join('p.course', 'c')
                 ->where('c.id IN (:courseIds)')
                 ->setParameter('courseIds', $courseIds)
-                ->orderBy('p.pinned', 'DESC')
-                ->addOrderBy('p.dateCreation', 'DESC')
+                ->orderBy('p.pinned', 'DESC')    // 🔥 1. d'abord épinglés
+                ->addOrderBy('p.dateCreation', 'DESC') // 🔥 2. ensuite date
                 ->setMaxResults(3)
                 ->getQuery()
                 ->getResult();
+
 
         }
 
