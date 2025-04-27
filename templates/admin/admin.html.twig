@@ -42,7 +42,7 @@
         <div class="card w-100 bg-blue-darker">
             <div class="card-header d-flex justify-content-between align-items-center" style="background: transparent; border-bottom: none;">
                 <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Liste des Utilisateurs</h2>
-                <button class="btn btn-success btn-sm" disabled>Créer un utilisateur ➕</button>
+                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createUserModal">Créer un utilisateur ➕</button>
             </div>
             <div class="card-body">
                 <ul class="list-group" id="userList">
@@ -166,6 +166,58 @@
             </div>
         </div>
     </div>
+    <!-- Modal Créer Utilisateur -->
+    <div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="background-color: #f0f0f0;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createUserModalLabel">Créer un nouvel utilisateur</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createUserForm">
+                        <div class="mb-3">
+                            <label>Email :</label>
+                            <input type="email" class="form-control" id="newEmail">
+                        </div>
+                        <div class="mb-3">
+                            <label>Mot de passe :</label>
+                            <input type="password" class="form-control" id="newPassword">
+                        </div>
+                        <div class="mb-3">
+                            <label>Prénom :</label>
+                            <input type="text" class="form-control" id="newFirstName">
+                        </div>
+                        <div class="mb-3">
+                            <label>Nom :</label>
+                            <input type="text" class="form-control" id="newLastName">
+                        </div>
+                        <div class="mb-3">
+                            <label>Numéro de téléphone :</label>
+                            <input type="text" class="form-control" id="newPhoneNumber">
+                        </div>
+                        <div class="mb-3">
+                            <label>Date de naissance :</label>
+                            <input type="date" class="form-control" id="newBirthDate">
+                        </div>
+                        <div class="mb-3">
+                            <label>Rôle :</label>
+                            <select class="form-select" id="newRole">
+                                <option value="ROLE_ELEVE">Élève</option>
+                                <option value="ROLE_PROF">Professeur</option>
+                                <option value="ROLE_ADMIN">Administrateur</option>
+                                <option value="ROLE_PROF_ADMIN">Prof et Administrateur</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="createUserButton">Créer l'utilisateur</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -305,4 +357,52 @@
         });
 
     </script>
+
+    <script>
+        document.getElementById('createUserButton').addEventListener('click', async function () {
+            const email = document.getElementById('newEmail').value;
+            const password = document.getElementById('newPassword').value;
+            const firstName = document.getElementById('newFirstName').value;
+            const lastName = document.getElementById('newLastName').value;
+            const phoneNumber = document.getElementById('newPhoneNumber').value;
+            const birthDate = document.getElementById('newBirthDate').value;
+            const role = document.getElementById('newRole').value;
+
+            if (!email || !password || !firstName || !lastName || !phoneNumber || !birthDate || !role) {
+                alert('Merci de remplir tous les champs.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/admin/create-user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password,
+                        firstName,
+                        lastName,
+                        phoneNumber,
+                        birthDate,
+                        role
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    alert('Utilisateur créé avec succès !');
+                    window.location.reload();
+                } else {
+                    alert('Erreur : ' + result.message);
+                }
+            } catch (error) {
+                alert('Erreur de communication avec le serveur.');
+            }
+        });
+    </script>
+
 {% endblock %}

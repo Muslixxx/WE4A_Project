@@ -110,4 +110,31 @@ class AdminController extends AbstractController
         return new JsonResponse(['status' => 'success']);
     }
 
+    #[Route('/admin/create-user', name: 'admin_create_user', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function createUser(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['email'], $data['password'], $data['firstName'], $data['lastName'], $data['phoneNumber'], $data['birthDate'], $data['role'])) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Données manquantes.'], 400);
+        }
+
+        $user = new User();
+        $user->setEmail($data['email']);
+        $user->setFirstName($data['firstName']);
+        $user->setLastName($data['lastName']);
+        $user->setPhoneNumber($data['phoneNumber']);
+        $user->setBirthDate(new \DateTime($data['birthDate']));
+        $user->setDateCreation(new \DateTime());
+        $user->setRole($data['role']);
+        $user->setPassword($passwordHasher->hashPassword($user, $data['password']));
+
+        $em->persist($user);
+        $em->flush();
+
+        return new JsonResponse(['status' => 'success']);
+    }
+
+
 }
