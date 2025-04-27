@@ -45,12 +45,12 @@
                 <button class="btn btn-success btn-sm" disabled>Créer un utilisateur ➕</button>
             </div>
             <div class="card-body">
-                <ul class="list-group">
+                <ul class="list-group" id="userList">
                     {% for user in users %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <li class="list-group-item d-flex justify-content-between align-items-center" id="user-{{ user.id }}">
                             <span><strong>{{ user.firstName }} {{ user.lastName }}</strong> - {{ user.email }} ({{ user.role }})</span>
                             <div class="action-buttons">
-                                <a href="#" class="btn btn-danger btn-sm">Supprimer</a>
+                                <button class="btn btn-danger btn-sm delete-user" data-id="{{ user.id }}">Supprimer</button>
                                 <a href="#" class="btn btn-danger btn-sm">Modifier</a>
                             </div>
                         </li>
@@ -68,12 +68,12 @@
                 <button class="btn btn-success btn-sm" disabled>Créer une UE ➕</button>
             </div>
             <div class="card-body">
-                <ul class="list-group">
+                <ul class="list-group" id="courseList">
                     {% for course in courses %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <li class="list-group-item d-flex justify-content-between align-items-center" id="course-{{ course.id }}">
                             <span><strong>{{ course.name }}</strong>: {{ course.description }}</span>
                             <div class="action-buttons">
-                                <a href="#" class="btn btn-danger btn-sm">Supprimer</a>
+                                <button class="btn btn-danger btn-sm delete-course" data-id="{{ course.id }}">Supprimer</button>
                                 <a href="#" class="btn btn-danger btn-sm">Modifier</a>
                             </div>
                         </li>
@@ -109,4 +109,49 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Suppression d'un utilisateur
+            document.querySelectorAll('.delete-user').forEach(button => {
+                button.addEventListener('click', async () => {
+                    const userId = button.getAttribute('data-id');
+                    if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
+                        const response = await fetch(`/admin/delete-user/${userId}`, {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+                        const result = await response.json();
+                        if (result.status === 'success') {
+                            document.getElementById('user-' + userId).remove();
+                        } else {
+                            alert('Erreur lors de la suppression.');
+                        }
+                    }
+                });
+            });
+
+            // Suppression d'un cours
+            document.querySelectorAll('.delete-course').forEach(button => {
+                button.addEventListener('click', async () => {
+                    const courseId = button.getAttribute('data-id');
+                    if (confirm('Êtes-vous sûr de vouloir supprimer cette UE ?')) {
+                        const response = await fetch(`/admin/delete-course/${courseId}`, {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+                        const result = await response.json();
+                        if (result.status === 'success') {
+                            document.getElementById('course-' + courseId).remove();
+                        } else {
+                            alert('Erreur lors de la suppression.');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}
