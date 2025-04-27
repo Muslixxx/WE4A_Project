@@ -155,5 +155,28 @@ class AdminController extends AbstractController
 
         return new JsonResponse(['status' => 'success']);
     }
+    #[Route('/admin/update-course/{id}', name: 'admin_update_course', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function updateCourse(int $id, Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $course = $em->getRepository(Course::class)->find($id);
+
+        if (!$course) {
+            return new JsonResponse(['status' => 'error', 'message' => 'UE non trouvée.'], 404);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        if (isset($data['name'])) {
+            $course->setName($data['name']);
+        }
+        if (isset($data['description'])) {
+            $course->setDescription($data['description']);
+        }
+
+        $em->flush();
+
+        return new JsonResponse(['status' => 'success']);
+    }
 
 }
