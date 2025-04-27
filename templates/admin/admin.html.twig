@@ -4,114 +4,148 @@
 
 {% block body %}
     <style>
-        /* Styles communs pour les cartes */
-        .card {
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            margin-bottom: 1rem;
+        .wide-card {
+            width: 100%;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
         }
+
         .bg-blue-darker {
             background-color: #001f3f !important;
+            border-radius: 10px;
         }
+
         .list-group-item {
             background-color: rgba(255,255,255,0.15);
             border: none;
             margin-bottom: 0.5rem;
             color: #fff;
         }
-        .list-group-item span {
-            /* Pour que le texte reste lisible */
-            color: #fff;
+        .tab-menu {
+            width: 100%;
+            max-width: 600px;
+            background-color: #001f3f;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            padding: 0.5rem;
+            gap: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            margin-bottom: 2rem;
+        }
+
+        .tab-link {
+            background-color: transparent;
+            border: 2px solid #ffffff33;
+            color: #ffffffcc;
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab-link:hover {
+            background-color: #ffffff22;
+            color: #ffffff;
+        }
+
+        .tab-link.active {
+            background-color: #ffffff;
+            color: #001f3f;
+            border-color: #ffffff;
+        }
+
+        .tab-link i {
+            font-size: 1.2rem;
         }
     </style>
 
-    <div class="container d-flex flex-column align-items-center" style="min-height: 100vh; gap: 1rem; padding: 2rem;">
 
-        <!-- Sélecteur pour changer de section -->
-        <div class="card w-100 bg-blue-darker mb-4">
-            <div class="card-body text-center">
-                <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Catalogue</h2>
-                <select id="catalogSelector" class="form-select w-50 mx-auto mt-3">
-                    <option value="users" selected>Utilisateurs</option>
-                    <option value="courses">UEs</option>
-                </select>
-            </div>
+    <div class="container-fluid d-flex flex-column align-items-center" style="min-height: 100vh; gap: 1rem; padding: 2rem; max-width: 1400px; margin: 0 auto;">
+
+        <div class="tab-menu">
+            <a href="#" id="users-tab" class="tab-link active">
+                <i class="bi bi-people-fill"></i> Utilisateurs
+            </a>
+            <a href="#" id="courses-tab" class="tab-link">
+                <i class="bi bi-journal-bookmark-fill"></i> UEs
+            </a>
         </div>
 
 
-        <!-- Liste des utilisateurs -->
-        <div id="usersSection">
-            <!-- Section Liste des Utilisateurs -->
-            <div class="card w-100 bg-blue-darker">
-                <div class="card-header d-flex justify-content-between align-items-center" style="background: transparent; border-bottom: none;">
-                    <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Liste des Utilisateurs</h2>
-                    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createUserModal">
-                        Créer un utilisateur ➕
-                    </button>
-                </div>
-                <div class="card-body">
-                    <ul class="list-group" id="userList">
-                        {% for user in users %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center" id="user-{{ user.id }}">
-                                <span><strong>{{ user.firstName }} {{ user.lastName }}</strong> - {{ user.email }} ({{ user.role }})</span>
-                                <div class="action-buttons">
-                                    <button class="btn btn-danger btn-sm delete-user" data-id="{{ user.id }}">Supprimer</button>
-                                    <button class="btn btn-danger btn-sm edit-user" data-id="{{ user.id }}"
-                                            data-email="{{ user.email }}" data-first-name="{{ user.firstName }}"
-                                            data-last-name="{{ user.lastName }}" data-phone-number="{{ user.phoneNumber }}"
-                                            data-birth-date="{{ user.birthDate ? user.birthDate|date('Y-m-d') : '' }}"
-                                            data-role="{{ user.role }}">
-                                        Modifier
-                                    </button>
-                                </div>
-                            </li>
-                        {% else %}
-                            <li class="list-group-item">Aucun utilisateur trouvé.</li>
-                        {% endfor %}
-                    </ul>
-                </div>
+        <section id="usersSection" class="card wide-card bg-blue-darker p-4 mb-5">
+            <div class="card-header d-flex justify-content-between align-items-center bg-transparent border-0">
+                <h2 class="text-white" style="font-family: 'Luckiest Guy', cursive;">Liste des Utilisateurs</h2>
+                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createUserModal">➕ Créer</button>
             </div>
-        </div>
+            <div class="card-body">
+                <ul class="list-group" id="userList">
+                    {% for user in users %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center" id="user-{{ user.id }}">
+                            <span><strong>{{ user.firstName }} {{ user.lastName }}</strong> – {{ user.email }} ({{ user.role }})</span>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-danger btn-sm delete-user" data-id="{{ user.id }}">Supprimer</button>
+                                <button class="btn btn-warning btn-sm edit-user"
+                                        data-id="{{ user.id }}"
+                                        data-email="{{ user.email }}"
+                                        data-first-name="{{ user.firstName }}"
+                                        data-last-name="{{ user.lastName }}"
+                                        data-phone-number="{{ user.phoneNumber }}"
+                                        data-birth-date="{{ user.birthDate ? user.birthDate|date('Y-m-d') : '' }}"
+                                        data-role="{{ user.role }}">
+                                    Modifier
+                                </button>
+                            </div>
+                        </li>
+                    {% else %}
+                        <li class="list-group-item">Aucun utilisateur trouvé.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
 
         <!-- Liste des UEs -->
-        <div id="coursesSection" style="display: none;">
-            <!-- Section Liste des UE -->
-            <div class="card w-100 bg-blue-darker">
-                <div class="card-header d-flex justify-content-between align-items-center" style="background: transparent; border-bottom: none;">
-                    <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Liste des UE</h2>
-                    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createCourseModal">
-                        Créer une UE ➕
-                    </button>
-                </div>
-                <div class="card-body">
-                    <ul class="list-group" id="courseList">
-                        {% for course in courses %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center" id="course-{{ course.id }}">
-                                <span><strong>{{ course.name }}</strong>: {{ course.description }}</span>
-                                <div class="action-buttons">
-                                    <button class="btn btn-danger btn-sm delete-course" data-id="{{ course.id }}">Supprimer</button>
-                                    <button
-                                            class="btn btn-danger btn-sm edit-course"
-                                            data-id="{{ course.id }}"
-                                            data-name="{{ course.name }}"
-                                            data-description="{{ course.description }}"
-                                    >
-                                        Modifier
-                                    </button>
-                                </div>
-                            </li>
-                        {% else %}
-                            <li class="list-group-item">Aucune UE trouvée.</li>
-                        {% endfor %}
-                    </ul>
-                </div>
+        <section id="coursesSection" class="card wide-card bg-blue-darker p-4 mb-5" style="display: none;">
+            <div class="card-header d-flex justify-content-between align-items-center bg-transparent border-0">
+                <h2 class="text-white" style="font-family: 'Luckiest Guy', cursive;">Liste des UE</h2>
+                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createCourseModal">
+                    ➕ Créer une UE
+                </button>
             </div>
-        </div>
+            <div class="card-body">
+                <ul class="list-group" id="courseList">
+                    {% for course in courses %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center" id="course-{{ course.id }}">
+                            <span><strong>{{ course.name }}</strong> : {{ course.description }}</span>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-danger btn-sm delete-course" data-id="{{ course.id }}">Supprimer</button>
+                                <button class="btn btn-warning btn-sm edit-course"
+                                        data-id="{{ course.id }}"
+                                        data-name="{{ course.name }}"
+                                        data-description="{{ course.description }}">
+                                    Modifier
+                                </button>
+                            </div>
+                        </li>
+                    {% else %}
+                        <li class="list-group-item">Aucune UE trouvée.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
+
 
 
         <!-- Section Activités récentes -->
 
-        <div class="card w-100 bg-blue-darker">
+        <div class="card wide-card bg-blue-darker">
             <div class="card-header text-center" style="background: transparent; border-bottom: none;">
                 <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Activités récentes</h2>
             </div>
@@ -153,7 +187,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content" style="background-color: #f0f0f0;">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editUserModalLabel">Modifier l'utilisateur</h5>
+                    <h5 class="modal-title" id="editUserModalLabel">Modifier l'utilisateur et assigner des élèves à une UE</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
                 <div class="modal-body">
@@ -184,11 +218,27 @@
                             </div>
                         {% endfor %}
 
-                        <!-- Mot de passe spécial -->
+                        <!-- Nouveau mot de passe -->
                         <div class="mb-3">
                             <label>Nouveau mot de passe (laisser vide si pas de changement)</label>
                             <input type="password" class="form-control" id="editPassword">
                         </div>
+
+                        <!-- Liste des élèves à assigner -->
+                        <div class="mb-3">
+                            <label>Assigner des élèves à une UE :</label>
+                            <div class="border p-2" style="max-height: 200px; overflow-y: auto;">
+                                {% for student in students %}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="eleve{{ student.id }}" name="assignedStudents" value="{{ student.id }}">
+                                        <label class="form-check-label" for="student{{ student.id }}">
+                                            {{ student.firstName }} {{ student.lastName }} ({{ student.email }})
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -197,6 +247,7 @@
             </div>
         </div>
     </div>
+
     <!-- Modal Créer Utilisateur -->
     <div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -308,22 +359,30 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // -------- Gestion des onglets --------
+            const usersTab = document.getElementById('users-tab');
+            const coursesTab = document.getElementById('courses-tab');
             const usersSection = document.getElementById('usersSection');
             const coursesSection = document.getElementById('coursesSection');
-            const selector = document.getElementById('catalogSelector');
 
-            // Changer d'onglet entre utilisateurs et cours
-            selector.addEventListener('change', () => {
-                if (selector.value === 'users') {
-                    usersSection.style.display = 'block';
-                    coursesSection.style.display = 'none';
-                } else {
-                    usersSection.style.display = 'none';
-                    coursesSection.style.display = 'block';
-                }
+            function switchTab(activeTab, inactiveTab, activeSection, inactiveSection) {
+                activeTab.classList.add('active');
+                inactiveTab.classList.remove('active');
+                activeSection.style.display = 'block';
+                inactiveSection.style.display = 'none';
+            }
+
+            usersTab.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchTab(usersTab, coursesTab, usersSection, coursesSection);
             });
 
-            // Suppression d'un utilisateur
+            coursesTab.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchTab(coursesTab, usersTab, coursesSection, usersSection);
+            });
+
+            // -------- Gestion des suppressions --------
             document.querySelectorAll('.delete-user').forEach(button => {
                 button.addEventListener('click', async () => {
                     const userId = button.getAttribute('data-id');
@@ -342,7 +401,6 @@
                 });
             });
 
-            // Suppression d'un cours
             document.querySelectorAll('.delete-course').forEach(button => {
                 button.addEventListener('click', async () => {
                     const courseId = button.getAttribute('data-id');
@@ -361,37 +419,75 @@
                 });
             });
 
-            // Ouvrir la fenêtre de modification d'utilisateur
+            // -------- Gestion des modales --------
             document.querySelectorAll('.edit-user').forEach(button => {
                 button.addEventListener('click', () => {
-                    const userId = button.getAttribute('data-id');
-                    const email = button.getAttribute('data-email');
-                    const firstName = button.getAttribute('data-first-name');
-                    const lastName = button.getAttribute('data-last-name');
-                    const phoneNumber = button.getAttribute('data-phone-number');
-                    const birthDate = button.getAttribute('data-birth-date');
-                    const role = button.getAttribute('data-role');
+                    const fields = ['Email', 'FirstName', 'LastName', 'PhoneNumber', 'BirthDate', 'Role'];
+                    document.getElementById('editUserId').value = button.getAttribute('data-id');
 
-                    document.getElementById('editUserId').value = userId;
-                    document.getElementById('currentEmail').textContent = email;
-                    document.getElementById('editEmail').value = email;
-                    document.getElementById('currentFirstName').textContent = firstName;
-                    document.getElementById('editFirstName').value = firstName;
-                    document.getElementById('currentLastName').textContent = lastName;
-                    document.getElementById('editLastName').value = lastName;
-                    document.getElementById('currentPhoneNumber').textContent = phoneNumber;
-                    document.getElementById('editPhoneNumber').value = phoneNumber;
-                    document.getElementById('currentBirthDate').textContent = birthDate;
-                    document.getElementById('editBirthDate').value = birthDate;
-                    document.getElementById('currentRole').textContent = role;
-                    document.getElementById('editRole').value = role;
+                    fields.forEach(field => {
+                        const lowerField = field.charAt(0).toLowerCase() + field.slice(1);
+                        document.getElementById('current' + field).textContent = button.getAttribute('data-' + lowerField);
+                        document.getElementById('edit' + field).value = button.getAttribute('data-' + lowerField);
+                    });
 
                     new bootstrap.Modal(document.getElementById('editUserModal')).show();
                 });
             });
 
-            // Création d'une UE
-            document.getElementById('createCourseButton').addEventListener('click', async function () {
+            document.querySelectorAll('.edit-course').forEach(button => {
+                button.addEventListener('click', () => {
+                    document.getElementById('editCourseId').value = button.getAttribute('data-id');
+                    document.getElementById('editCourseName').value = button.getAttribute('data-name');
+                    document.getElementById('editCourseDescription').value = button.getAttribute('data-description');
+
+                    new bootstrap.Modal(document.getElementById('editCourseModal')).show();
+                });
+            });
+
+            // -------- Gestion création utilisateurs / UEs --------
+            const createUserBtn = document.getElementById('createUserButton');
+            if (createUserBtn) {
+                createUserBtn.addEventListener('click', async () => {
+                    const userData = {
+                        email: document.getElementById('newEmail').value,
+                        password: document.getElementById('newPassword').value,
+                        firstName: document.getElementById('newFirstName').value,
+                        lastName: document.getElementById('newLastName').value,
+                        phoneNumber: document.getElementById('newPhoneNumber').value,
+                        birthDate: document.getElementById('newBirthDate').value,
+                        role: document.getElementById('newRole').value
+                    };
+
+                    if (Object.values(userData).some(v => !v)) {
+                        alert('Merci de remplir tous les champs.');
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('/admin/create-user', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify(userData)
+                        });
+
+                        const result = await response.json();
+                        if (result.status === 'success') {
+                            alert('Utilisateur créé avec succès !');
+                            window.location.reload();
+                        } else {
+                            alert('Erreur : ' + result.message);
+                        }
+                    } catch (error) {
+                        alert('Erreur de communication avec le serveur.');
+                    }
+                });
+            }
+
+            document.getElementById('createCourseButton').addEventListener('click', async () => {
                 const name = document.getElementById('newCourseName').value;
                 const description = document.getElementById('newCourseDescription').value;
 
@@ -411,10 +507,9 @@
                     });
 
                     const result = await response.json();
-
                     if (result.status === 'success') {
                         alert('UE créée avec succès !');
-                        window.location.reload(); // recharge pour afficher la nouvelle UE
+                        window.location.reload();
                     } else {
                         alert('Erreur : ' + result.message);
                     }
@@ -423,8 +518,7 @@
                 }
             });
 
-
-            // Sauvegarder les changements sur un utilisateur
+            // -------- Gestion sauvegarde modifications utilisateur / UE --------
             document.getElementById('saveUserChanges').addEventListener('click', async () => {
                 const userId = document.getElementById('editUserId').value;
 
@@ -456,28 +550,11 @@
                         alert('Erreur : ' + result.message);
                     }
                 } catch (error) {
-                    console.error('Erreur lors de l\'envoi de la mise à jour:', error);
                     alert('Erreur de communication avec le serveur.');
                 }
             });
 
-            // Remplir les champs de la modale Modifier UE
-            document.querySelectorAll('.edit-course').forEach(button => {
-                button.addEventListener('click', () => {
-                    const courseId = button.getAttribute('data-id');
-                    const courseName = button.getAttribute('data-name');
-                    const courseDescription = button.getAttribute('data-description');
-
-                    document.getElementById('editCourseId').value = courseId;
-                    document.getElementById('editCourseName').value = courseName;
-                    document.getElementById('editCourseDescription').value = courseDescription;
-
-                    new bootstrap.Modal(document.getElementById('editCourseModal')).show();
-                });
-            });
-
-            // Sauvegarder les modifications UE
-            document.getElementById('saveCourseChanges').addEventListener('click', async function () {
+            document.getElementById('saveCourseChanges').addEventListener('click', async () => {
                 const courseId = document.getElementById('editCourseId').value;
                 const name = document.getElementById('editCourseName').value;
                 const description = document.getElementById('editCourseDescription').value;
@@ -498,7 +575,6 @@
                     });
 
                     const result = await response.json();
-
                     if (result.status === 'success') {
                         alert('UE modifiée avec succès !');
                         window.location.reload();
@@ -510,123 +586,52 @@
                 }
             });
 
-            // Création d'un utilisateur
-            const createUserBtn = document.getElementById('createUserButton');
-            if (createUserBtn) {
-                createUserBtn.addEventListener('click', async () => {
-                    const email = document.getElementById('newEmail').value;
-                    const password = document.getElementById('newPassword').value;
-                    const firstName = document.getElementById('newFirstName').value;
-                    const lastName = document.getElementById('newLastName').value;
-                    const phoneNumber = document.getElementById('newPhoneNumber').value;
-                    const birthDate = document.getElementById('newBirthDate').value;
-                    const role = document.getElementById('newRole').value;
-
-                    if (!email || !password || !firstName || !lastName || !phoneNumber || !birthDate || !role) {
-                        alert('Merci de remplir tous les champs.');
-                        return;
-                    }
-
+            // -------- Load more posts --------
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            if (loadMoreBtn) {
+                loadMoreBtn.addEventListener('click', async () => {
                     try {
-                        const response = await fetch('/admin/create-user', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest'
-                            },
-                            body: JSON.stringify({
-                                email, password, firstName, lastName, phoneNumber, birthDate, role
-                            })
+                        const response = await fetch('{{ path('admin_load_more_posts') }}', {
+                            method: 'GET',
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
                         });
 
-                        const result = await response.json();
-                        if (result.status === 'success') {
-                            alert('Utilisateur créé avec succès !');
-                            window.location.reload();
-                        } else {
-                            alert('Erreur : ' + result.message);
-                        }
+                        const posts = await response.json();
+                        const container = document.getElementById('recentPosts');
+
+                        container.innerHTML = '';
+
+                        posts.forEach(post => {
+                            const div = document.createElement('div');
+                            div.className = 'list-group-item';
+                            div.style.backgroundColor = 'rgba(255,255,255,0.15)';
+                            div.style.border = 'none';
+                            div.style.marginBottom = '0.5rem';
+                            div.style.color = '#fff';
+
+                            div.innerHTML = `
+                        <small class="text-muted">${post.date}</small>
+                        <p class="mb-0">
+                            ${post.firstName} ${post.lastName} a posté
+                            ${post.type === 'document' ? 'un fichier' : post.type === 'link' ? 'un lien' : 'un message'}
+                            « ${post.title} » dans ${post.courseName}
+                            ${post.pinned ? '📌' : ''}
+                        </p>
+                    `;
+
+                            container.appendChild(div);
+                        });
+
+                        loadMoreBtn.style.display = 'none';
                     } catch (error) {
-                        alert('Erreur de communication avec le serveur.');
+                        console.error('Erreur AJAX :', error);
+                        alert('Erreur de chargement.');
                     }
                 });
             }
         });
-
-        // Fonction pour rendre un champ éditable
-        function enableEdit(id) {
-            const input = document.getElementById(id);
-            const validateButton = document.getElementById('validate-' + id.replace('edit', ''));
-
-            input.removeAttribute('readonly');
-            input.removeAttribute('disabled');
-            input.focus();
-
-            if (validateButton) {
-                validateButton.classList.remove('d-none');
-            }
-        }
-
-        // Fonction pour valider la modification d'un champ
-        function validateEdit(id) {
-            const input = document.getElementById(id);
-            const validateButton = document.getElementById('validate-' + id.replace('edit', ''));
-
-            if (input.tagName === "SELECT") {
-                input.setAttribute('disabled', true);
-            } else {
-                input.setAttribute('readonly', true);
-            }
-
-            if (validateButton) {
-                validateButton.classList.add('d-none');
-            }
-        }
     </script>
 
-    <script>
-        document.getElementById('loadMoreBtn').addEventListener('click', async () => {
-            try {
-                const response = await fetch('{{ path('admin_load_more_posts') }}', {
-                    method: 'GET',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                });
-
-                const posts = await response.json();
-                const container = document.getElementById('recentPosts');
-
-                container.innerHTML = ''; // On vide l'ancien contenu
-
-                posts.forEach(post => {
-                    const div = document.createElement('div');
-                    div.className = 'list-group-item';
-                    div.style.backgroundColor = 'rgba(255,255,255,0.15)';
-                    div.style.border = 'none';
-                    div.style.marginBottom = '0.5rem';
-                    div.style.color = '#fff';
-
-                    div.innerHTML = `
-                    <small class="text-muted">${post.date}</small>
-                    <p class="mb-0">
-                        ${post.firstName} ${post.lastName} a posté
-                        ${post.type === 'document' ? 'un fichier' : post.type === 'link' ? 'un lien' : 'un message'}
-                        « ${post.title} » dans ${post.courseName}
-                        ${post.pinned ? '📌' : ''}
-                    </p>
-                `;
-
-                    container.appendChild(div);
-                });
-
-                document.getElementById('loadMoreBtn').style.display = 'none'; // Cacher le bouton après chargement
-            } catch (error) {
-                console.error('Erreur AJAX :', error);
-                alert('Erreur de chargement.');
-            }
-        });
-    </script>
 
 
 

@@ -21,31 +21,33 @@ class AdminController extends AbstractController
     {
         $users = $em->getRepository(User::class)->findAll();
         $courses = $em->getRepository(Course::class)->findAll();
-
-        // Charger seulement les 3 dernières activités
         $recentPosts = $em->getRepository(Post::class)
             ->createQueryBuilder('p')
-            ->orderBy('p.pinned', 'DESC')    // 🔥 d'abord épinglés
-            ->addOrderBy('p.dateCreation', 'DESC') // 🔥 ensuite date
+            ->orderBy('p.pinned', 'DESC')
+            ->addOrderBy('p.dateCreation', 'DESC')
             ->setMaxResults(3)
             ->getQuery()
             ->getResult();
 
+        // On filtre pour ne prendre que les étudiants
+        $students = $em->getRepository(User::class)->findBy(['role' => 'ROLE_ELEVE']);
 
         return $this->render('admin/admin.html.twig', [
             'users' => $users,
             'courses' => $courses,
             'recentPosts' => $recentPosts,
+            'students' => $students, // <- C'est ça qui manquait
         ]);
     }
+
 
     #[Route('/admin/load-more-posts', name: 'admin_load_more_posts', methods: ['GET'])]
     public function loadMorePosts(EntityManagerInterface $em): JsonResponse
     {
         $posts = $em->getRepository(Post::class)
             ->createQueryBuilder('p')
-            ->orderBy('p.pinned', 'DESC')    // 🔥 d'abord épinglés
-            ->addOrderBy('p.dateCreation', 'DESC') // 🔥 ensuite date
+            ->orderBy('p.pinned', 'DESC')
+            ->addOrderBy('p.dateCreation', 'DESC')
             ->getQuery()
             ->getResult();
 
@@ -58,7 +60,7 @@ class AdminController extends AbstractController
                 'type' => $post->getType(),
                 'title' => $post->getTitle(),
                 'courseName' => $post->getCourse()->getName(),
-                'pinned' => $post->isPinned() ? true : false,
+                'pinned' => $post->isPinned(),
             ];
         }
 
@@ -70,7 +72,6 @@ class AdminController extends AbstractController
     public function deleteUser(int $id, EntityManagerInterface $em): JsonResponse
     {
         $user = $em->getRepository(User::class)->find($id);
-
         if (!$user) {
             return new JsonResponse(['status' => 'error', 'message' => 'Utilisateur non trouvé.'], 404);
         }
@@ -86,7 +87,6 @@ class AdminController extends AbstractController
     public function deleteCourse(int $id, EntityManagerInterface $em): JsonResponse
     {
         $course = $em->getRepository(Course::class)->find($id);
-
         if (!$course) {
             return new JsonResponse(['status' => 'error', 'message' => 'UE non trouvée.'], 404);
         }
@@ -106,7 +106,6 @@ class AdminController extends AbstractController
         UserPasswordHasherInterface $passwordHasher
     ): JsonResponse {
         $user = $em->getRepository(User::class)->find($id);
-
         if (!$user) {
             return new JsonResponse(['status' => 'error', 'message' => 'Utilisateur non trouvé.'], 404);
         }
@@ -187,6 +186,16 @@ class AdminController extends AbstractController
         $course = new Course();
         $course->setName($data['name']);
         $course->setDescription($data['description']);
+
+        // Lier les élèves s'ils sont spécifiés
+        if (!empty($data['students']) && is_array($data['students'])) {
+            foreach ($data['students'] as $studentId) {
+                $student = $em->getRepository(User::class)->find($studentId);
+                if ($student && $student->getRole() === 'ROLE_ELEVE') {
+                    $course->addStudent($student);
+                }
+            }
+        }
 
         $em->persist($course);
         $em->flush();
