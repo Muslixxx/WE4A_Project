@@ -156,9 +156,19 @@
                                 <label for="postTitle" class="form-label">Titre du post</label>
                                 <input type="text" class="form-control" id="postTitle" placeholder="Titre du post">
                             </div>
-                            <div class="mb-3">
-                                <label for="postText" class="form-label">Description</label>
+                            <div class="mb-3" id="descriptionTextGroup">
+                                <label for="postText" class="form-label">Texte du post</label>
                                 <textarea class="form-control" id="postText" rows="3" placeholder="Entrez votre texte"></textarea>
+                            </div>
+
+                            <div class="mb-3 d-none" id="descriptionLinkGroup">
+                                <label for="postLink" class="form-label">Lien URL</label>
+                                <input type="url" class="form-control" id="postLink" placeholder="https://exemple.com">
+                            </div>
+
+                            <div class="mb-3 d-none" id="descriptionFileGroup">
+                                <label for="postFile" class="form-label">Fichier</label>
+                                <input type="file" class="form-control" id="postFile">
                             </div>
                             <div class="mb-3">
                                 <label for="contentType" class="form-label">Type</label>
@@ -196,10 +206,27 @@
             if (submitButton) {
                 submitButton.addEventListener('click', async () => {
                     const title = document.getElementById('postTitle').value.trim();
-                    const description = document.getElementById('postText').value.trim();
                     const type = document.getElementById('contentType').value;
                     const isImportant = document.getElementById('isImportant').value;
                     const courseId = {{ course.id }};
+
+                    let description = '';
+
+                    if (type === 'text') {
+                        description = document.getElementById('postText').value.trim();
+                    } else if (type === 'link') {
+                        description = document.getElementById('postLink').value.trim();
+                    } else if (type === 'document') {
+                        const fileInput = document.getElementById('postFile');
+                        if (fileInput.files.length > 0) {
+                            const file = fileInput.files[0];
+                            // Pour simplifier pour l’instant on envoie juste son nom (on peut améliorer avec un vrai upload plus tard)
+                            description = file.name;
+                        } else {
+                            alert('Merci de sélectionner un fichier.');
+                            return;
+                        }
+                    }
 
                     if (!title || !description) {
                         alert('Merci de remplir tous les champs.');
@@ -236,8 +263,26 @@
                         alert('Erreur de communication avec le serveur.');
                     }
                 });
+
             }
         });
+
+        document.getElementById('contentType').addEventListener('change', function () {
+            const selectedType = this.value;
+
+            document.getElementById('descriptionTextGroup').classList.add('d-none');
+            document.getElementById('descriptionLinkGroup').classList.add('d-none');
+            document.getElementById('descriptionFileGroup').classList.add('d-none');
+
+            if (selectedType === 'text') {
+                document.getElementById('descriptionTextGroup').classList.remove('d-none');
+            } else if (selectedType === 'link') {
+                document.getElementById('descriptionLinkGroup').classList.remove('d-none');
+            } else if (selectedType === 'document') {
+                document.getElementById('descriptionFileGroup').classList.remove('d-none');
+            }
+        });
+
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
