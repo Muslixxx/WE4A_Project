@@ -26,71 +26,79 @@
     </style>
 
     <div class="container d-flex flex-column align-items-center" style="min-height: 100vh; gap: 1rem; padding: 2rem;">
-        <!-- Section Bienvenue -->
-        <div class="card w-100 bg-blue-darker">
+
+        <!-- Sélecteur pour changer de section -->
+        <div class="card w-100 bg-blue-darker mb-4">
             <div class="card-body text-center">
-                <h1 class="card-title" style="font-family: 'Luckiest Guy', cursive; font-size: 2.2rem; color: #fff; text-shadow: 2px 2px 0 #0003;">
-                    Menu Principal
-                </h1>
-                <p class="card-text" style="font-family: 'Comic Neue', cursive; color: #fff;">
-                    Bienvenue sur Moodneuille, vous êtes connecté en tant qu’administrateur.
-                </p>
+                <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Catalogue</h2>
+                <select id="catalogSelector" class="form-select w-50 mx-auto mt-3">
+                    <option value="users" selected>Utilisateurs</option>
+                    <option value="courses">UEs</option>
+                </select>
             </div>
         </div>
 
-        <!-- Section Liste des Utilisateurs -->
-        <div class="card w-100 bg-blue-darker">
-            <div class="card-header d-flex justify-content-between align-items-center" style="background: transparent; border-bottom: none;">
-                <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Liste des Utilisateurs</h2>
-                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createUserModal">Créer un utilisateur ➕</button>
-            </div>
-            <div class="card-body">
-                <ul class="list-group" id="userList">
-                    {% for user in users %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center" id="user-{{ user.id }}">
-                            <span><strong>{{ user.firstName }} {{ user.lastName }}</strong> - {{ user.email }} ({{ user.role }})</span>
-                            <div class="action-buttons">
-                                <button class="btn btn-danger btn-sm delete-user" data-id="{{ user.id }}">Supprimer</button>
-                                <a href="#" class="btn btn-danger btn-sm edit-user"
-                                   data-id="{{ user.id }}"
-                                   data-firstname="{{ user.firstName }}"
-                                   data-lastname="{{ user.lastName }}"
-                                   data-email="{{ user.email }}"
-                                   data-phone="{{ user.phoneNumber }}"
-                                   data-birthdate="{{ user.birthDate|date('Y-m-d') }}"
-                                   data-role="{{ user.role }}"
-                                >Modifier</a>
-                            </div>
-                        </li>
-                    {% else %}
-                        <li class="list-group-item">Aucun utilisateur trouvé.</li>
-                    {% endfor %}
-                </ul>
+
+        <!-- Liste des utilisateurs -->
+        <div id="usersSection">
+            <!-- Section Liste des Utilisateurs -->
+            <div class="card w-100 bg-blue-darker">
+                <div class="card-header d-flex justify-content-between align-items-center" style="background: transparent; border-bottom: none;">
+                    <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Liste des Utilisateurs</h2>
+                    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createUserModal">
+                        Créer un utilisateur ➕
+                    </button>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group" id="userList">
+                        {% for user in users %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center" id="user-{{ user.id }}">
+                                <span><strong>{{ user.firstName }} {{ user.lastName }}</strong> - {{ user.email }} ({{ user.role }})</span>
+                                <div class="action-buttons">
+                                    <button class="btn btn-danger btn-sm delete-user" data-id="{{ user.id }}">Supprimer</button>
+                                    <button class="btn btn-danger btn-sm edit-user" data-id="{{ user.id }}"
+                                            data-email="{{ user.email }}" data-first-name="{{ user.firstName }}"
+                                            data-last-name="{{ user.lastName }}" data-phone-number="{{ user.phoneNumber }}"
+                                            data-birth-date="{{ user.birthDate ? user.birthDate|date('Y-m-d') : '' }}"
+                                            data-role="{{ user.role }}">
+                                        Modifier
+                                    </button>
+                                </div>
+                            </li>
+                        {% else %}
+                            <li class="list-group-item">Aucun utilisateur trouvé.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
 
-        <!-- Section Liste des UE -->
-        <div class="card w-100 bg-blue-darker">
-            <div class="card-header d-flex justify-content-between align-items-center" style="background: transparent; border-bottom: none;">
-                <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Liste des UE</h2>
-                <button class="btn btn-success btn-sm" disabled>Créer une UE ➕</button>
-            </div>
-            <div class="card-body">
-                <ul class="list-group" id="courseList">
-                    {% for course in courses %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center" id="course-{{ course.id }}">
-                            <span><strong>{{ course.name }}</strong>: {{ course.description }}</span>
-                            <div class="action-buttons">
-                                <button class="btn btn-danger btn-sm delete-course" data-id="{{ course.id }}">Supprimer</button>
-                                <a href="#" class="btn btn-danger btn-sm">Modifier</a>
-                            </div>
-                        </li>
-                    {% else %}
-                        <li class="list-group-item">Aucune UE trouvée.</li>
-                    {% endfor %}
-                </ul>
+        <!-- Liste des UEs -->
+        <div id="coursesSection" style="display: none;">
+            <!-- Section Liste des UE -->
+            <div class="card w-100 bg-blue-darker">
+                <div class="card-header d-flex justify-content-between align-items-center" style="background: transparent; border-bottom: none;">
+                    <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Liste des UE</h2>
+                    <button class="btn btn-success btn-sm" id="createCourseBtn">Créer une UE ➕</button>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group" id="courseList">
+                        {% for course in courses %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center" id="course-{{ course.id }}">
+                                <span><strong>{{ course.name }}</strong>: {{ course.description }}</span>
+                                <div class="action-buttons">
+                                    <button class="btn btn-danger btn-sm delete-course" data-id="{{ course.id }}">Supprimer</button>
+                                    <a href="#" class="btn btn-danger btn-sm">Modifier</a>
+                                </div>
+                            </li>
+                        {% else %}
+                            <li class="list-group-item">Aucune UE trouvée.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
+
 
         <!-- Section Activités récentes -->
         {% set posts = [
@@ -177,42 +185,42 @@
                 <div class="modal-body">
                     <form id="createUserForm">
                         <div class="mb-3">
-                            <label>Email :</label>
-                            <input type="email" class="form-control" id="newEmail">
+                            <label>Email</label>
+                            <input type="email" class="form-control" id="newEmail" required>
                         </div>
                         <div class="mb-3">
-                            <label>Mot de passe :</label>
-                            <input type="password" class="form-control" id="newPassword">
+                            <label>Mot de passe</label>
+                            <input type="password" class="form-control" id="newPassword" required>
                         </div>
                         <div class="mb-3">
-                            <label>Prénom :</label>
-                            <input type="text" class="form-control" id="newFirstName">
+                            <label>Prénom</label>
+                            <input type="text" class="form-control" id="newFirstName" required>
                         </div>
                         <div class="mb-3">
-                            <label>Nom :</label>
-                            <input type="text" class="form-control" id="newLastName">
+                            <label>Nom</label>
+                            <input type="text" class="form-control" id="newLastName" required>
                         </div>
                         <div class="mb-3">
-                            <label>Numéro de téléphone :</label>
-                            <input type="text" class="form-control" id="newPhoneNumber">
+                            <label>Téléphone</label>
+                            <input type="text" class="form-control" id="newPhoneNumber" required>
                         </div>
                         <div class="mb-3">
-                            <label>Date de naissance :</label>
-                            <input type="date" class="form-control" id="newBirthDate">
+                            <label>Date de naissance</label>
+                            <input type="date" class="form-control" id="newBirthDate" required>
                         </div>
                         <div class="mb-3">
-                            <label>Rôle :</label>
-                            <select class="form-select" id="newRole">
+                            <label>Rôle</label>
+                            <select class="form-select" id="newRole" required>
                                 <option value="ROLE_ELEVE">Élève</option>
                                 <option value="ROLE_PROF">Professeur</option>
                                 <option value="ROLE_ADMIN">Administrateur</option>
-                                <option value="ROLE_PROF_ADMIN">Prof et Administrateur</option>
+                                <option value="ROLE_PROF_ADMIN">Professeur + Administrateur</option>
                             </select>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" id="createUserButton">Créer l'utilisateur</button>
+                    <button type="button" id="createUserButton" class="btn btn-success">Créer l'utilisateur</button>
                 </div>
             </div>
         </div>
@@ -221,6 +229,21 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const usersSection = document.getElementById('usersSection');
+            const coursesSection = document.getElementById('coursesSection');
+            const selector = document.getElementById('catalogSelector');
+
+            // Changer d'onglet entre utilisateurs et cours
+            selector.addEventListener('change', () => {
+                if (selector.value === 'users') {
+                    usersSection.style.display = 'block';
+                    coursesSection.style.display = 'none';
+                } else {
+                    usersSection.style.display = 'none';
+                    coursesSection.style.display = 'block';
+                }
+            });
+
             // Suppression d'un utilisateur
             document.querySelectorAll('.delete-user').forEach(button => {
                 button.addEventListener('click', async () => {
@@ -228,9 +251,7 @@
                     if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
                         const response = await fetch(`/admin/delete-user/${userId}`, {
                             method: 'POST',
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
                         });
                         const result = await response.json();
                         if (result.status === 'success') {
@@ -249,9 +270,7 @@
                     if (confirm('Êtes-vous sûr de vouloir supprimer cette UE ?')) {
                         const response = await fetch(`/admin/delete-course/${courseId}`, {
                             method: 'POST',
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
                         });
                         const result = await response.json();
                         if (result.status === 'success') {
@@ -262,7 +281,116 @@
                     }
                 });
             });
+
+            // Ouvrir la fenêtre de modification d'utilisateur
+            document.querySelectorAll('.edit-user').forEach(button => {
+                button.addEventListener('click', () => {
+                    const userId = button.getAttribute('data-id');
+                    const email = button.getAttribute('data-email');
+                    const firstName = button.getAttribute('data-first-name');
+                    const lastName = button.getAttribute('data-last-name');
+                    const phoneNumber = button.getAttribute('data-phone-number');
+                    const birthDate = button.getAttribute('data-birth-date');
+                    const role = button.getAttribute('data-role');
+
+                    document.getElementById('editUserId').value = userId;
+                    document.getElementById('currentEmail').textContent = email;
+                    document.getElementById('editEmail').value = email;
+                    document.getElementById('currentFirstName').textContent = firstName;
+                    document.getElementById('editFirstName').value = firstName;
+                    document.getElementById('currentLastName').textContent = lastName;
+                    document.getElementById('editLastName').value = lastName;
+                    document.getElementById('currentPhoneNumber').textContent = phoneNumber;
+                    document.getElementById('editPhoneNumber').value = phoneNumber;
+                    document.getElementById('currentBirthDate').textContent = birthDate;
+                    document.getElementById('editBirthDate').value = birthDate;
+                    document.getElementById('currentRole').textContent = role;
+                    document.getElementById('editRole').value = role;
+
+                    new bootstrap.Modal(document.getElementById('editUserModal')).show();
+                });
+            });
+
+            // Sauvegarder les changements sur un utilisateur
+            document.getElementById('saveUserChanges').addEventListener('click', async () => {
+                const userId = document.getElementById('editUserId').value;
+
+                const userData = {
+                    email: document.getElementById('editEmail').value,
+                    password: document.getElementById('editPassword').value,
+                    firstName: document.getElementById('editFirstName').value,
+                    lastName: document.getElementById('editLastName').value,
+                    phoneNumber: document.getElementById('editPhoneNumber').value,
+                    birthDate: document.getElementById('editBirthDate').value,
+                    role: document.getElementById('editRole').value
+                };
+
+                try {
+                    const response = await fetch(`/admin/update-user/${userId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify(userData)
+                    });
+
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        alert('Utilisateur mis à jour avec succès.');
+                        window.location.reload();
+                    } else {
+                        alert('Erreur : ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de l\'envoi de la mise à jour:', error);
+                    alert('Erreur de communication avec le serveur.');
+                }
+            });
+
+            // Création d'un utilisateur
+            const createUserBtn = document.getElementById('createUserButton');
+            if (createUserBtn) {
+                createUserBtn.addEventListener('click', async () => {
+                    const email = document.getElementById('newEmail').value;
+                    const password = document.getElementById('newPassword').value;
+                    const firstName = document.getElementById('newFirstName').value;
+                    const lastName = document.getElementById('newLastName').value;
+                    const phoneNumber = document.getElementById('newPhoneNumber').value;
+                    const birthDate = document.getElementById('newBirthDate').value;
+                    const role = document.getElementById('newRole').value;
+
+                    if (!email || !password || !firstName || !lastName || !phoneNumber || !birthDate || !role) {
+                        alert('Merci de remplir tous les champs.');
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('/admin/create-user', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({
+                                email, password, firstName, lastName, phoneNumber, birthDate, role
+                            })
+                        });
+
+                        const result = await response.json();
+                        if (result.status === 'success') {
+                            alert('Utilisateur créé avec succès !');
+                            window.location.reload();
+                        } else {
+                            alert('Erreur : ' + result.message);
+                        }
+                    } catch (error) {
+                        alert('Erreur de communication avec le serveur.');
+                    }
+                });
+            }
         });
+
         // Fonction pour rendre un champ éditable
         function enableEdit(id) {
             const input = document.getElementById(id);
@@ -272,9 +400,12 @@
             input.removeAttribute('disabled');
             input.focus();
 
-            validateButton.classList.remove('d-none');
+            if (validateButton) {
+                validateButton.classList.remove('d-none');
+            }
         }
 
+        // Fonction pour valider la modification d'un champ
         function validateEdit(id) {
             const input = document.getElementById(id);
             const validateButton = document.getElementById('validate-' + id.replace('edit', ''));
@@ -285,124 +416,11 @@
                 input.setAttribute('readonly', true);
             }
 
-            validateButton.classList.add('d-none');
+            if (validateButton) {
+                validateButton.classList.add('d-none');
+            }
         }
-
-        // Modifier User
-        document.querySelectorAll('.edit-user').forEach(button => {
-            button.addEventListener('click', () => {
-                const userId = button.getAttribute('data-id');
-                const firstName = button.getAttribute('data-firstname');
-                const lastName = button.getAttribute('data-lastname');
-                const email = button.getAttribute('data-email');
-                const phoneNumber = button.getAttribute('data-phone');
-                const birthDate = button.getAttribute('data-birthdate');
-                const role = button.getAttribute('data-role');
-
-                document.getElementById('editUserId').value = userId;
-                document.getElementById('currentEmail').textContent = email;
-                document.getElementById('editEmail').value = email;
-                document.getElementById('currentFirstName').textContent = firstName;
-                document.getElementById('editFirstName').value = firstName;
-                document.getElementById('currentLastName').textContent = lastName;
-                document.getElementById('editLastName').value = lastName;
-                document.getElementById('currentPhoneNumber').textContent = phoneNumber;
-                document.getElementById('editPhoneNumber').value = phoneNumber;
-                document.getElementById('currentBirthDate').textContent = birthDate;
-                document.getElementById('editBirthDate').value = birthDate;
-                document.getElementById('currentRole').textContent = role;
-                document.getElementById('editRole').value = role;
-
-                new bootstrap.Modal(document.getElementById('editUserModal')).show();
-            });
-        });
-
-        // Sauvegarder changements User
-        document.getElementById('saveUserChanges').addEventListener('click', async () => {
-            const userId = document.getElementById('editUserId').value;
-
-            const userData = {
-                email: document.getElementById('editEmail').value,
-                password: document.getElementById('editPassword').value,
-                firstName: document.getElementById('editFirstName').value,
-                lastName: document.getElementById('editLastName').value,
-                phoneNumber: document.getElementById('editPhoneNumber').value,
-                birthDate: document.getElementById('editBirthDate').value,
-                role: document.getElementById('editRole').value,
-            };
-
-            try {
-                const response = await fetch(`/admin/update-user/${userId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: JSON.stringify(userData)
-                });
-
-                const result = await response.json();
-
-                if (result.status === 'success') {
-                    alert('Utilisateur mis à jour avec succès.');
-                    location.href = '/admin'; // Recharge vers Admin après succès
-                } else {
-                    alert('Erreur : ' + result.message);
-                }
-
-            } catch (error) {
-                console.error('Erreur lors de l\'envoi de la mise à jour:', error);
-                alert('Erreur de communication avec le serveur.');
-            }
-        });
-
     </script>
 
-    <script>
-        document.getElementById('createUserButton').addEventListener('click', async function () {
-            const email = document.getElementById('newEmail').value;
-            const password = document.getElementById('newPassword').value;
-            const firstName = document.getElementById('newFirstName').value;
-            const lastName = document.getElementById('newLastName').value;
-            const phoneNumber = document.getElementById('newPhoneNumber').value;
-            const birthDate = document.getElementById('newBirthDate').value;
-            const role = document.getElementById('newRole').value;
-
-            if (!email || !password || !firstName || !lastName || !phoneNumber || !birthDate || !role) {
-                alert('Merci de remplir tous les champs.');
-                return;
-            }
-
-            try {
-                const response = await fetch('/admin/create-user', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: JSON.stringify({
-                        email,
-                        password,
-                        firstName,
-                        lastName,
-                        phoneNumber,
-                        birthDate,
-                        role
-                    })
-                });
-
-                const result = await response.json();
-
-                if (result.status === 'success') {
-                    alert('Utilisateur créé avec succès !');
-                    window.location.reload();
-                } else {
-                    alert('Erreur : ' + result.message);
-                }
-            } catch (error) {
-                alert('Erreur de communication avec le serveur.');
-            }
-        });
-    </script>
 
 {% endblock %}
