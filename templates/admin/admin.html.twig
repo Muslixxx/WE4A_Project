@@ -39,11 +39,6 @@
         </div>
 
         <!-- Section Liste des Utilisateurs -->
-        {% set users = [
-            { 'name': 'Alice', 'email': 'alice@example.com' },
-            { 'name': 'Bob', 'email': 'bob@example.com' },
-            { 'name': 'Charlie', 'email': 'charlie@example.com' }
-        ] %}
         <div class="card w-100 bg-blue-darker">
             <div class="card-header text-center" style="background: transparent; border-bottom: none;">
                 <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Liste des Utilisateurs</h2>
@@ -52,35 +47,40 @@
                 <ul class="list-group">
                     {% for user in users %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span><strong>{{ user.name }}</strong> - {{ user.email }}</span>
+                    <span>
+                        <strong>{{ user.firstName }} {{ user.lastName }}</strong> - {{ user.email }} ({{ user.role|replace({'ROLE_':'', '_':' '})|capitalize }})
+                    </span>
                             <a href="#" class="btn btn-danger btn-sm">Modifier</a>
                         </li>
+                    {% else %}
+                        <li class="list-group-item">Aucun utilisateur trouvé.</li>
                     {% endfor %}
                 </ul>
             </div>
         </div>
 
+
         <!-- Section Liste des UE -->
-        {% set ueList = [
-            { 'name': 'UE Mathématiques', 'description': 'Calcul avancé et algèbre linéaire.' },
-            { 'name': 'UE Informatique', 'description': 'Programmation web et algorithmique.' },
-            { 'name': 'UE Physique', 'description': 'Mécanique et thermodynamique.' }
-        ] %}
         <div class="card w-100 bg-blue-darker">
             <div class="card-header text-center" style="background: transparent; border-bottom: none;">
                 <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Liste des UE</h2>
             </div>
             <div class="card-body">
                 <ul class="list-group">
-                    {% for ue in ueList %}
+                    {% for course in courses %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span><strong>{{ ue.name }}</strong>: {{ ue.description }}</span>
+                    <span>
+                        <strong>{{ course.name }}</strong>: {{ course.description }}
+                    </span>
                             <a href="#" class="btn btn-danger btn-sm">Modifier</a>
                         </li>
+                    {% else %}
+                        <li class="list-group-item">Aucune UE trouvée.</li>
                     {% endfor %}
                 </ul>
             </div>
         </div>
+
 
         <!-- Section Activités récentes -->
         {% set posts = [
