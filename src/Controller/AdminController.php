@@ -44,7 +44,8 @@ class AdminController extends AbstractController
     {
         $posts = $em->getRepository(Post::class)
             ->createQueryBuilder('p')
-            ->orderBy('p.dateCreation', 'DESC')
+            ->orderBy('p.pinned', 'DESC')    // 🔥 d'abord épinglés
+            ->addOrderBy('p.dateCreation', 'DESC') // 🔥 ensuite date
             ->getQuery()
             ->getResult();
 
