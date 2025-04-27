@@ -1,107 +1,267 @@
-<div class="button-container" title="Accueil"
-     style="background-color: {{ is_granted('ROLE_ADMIN') ? '#002171' : '#42a5f5' }};">
+{% block stylesheets %}
+    <style>
+        /* =========================== */
+        /* BODY Reset */
+        /* =========================== */
+        body {
+            margin: 0;
+            padding: 0;
+        }
 
-    {# Si PROF_ADMIN, afficher le bouton de switch Admin ↔ Menu #}
-    {% if is_granted('ROLE_PROF_ADMIN') %}
-        {% set currentRoute = app.request.attributes.get('_route') %}
-        {% if currentRoute == 'app_admin' %}
-            <a href="{{ path('app_menu') }}" title="Aller au menu utilisateur">
-                <button class="Btn">
-                    Menu utilisateur
-                    <svg class="svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 6h16M4 12h16M4 18h16"/>
-                    </svg>
-                </button>
-            </a>
-        {% elseif currentRoute == 'app_menu' %}
-            <a href="{{ path('app_admin') }}" title="Aller à l’administration">
-                <button class="Btn">
-                    Administration
-                    <svg class="svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3 12h18M3 6h18M3 18h18"/>
-                    </svg>
-                </button>
-            </a>
-        {% else %}
-            {# Par défaut, afficher Accueil si pas sur app_admin/menu #}
-            <a href="{{ is_granted('ROLE_ADMIN') ? path('app_admin') : path('app_menu') }}">
-                <button class="Btn">
-                    Accueil
-                    <svg class="svg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Icone maison (home) -->
-                        <path d="M946.5 505L560.1 118.8l-25.9-25.9a31.5 31.5 0 0 0-44.4 0L77.5 505a63.9 63.9 0 0 0-18.8 46c.4 35.2 29.7 63.3 64.9 63.3h42.5V940h691.8V614.3h43.4c17.1 0 33.2-6.7 45.3-18.8a63.6 63.6 0 0 0 18.7-45.3c0-17-6.7-33.1-18.8-45.2zM568 868H456V664h112v204zm217.9-325.7V868H632V640c0-22.1-17.9-40-40-40H432c-22.1 0-40 17.9-40 40v228H238.1V542.3h-96l370-369.7 23.1 23.1L882 542.3h-96.1z"/>
-                    </svg>
-                </button>
-            </a>
-        {% endif %}
+        html, body {
+            overflow: auto;
+        }
 
-        {# Sinon (pas PROF_ADMIN), affichage normal du bouton Accueil #}
+        /* =========================== */
+        /* NAVBAR Container */
+        /* =========================== */
+        .button-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 0 20px;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.35);
+            z-index: 1000;
+            animation: fadeInOnly 0.8s ease-in-out;
+            transition: background-color 0.5s ease;
+        }
+
+        /* Fond clair pour utilisateurs normaux */
+        .user-navbar {
+            background-color: #42a5f5; /* Bleu clair */
+        }
+
+        /* Fond foncé pour administrateurs */
+        .admin-navbar {
+            background-color: #0A2240; /* Bleu très foncé */
+        }
+
+        /* Animation Fade In */
+        @keyframes fadeInOnly {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* =========================== */
+        /* Bubble Buttons */
+        /* =========================== */
+        .bubble-button {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 150px;
+            height: 50px;
+            appearance: none;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-family: 'Comic Neue', cursive, sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            overflow: hidden;
+            padding: 0;
+            text-decoration: none;
+            transition: filter 0.3s ease;
+        }
+
+        .bubble-button:hover {
+            filter: brightness(1.1);
+        }
+
+        .bubble-button:active {
+            filter: brightness(0.9);
+        }
+
+        .bubble-button > span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* espace entre l'icône et le texte */
+            position: relative;
+            z-index: 2;
+            transition: transform 0.3s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+        }
+
+        .bubble-button:hover > span {
+            transform: scale(1.05);
+        }
+
+        .bubble-button:active > span {
+            transform: scale(0.95);
+        }
+
+        .bubble-button > svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            fill: #1976d2;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .bubble-button > svg > path {
+            transition: d 0.3s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+        }
+
+        .bubble-button:hover > svg > path {
+            d: path("M0,0 C0,-5 100,-5 100,0 C105,0 105,100 100,100 C100,105 0,105 0,100 C-5,100 -5,0 0,0");
+        }
+
+        .bubble-button:active > svg > path {
+            d: path("M0,0 C30,10 70,10 100,0 C95,30 95,70 100,100 C70,90 30,90 0,100 C5,70 5,30 0,0");
+        }
+    </style>
+{% endblock %}
+
+<div class="button-container
+    {% if (is_granted('ROLE_PROF_ADMIN') and app.request.attributes.get('_route') starts with 'app_admin')
+    or is_granted('ROLE_ADMIN') %}
+        admin-navbar
     {% else %}
-        <a href="{{ is_granted('ROLE_ADMIN') ? path('app_admin') : path('app_menu') }}">
-            <button class="Btn">
-                Accueil
-                <svg class="svg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Icone maison (home) -->
-                    <path d="M946.5 505L560.1 118.8l-25.9-25.9a31.5 31.5 0 0 0-44.4 0L77.5 505a63.9 63.9 0 0 0-18.8 46c.4 35.2 29.7 63.3 64.9 63.3h42.5V940h691.8V614.3h43.4c17.1 0 33.2-6.7 45.3-18.8a63.6 63.6 0 0 0 18.7-45.3c0-17-6.7-33.1-18.8-45.2zM568 868H456V664h112v204zm217.9-325.7V868H632V640c0-22.1-17.9-40-40-40H432c-22.1 0-40 17.9-40 40v228H238.1V542.3h-96l370-369.7 23.1 23.1L882 542.3h-96.1z"/>
-                </svg>
-            </button>
-        </a>
+        user-navbar
     {% endif %}
+">
+
+
+    {# --- BOUTONS NAVIGATION SELON ROLES --- #}
+
+    {% if is_granted('ROLE_PROF_ADMIN') %}
+        {# PROF_ADMIN voit les deux boutons #}
+
+        {# Bouton Accueil Admin #}
+        <a class="bubble-button" href="{{ path('app_admin') }}" title="Accueil Admin">
+        <span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            Accueil Admin
+        </span>
+            <svg aria-hidden="true" preserveAspectRatio="none" viewBox="-5 -5 110 110">
+                <path d="M0,0 C0,0 100,0 100,0 C100,0 100,100 100,100 C100,100 0,100 0,100 C0,100 0,0 0,0"></path>
+            </svg>
+        </a>
+
+        {# Bouton Accueil Prof (Menu) #}
+        <a class="bubble-button" href="{{ path('app_menu') }}" title="Accueil Prof">
+        <span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            Accueil Prof
+        </span>
+            <svg aria-hidden="true" preserveAspectRatio="none" viewBox="-5 -5 110 110">
+                <path d="M0,0 C0,0 100,0 100,0 C100,0 100,100 100,100 C100,100 0,100 0,100 C0,100 0,0 0,0"></path>
+            </svg>
+        </a>
+
+    {% elseif is_granted('ROLE_ADMIN') %}
+        {# Admin classique (pas prof_admin) #}
+
+        <a class="bubble-button" href="{{ path('app_admin') }}" title="Accueil Admin">
+        <span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            Accueil Admin
+        </span>
+            <svg aria-hidden="true" preserveAspectRatio="none" viewBox="-5 -5 110 110">
+                <path d="M0,0 C0,0 100,0 100,0 C100,0 100,100 100,100 C100,100 0,100 0,100 C0,100 0,0 0,0"></path>
+            </svg>
+        </a>
+
+    {% elseif is_granted('ROLE_PROF') or is_granted('ROLE_ELEVE') %}
+        {# Professeur normal ou élève normal #}
+
+        <a class="bubble-button" href="{{ path('app_menu') }}" title="Accueil">
+        <span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            Accueil
+        </span>
+            <svg aria-hidden="true" preserveAspectRatio="none" viewBox="-5 -5 110 110">
+                <path d="M0,0 C0,0 100,0 100,0 C100,0 100,100 100,100 C100,100 0,100 0,100 C0,100 0,0 0,0"></path>
+            </svg>
+        </a>
+
+    {% endif %}
+
+
+
 
     {# Bouton Paramètres #}
-    <a href="{{ path('app_settings') }}">
-        <button class="Btn">
+    <button class="bubble-button" onclick="location.href='{{ path('app_settings') }}'" title="Paramètres">
+        <span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.09a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
             Paramètres
-            <svg class="svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                 fill="none" stroke="currentColor" stroke-width="2"
-                 stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="3"/>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33
-                         1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06
-                         a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65
-                         1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0
-                         1.82.33h.09a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.09a1.65 1.65
-                         0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65
-                         0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65
-                         1.65 0 0 0-1.51 1z"/>
-            </svg>
-        </button>
-    </a>
+        </span>
+        <svg aria-hidden="true" preserveAspectRatio="none" viewBox="-5 -5 110 110">
+            <path d="M0,0 C0,0 100,0 100,0 C100,0 100,100 100,100 C100,100 0,100 0,100 C0,100 0,0 0,0"></path>
+        </svg>
+    </button>
 
-    {# Mon Profil #}
-    <a href="{{ path('app_gestion') }}">
-        <button class="Btn">
+    {# Bouton Mon Profil #}
+    <button class="bubble-button" onclick="location.href='{{ path('app_gestion') }}'" title="Mon Profil">
+        <span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M4 21v-2a4 4 0 0 1 3-3.87"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
             Mon Profil
-            <svg class="svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2.5a5.5 5.5 0 0 1 3.096 10.047 9.005 9.005 0 0 1 5.9 8.181.75.75 0 1 1-1.499.044 7.5 7.5 0 0 0-14.993 0 .75.75 0 0 1-1.5-.045 9.005 9.005 0 0 1 5.9-8.18A5.5 5.5 0 0 1 12 2.5ZM8 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z"/>
+        </span>
+        <svg aria-hidden="true" preserveAspectRatio="none" viewBox="-5 -5 110 110">
+            <path d="M0,0 C0,0 100,0 100,0 C100,0 100,100 100,100 C100,100 0,100 0,100 C0,100 0,0 0,0"></path>
+        </svg>
+    </button>
+
+    {% if not is_granted('ROLE_ADMIN') %}
+        {# Bouton Mes UEs #}
+        <button class="bubble-button" onclick="location.href='{{ path('ue_selection') }}'" title="Mes UEs">
+            <span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 19.5A2.5 2.5 0 0 0 6.5 22h11a2.5 2.5 0 0 0 2.5-2.5V7H4z"></path>
+                    <path d="M20 7V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v2"></path>
+                </svg>
+                Mes UEs
+            </span>
+            <svg aria-hidden="true" preserveAspectRatio="none" viewBox="-5 -5 110 110">
+                <path d="M0,0 C0,0 100,0 100,0 C100,0 100,100 100,100 C100,100 0,100 0,100 C0,100 0,0 0,0"></path>
             </svg>
         </button>
-    </a>
-
-    {# Mes UEs pour PROF_ADMIN uniquement #}
-    {% if not is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('ue_selection') }}" title="Mes UEs">
-            <button class="Btn">
-                Mes UEs
-                <svg class="svg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231z"/>
-                </svg>
-            </button>
-        </a>
     {% endif %}
 
-    {# Déconnexion #}
-    <a href="{{ path('app_logout') }}">
-        <button class="Btn">
-            Déconnexion
-            <svg class="svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                 fill="none" stroke="currentColor" stroke-width="2"
-                 stroke-linecap="round" stroke-linejoin="round">
-                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-                <polyline points="10 17 15 12 10 7"/>
-                <line x1="15" y1="12" x2="3" y2="12"/>
+    {# Bouton Déconnexion #}
+    <button class="bubble-button" onclick="location.href='{{ path('app_logout') }}'" title="Déconnexion">
+        <span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
             </svg>
-        </button>
-    </a>
+            Déconnexion
+        </span>
+        <svg aria-hidden="true" preserveAspectRatio="none" viewBox="-5 -5 110 110">
+            <path d="M0,0 C0,0 100,0 100,0 C100,0 100,100 100,100 C100,100 0,100 0,100 C0,100 0,0 0,0"></path>
+        </svg>
+    </button>
 
 </div>

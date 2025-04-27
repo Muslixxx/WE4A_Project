@@ -4,12 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Moodle Simplifié{% endblock %}</title>
+
+    <!-- ✅ Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue&family=Luckiest+Guy&display=swap" rel="stylesheet">
+
+    <!-- ✅ Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-    {# ✅ Bootstrap CSS #}
+
+    <!-- ✅ Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    {# ✅ CSS personnalisé pour la navbar UIverse #}
-    <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
+
+    <!-- ✅ CSS personnalisé -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         body {
@@ -24,13 +29,11 @@
                 padding: 0;
             }
             {% if fixed_page is defined and fixed_page %}
-            /* Si la page est fixe : hauteur à 100% et pas de scrolling */
             html, body {
                 height: 100%;
                 overflow: hidden;
             }
             {% else %}
-            /* Sinon, autoriser le scrolling */
             html, body {
                 overflow: auto;
             }
@@ -38,16 +41,20 @@
         </style>
     {% endblock %}
 </head>
+
 <body>
 {% if show_navbar is not defined or show_navbar %}
     {% include 'partials/navbar.html.twig' %}
 {% endif %}
+
 <div class="page-content" style="padding-top: 70px;">
     {% block body %}{% endblock %}
 </div>
+
 {% block javascripts %}
     {% block importmap %}{{ importmap('app') }}{% endblock %}
 {% endblock %}
 </body>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </html>
