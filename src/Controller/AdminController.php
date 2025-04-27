@@ -109,4 +109,51 @@ class AdminController extends AbstractController
         return new JsonResponse(['status' => 'success']);
     }
 
+    #[Route('/admin/create-user', name: 'admin_create_user', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function createUser(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (!$data) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Données invalides.'], 400);
+        }
+
+        $user = new User();
+        $user->setEmail($data['email']);
+        $user->setFirstName($data['firstName']);
+        $user->setLastName($data['lastName']);
+        $user->setPhoneNumber($data['phoneNumber']);
+        $user->setBirthDate(new \DateTime($data['birthDate']));
+        $user->setRole($data['role']);
+        $user->setDateCreation(new \DateTime());
+
+        $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
+        $user->setPassword($hashedPassword);
+
+        $em->persist($user);
+        $em->flush();
+
+        return new JsonResponse(['status' => 'success']);
+    }
+    #[Route('/admin/create-course', name: 'admin_create_course', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function createCourse(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (!$data || empty($data['name']) || empty($data['description'])) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Données invalides.'], 400);
+        }
+
+        $course = new Course();
+        $course->setName($data['name']);
+        $course->setDescription($data['description']);
+
+        $em->persist($course);
+        $em->flush();
+
+        return new JsonResponse(['status' => 'success']);
+    }
+
 }
