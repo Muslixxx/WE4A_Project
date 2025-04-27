@@ -51,7 +51,15 @@
                             <span><strong>{{ user.firstName }} {{ user.lastName }}</strong> - {{ user.email }} ({{ user.role }})</span>
                             <div class="action-buttons">
                                 <button class="btn btn-danger btn-sm delete-user" data-id="{{ user.id }}">Supprimer</button>
-                                <a href="#" class="btn btn-danger btn-sm">Modifier</a>
+                                <a href="#" class="btn btn-danger btn-sm edit-user"
+                                   data-id="{{ user.id }}"
+                                   data-firstname="{{ user.firstName }}"
+                                   data-lastname="{{ user.lastName }}"
+                                   data-email="{{ user.email }}"
+                                   data-phone="{{ user.phoneNumber }}"
+                                   data-birthdate="{{ user.birthDate|date('Y-m-d') }}"
+                                   data-role="{{ user.role }}"
+                                >Modifier</a>
                             </div>
                         </li>
                     {% else %}
@@ -109,6 +117,56 @@
             </div>
         </div>
     </div>
+    <!-- Modal Modifier User -->
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="background-color: #f0f0f0;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editUserModalLabel">Modifier l'utilisateur</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editUserForm">
+                        <input type="hidden" id="editUserId">
+
+                        {% for field in ['Email', 'FirstName', 'LastName', 'PhoneNumber', 'BirthDate', 'Role'] %}
+                            <div class="mb-3">
+                                <label>{{ field|capitalize }} actuel : <span id="current{{ field }}"></span></label>
+
+                                {% if field == 'Role' %}
+                                    <select class="form-select" id="edit{{ field }}" disabled>
+                                        <option value="ROLE_ELEVE">Élève</option>
+                                        <option value="ROLE_PROF">Professeur</option>
+                                        <option value="ROLE_ADMIN">Administrateur</option>
+                                        <option value="ROLE_PROF_ADMIN">Prof et Administrateur</option>
+                                    </select>
+                                {% elseif field == 'BirthDate' %}
+                                    <input type="date" class="form-control" id="edit{{ field }}" readonly>
+                                {% else %}
+                                    <input type="text" class="form-control" id="edit{{ field }}" readonly>
+                                {% endif %}
+
+                                <div class="mt-1">
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="enableEdit('edit{{ field }}')">Modifier</button>
+                                    <button type="button" class="btn btn-sm btn-success d-none" id="validate-{{ field }}" onclick="validateEdit('edit{{ field }}')">Valider</button>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        <!-- Mot de passe spécial -->
+                        <div class="mb-3">
+                            <label>Nouveau mot de passe (laisser vide si pas de changement)</label>
+                            <input type="password" class="form-control" id="editPassword">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="saveUserChanges">Sauvegarder les changements</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Suppression d'un utilisateur
@@ -153,5 +211,98 @@
                 });
             });
         });
+        // Fonction pour rendre un champ éditable
+        function enableEdit(id) {
+            const input = document.getElementById(id);
+            const validateButton = document.getElementById('validate-' + id.replace('edit', ''));
+
+            input.removeAttribute('readonly');
+            input.removeAttribute('disabled');
+            input.focus();
+
+            validateButton.classList.remove('d-none');
+        }
+
+        function validateEdit(id) {
+            const input = document.getElementById(id);
+            const validateButton = document.getElementById('validate-' + id.replace('edit', ''));
+
+            if (input.tagName === "SELECT") {
+                input.setAttribute('disabled', true);
+            } else {
+                input.setAttribute('readonly', true);
+            }
+
+            validateButton.classList.add('d-none');
+        }
+
+        // Modifier User
+        document.querySelectorAll('.edit-user').forEach(button => {
+            button.addEventListener('click', () => {
+                const userId = button.getAttribute('data-id');
+                const firstName = button.getAttribute('data-firstname');
+                const lastName = button.getAttribute('data-lastname');
+                const email = button.getAttribute('data-email');
+                const phoneNumber = button.getAttribute('data-phone');
+                const birthDate = button.getAttribute('data-birthdate');
+                const role = button.getAttribute('data-role');
+
+                document.getElementById('editUserId').value = userId;
+                document.getElementById('currentEmail').textContent = email;
+                document.getElementById('editEmail').value = email;
+                document.getElementById('currentFirstName').textContent = firstName;
+                document.getElementById('editFirstName').value = firstName;
+                document.getElementById('currentLastName').textContent = lastName;
+                document.getElementById('editLastName').value = lastName;
+                document.getElementById('currentPhoneNumber').textContent = phoneNumber;
+                document.getElementById('editPhoneNumber').value = phoneNumber;
+                document.getElementById('currentBirthDate').textContent = birthDate;
+                document.getElementById('editBirthDate').value = birthDate;
+                document.getElementById('currentRole').textContent = role;
+                document.getElementById('editRole').value = role;
+
+                new bootstrap.Modal(document.getElementById('editUserModal')).show();
+            });
+        });
+
+        // Sauvegarder changements User
+        document.getElementById('saveUserChanges').addEventListener('click', async () => {
+            const userId = document.getElementById('editUserId').value;
+
+            const userData = {
+                email: document.getElementById('editEmail').value,
+                password: document.getElementById('editPassword').value,
+                firstName: document.getElementById('editFirstName').value,
+                lastName: document.getElementById('editLastName').value,
+                phoneNumber: document.getElementById('editPhoneNumber').value,
+                birthDate: document.getElementById('editBirthDate').value,
+                role: document.getElementById('editRole').value,
+            };
+
+            try {
+                const response = await fetch(`/admin/update-user/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    alert('Utilisateur mis à jour avec succès.');
+                    location.href = '/admin'; // Recharge vers Admin après succès
+                } else {
+                    alert('Erreur : ' + result.message);
+                }
+
+            } catch (error) {
+                console.error('Erreur lors de l\'envoi de la mise à jour:', error);
+                alert('Erreur de communication avec le serveur.');
+            }
+        });
+
     </script>
 {% endblock %}
