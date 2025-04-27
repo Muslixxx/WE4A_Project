@@ -3,7 +3,6 @@
 {% block title %}Menu Principal{% endblock %}
 
 {% block body %}
-
     <style>
         .custom-card {
             position: relative;
@@ -14,6 +13,16 @@
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.25rem;
         }
 
         .custom-card:hover .card-overlay {
@@ -23,6 +32,7 @@
     </style>
 
     <div class="container d-flex flex-column align-items-center" style="min-height: 100vh; gap: 1rem; padding: 2rem;">
+        <!-- Carte de bienvenue -->
         <div class="card w-100 bg-blue-darker" style="border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
             <div class="card-body text-center">
                 <h1 class="card-title" style="font-family: 'Luckiest Guy'; color: #fff;">
@@ -40,8 +50,8 @@
         </div>
 
         <!-- Section des cours dynamique -->
-        <div class="card w-100 bg-blue-darker">
-            <div class="card-header text-center">
+        <div class="card w-100 bg-blue-darker" style="border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+            <div class="card-header text-center" style="background: transparent; border-bottom: none;">
                 <h2 style="color: #fff;">Cours</h2>
             </div>
             <div class="card-body">
@@ -68,24 +78,35 @@
         <!-- Section Activités récentes -->
         <div class="card w-100 bg-blue-darker" style="border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
             <div class="card-header text-center" style="background: transparent; border-bottom: none;">
-                <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Activités récentes</h2>
+                <h2 style="font-family: 'Luckiest Guy'; color: #fff;">Activités récentes</h2>
             </div>
             <div class="card-body">
                 <div class="list-group">
-                    {% set posts = [
-                        { 'date': '2025-04-01', 'content': 'Mise à jour du cours de Mathématiques.' },
-                        { 'date': '2025-03-28', 'content': 'Nouvelle ressource ajoutée au cours d\'Informatique.' },
-                        { 'date': '2025-03-25', 'content': 'Correction d\'un exercice dans le cours de Physique.' }
-                    ] %}
-                    {% for post in posts %}
-                        <div class="list-group-item" style="background-color: rgba(255,255,255,0.15); border: none; margin-bottom: 0.5rem;">
-                            <small class="text-muted">{{ post.date }}</small>
-                            <p class="mb-0" style="color: #fff;">{{ post.content }}</p>
-                        </div>
-                    {% endfor %}
+                    {% if recentPosts|length > 0 %}
+                        {% for post in recentPosts %}
+                            <div class="list-group-item" style="background-color: rgba(255,255,255,0.15); border: none; margin-bottom: 0.5rem;">
+                                <small class="text-muted">{{ post.dateCreation|date('d/m/Y H:i') }}</small>
+                                <p class="mb-0" style="color: #fff;">
+                                    {{ post.user.firstName }} {{ post.user.lastName }} a posté
+                                    {% if post.type == 'document' %}
+                                        un fichier
+                                    {% elseif post.type == 'link' %}
+                                        un lien
+                                    {% else %}
+                                        un message
+                                    {% endif %}
+                                    « {{ post.title }} » dans {{ post.course.name }}
+                                </p>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color: #fff;">Aucune activité récente.</p>
+                    {% endif %}
                 </div>
+
+                <!-- Bouton Charger Plus -->
                 <div class="text-center mt-3">
-                    <a href="{{ path('app_activities') }}" class="btn btn-outline-light">Voir plus d'activités</a>
+                    <button id="loadMoreBtn" class="btn btn-outline-light">Charger plus d'actualités</button>
                 </div>
             </div>
         </div>
