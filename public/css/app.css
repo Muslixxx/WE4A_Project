@@ -1,246 +1,73 @@
 /* ===========================
-   FOND ET TYPO
+   ANIMATIONS
    =========================== */
 
-body {
-    background-color: #f0f8ff; /* bleu pastel */
-    font-family: 'Comic Neue', cursive;
-    color: #333;
-    min-height: 100vh;
+/* Animation de fade-in seulement (sans translation) */
+@keyframes fadeInOnly {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Animation de rebond (bounce) sur un élément */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-6px);
+    }
 }
 
 /* ===========================
-   TITRES ET TEXTES
+   NAVBAR & BOUTONS
    =========================== */
 
-h1, h2, h3 {
-    font-family: 'Luckiest Guy', cursive;
-    color: #ff5e5e;
-    text-shadow: 2px 2px 0px #fff3;
-}
-
-/* ===========================
-   COULEURS UTILITAIRES
-   =========================== */
-
-.bg-blue-darker {
-    background-color: #42a5f5 !important;
-}
-
-.text-blue-light {
-    color: #e3f2fd !important;
-}
-
-/* ===========================
-   CARTE DE COURS
-   =========================== */
-
-.custom-card {
-    width: 220px;
-    height: 220px;
-    padding: 0.5rem;
-    background: rgba(13, 71, 161, 0.5);
-    border-radius: 8px;
-    border-bottom: 3px solid rgba(187, 222, 251, 0.44);
-    border-left: 2px solid rgba(187, 222, 251, 0.545);
-    box-shadow: -10px 10px 15px rgba(0, 0, 0, 0.2);
-    transition: transform 0.4s ease;
-    overflow: hidden;
-    position: relative;
-    will-change: transform;
-}
-
-.custom-card:hover {
-    transform: scale(1.05);
-}
-
-.card-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    width: 100%;
-    padding: 0 0.5rem;
-}
-
-.card-content h1 {
-    margin-bottom: 0.5rem;
-    font-size: 1.2rem;
-}
-
-.card-content p {
-    margin: 0;
-    font-size: 0.9rem;
-}
-
-.card-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(13, 71, 161, 0.6);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+/* From Uiverse.io by eslam-hany */
+.button-container {
+    position: fixed; /* reste visible même en scroll */
+    top: 0;          /* alignée en haut */
+    left: 0;         /* commence à gauche */
+    z-index: 1000;   /* au-dessus du contenu */
     display: flex;
+    background-color: #42a5f5;
+    width: 100vw;    /* largeur totale de l'écran */
+    height: 60px;    /* hauteur un peu augmentée pour meilleure lisibilité */
     align-items: center;
-    justify-content: center;
-    will-change: opacity;
+    justify-content: center; /* centre les boutons au milieu */
+    gap: 20px;       /* espace entre les boutons */
+    border-radius: 0 0 10px 10px; /* arrondi uniquement en bas */
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px,
+    rgba(0, 73, 144, 0.5) 5px 10px 15px;
+    transition: all 0.5s;
+
+    /* Animation uniquement en fondu */
+    animation: fadeInOnly 0.8s ease-in-out;
 }
 
-.custom-card:hover .card-overlay {
-    opacity: 1;
-}
-
-.card-overlay a.btn {
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.custom-card:hover .card-overlay a.btn {
-    opacity: 1;
-}
-
-/* ===========================
-   LISTE D'ACTIVITÉS
-   =========================== */
-
-.list-group-item {
-    background: rgba(10, 118, 238, 0.2);
-    border: none;
-}
-
-.list-group-item small {
-    color: #e3f2fd;
-}
-
-/* ===========================
-   CONTAINERS STYLÉS
-   =========================== */
-
-.container-box {
-    background-color: #fff9f4;
-    border: 3px dashed #ffb347;
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: 4px 4px 12px rgba(255, 105, 180, 0.1);
-    transition: transform 0.2s ease-in-out;
-    will-change: transform;
-}
-
-.container-box:hover {
-    transform: scale(1.01);
-}
-
-/* ===========================
-   BOUTONS FUNKY
-   =========================== */
-
-.btn-funky {
-    background-color: #ff5e5e;
-    color: white;
-    font-weight: bold;
-    border: 2px solid #ffb347;
-    border-radius: 30px;
-    padding: 0.6rem 1.5rem;
-    text-transform: uppercase;
-    box-shadow: 2px 2px 0px #fdd;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.btn-funky:hover {
-    background-color: #ff8c8c;
-    transform: translateY(-2px);
-}
-
-/* ===========================
-   BOUTONS AVEC ICÔNES
-   =========================== */
-
-.btn-conteiner {
-    display: flex;
-    justify-content: center;
-    --color-text: #ffffff;
-    --color-background: #001f3f;
-    --color-outline: #001f3f80;
-    --color-shadow: #00000080;
-}
-
-.btn-content {
-    display: flex;
-    align-items: center;
-    padding: 5px 30px;
-    text-decoration: none;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 600;
-    font-size: 26px;
-    color: var(--color-text);
-    background: var(--color-background);
-    transition: background-color 0.5s ease;
-    border-radius: 100px;
-    box-shadow: 0 0 0.2em 0 var(--color-background);
-    position: relative;
-}
-
-.btn-content::after {
-    content: ">";
-    display: inline-block;
-    margin-left: 10px;
-    font-size: inherit;
-    line-height: 1;
-}
-
-.btn-content:hover,
-.btn-content:focus {
-    background-color: #003366;
-    box-shadow: 0 0 0.4em 0 var(--color-background);
-}
-
-/* ===========================
-   BOUTONS SVG SIMPLIFIÉS
-   =========================== */
-
-.Btn {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 140px;
+.button {
+    outline: 0 !important;
+    border: 0 !important;
+    width: 40px;
     height: 40px;
-    border: none;
-    padding: 0px 20px;
-    background-color: rgb(168, 38, 255);
-    color: white;
-    font-weight: 500;
+    border-radius: 50%;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition: all ease-in-out 0.3s;
     cursor: pointer;
-    border-radius: 10px;
-    box-shadow: 5px 5px 0px rgb(140, 32, 212);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    will-change: transform;
 }
 
-.Btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 2px 2px 0px rgb(140, 32, 212);
+.button:hover {
+    /* Lance l'animation de rebond lors du survol */
+    animation: bounce 0.6s ease-in-out forwards;
 }
 
-.Btn:active {
-    transform: translate(3px, 3px);
-    box-shadow: 2px 2px 0px rgb(140, 32, 212);
-}
-
-/* ===========================
-   BOUTON REGISTER SIMPLE
-   =========================== */
-
-#register-button {
-    background: #001f3f;
-    box-shadow: 0 0 0.2em #001f3f;
-    transition: background-color 0.5s ease, box-shadow 0.5s ease;
-}
-
-#register-button:hover {
-    background: #003366;
-    box-shadow: 0 0 0.3em #003366;
+.icon {
+    font-size: 20px;
 }

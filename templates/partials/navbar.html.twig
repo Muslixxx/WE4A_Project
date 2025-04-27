@@ -1,16 +1,54 @@
 <div class="button-container" title="Accueil"
      style="background-color: {{ is_granted('ROLE_ADMIN') ? '#002171' : '#42a5f5' }};">
-    <!-- Accueil -->
-    <a href="{{ is_granted('ROLE_ADMIN') ? path('app_admin') : path('app_menu') }}">
-        <button class="Btn">
-            Accueil
-            <svg class="svg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-                <path d="M946.5 505L560.1 118.8l-25.9-25.9a31.5 31.5 0 0 0-44.4 0L77.5 505a63.9 63.9 0 0 0-18.8 46c.4 35.2 29.7 63.3 64.9 63.3h42.5V940h691.8V614.3h43.4c17.1 0 33.2-6.7 45.3-18.8a63.6 63.6 0 0 0 18.7-45.3c0-17-6.7-33.1-18.8-45.2zM568 868H456V664h112v204zm217.9-325.7V868H632V640c0-22.1-17.9-40-40-40H432c-22.1 0-40 17.9-40 40v228H238.1V542.3h-96l370-369.7 23.1 23.1L882 542.3h-96.1z"/>
-            </svg>
-        </button>
-    </a>
 
-    <!-- Paramètres -->
+    {# Si PROF_ADMIN, afficher le bouton de switch Admin ↔ Menu #}
+    {% if is_granted('ROLE_PROF_ADMIN') %}
+        {% set currentRoute = app.request.attributes.get('_route') %}
+        {% if currentRoute == 'app_admin' %}
+            <a href="{{ path('app_menu') }}" title="Aller au menu utilisateur">
+                <button class="Btn">
+                    Menu utilisateur
+                    <svg class="svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </a>
+        {% elseif currentRoute == 'app_menu' %}
+            <a href="{{ path('app_admin') }}" title="Aller à l’administration">
+                <button class="Btn">
+                    Administration
+                    <svg class="svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 12h18M3 6h18M3 18h18"/>
+                    </svg>
+                </button>
+            </a>
+        {% else %}
+            {# Par défaut, afficher Accueil si pas sur app_admin/menu #}
+            <a href="{{ is_granted('ROLE_ADMIN') ? path('app_admin') : path('app_menu') }}">
+                <button class="Btn">
+                    Accueil
+                    <svg class="svg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Icone maison (home) -->
+                        <path d="M946.5 505L560.1 118.8l-25.9-25.9a31.5 31.5 0 0 0-44.4 0L77.5 505a63.9 63.9 0 0 0-18.8 46c.4 35.2 29.7 63.3 64.9 63.3h42.5V940h691.8V614.3h43.4c17.1 0 33.2-6.7 45.3-18.8a63.6 63.6 0 0 0 18.7-45.3c0-17-6.7-33.1-18.8-45.2zM568 868H456V664h112v204zm217.9-325.7V868H632V640c0-22.1-17.9-40-40-40H432c-22.1 0-40 17.9-40 40v228H238.1V542.3h-96l370-369.7 23.1 23.1L882 542.3h-96.1z"/>
+                    </svg>
+                </button>
+            </a>
+        {% endif %}
+
+        {# Sinon (pas PROF_ADMIN), affichage normal du bouton Accueil #}
+    {% else %}
+        <a href="{{ is_granted('ROLE_ADMIN') ? path('app_admin') : path('app_menu') }}">
+            <button class="Btn">
+                Accueil
+                <svg class="svg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Icone maison (home) -->
+                    <path d="M946.5 505L560.1 118.8l-25.9-25.9a31.5 31.5 0 0 0-44.4 0L77.5 505a63.9 63.9 0 0 0-18.8 46c.4 35.2 29.7 63.3 64.9 63.3h42.5V940h691.8V614.3h43.4c17.1 0 33.2-6.7 45.3-18.8a63.6 63.6 0 0 0 18.7-45.3c0-17-6.7-33.1-18.8-45.2zM568 868H456V664h112v204zm217.9-325.7V868H632V640c0-22.1-17.9-40-40-40H432c-22.1 0-40 17.9-40 40v228H238.1V542.3h-96l370-369.7 23.1 23.1L882 542.3h-96.1z"/>
+                </svg>
+            </button>
+        </a>
+    {% endif %}
+
+    {# Bouton Paramètres #}
     <a href="{{ path('app_settings') }}">
         <button class="Btn">
             Paramètres
@@ -30,7 +68,7 @@
         </button>
     </a>
 
-    <!-- Mon Profil : corriger ici pour pointer sur 'app_profil' -->
+    {# Mon Profil #}
     <a href="{{ path('app_gestion') }}">
         <button class="Btn">
             Mon Profil
@@ -40,18 +78,20 @@
         </button>
     </a>
 
-    <!-- Mes UEs -->
-    <a href="{{ path('ue_selection') }}" title="Mes UEs">
-        <button class="Btn">
-            Mes UEs
-            <svg class="svg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-                <path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"/>
-            </svg>
-        </button>
-    </a>
+    {# Mes UEs pour PROF_ADMIN uniquement #}
+    {% if is_granted('ROLE_PROF_ADMIN') %}
+        <a href="{{ path('ue_selection') }}" title="Mes UEs">
+            <button class="Btn">
+                Mes UEs
+                <svg class="svg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231z"/>
+                </svg>
+            </button>
+        </a>
+    {% endif %}
 
-    <!-- Déconnexion -->
-    <a href="{{ path('app_login') }}">
+    {# Déconnexion #}
+    <a href="{{ path('app_logout') }}">
         <button class="Btn">
             Déconnexion
             <svg class="svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
@@ -63,82 +103,5 @@
             </svg>
         </button>
     </a>
+
 </div>
-
-<style>
-    .button-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 1000;
-        display: flex;
-        width: 100vw;
-        height: 60px;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-        border-radius: 0 0 10px 10px;
-        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px,
-        rgba(0, 73, 144, 0.5) 5px 10px 15px;
-        animation: slideDown 0.8s ease-in-out;
-        transition: all 0.5s;
-    }
-
-    .button-container a {
-        text-decoration: none;
-        color: inherit;
-    }
-    .button-container a:visited {
-        color: inherit;
-    }
-
-    .Btn {
-        background-color: #187BCD;
-        color: #fff;
-        border: none;
-        box-shadow: none;
-        outline: none;
-        padding: 0.5rem 1rem;
-        cursor: pointer;
-        border-radius: 4px;
-        transition: background-color 0.3s ease;
-    }
-
-    .Btn:hover {
-        background-color: #106BB8;
-    }
-
-    .Btn:focus,
-    .Btn:active {
-        outline: none;
-        box-shadow: none;
-    }
-
-    @keyframes slideDown {
-        0% {
-            transform: translateY(-60px);
-            opacity: 0;
-        }
-        100% {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    @keyframes bounce {
-        0%, 100% {
-            transform: translateY(0);
-        }
-        50% {
-            transform: translateY(-6px);
-        }
-    }
-
-    .button:hover {
-        animation: bounce 0.6s ease-in-out forwards;
-    }
-
-    .icon {
-        font-size: 20px;
-    }
-</style>
