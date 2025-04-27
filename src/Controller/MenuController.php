@@ -6,6 +6,7 @@ use App\Entity\Post;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 
 class MenuController extends AbstractController
@@ -13,23 +14,19 @@ class MenuController extends AbstractController
     #[Route('/menu', name: 'app_menu')]
     public function index(EntityManagerInterface $em): Response
     {
-        // Récupère l'utilisateur connecté
         $user = $this->getUser();
 
         if (!$user) {
             throw $this->createAccessDeniedException('Vous devez être connecté pour accéder au menu.');
         }
 
-        // Récupère les cours de l'utilisateur
         $userCourses = $user->getCourses();
-
-        // Récupère les IDs de ces cours
         $courseIds = [];
+
         foreach ($userCourses as $course) {
             $courseIds[] = $course->getId();
         }
 
-        // Récupère les posts récents liés aux cours de l'utilisateur
         $recentPosts = [];
         if (!empty($courseIds)) {
             $recentPosts = $em->getRepository(Post::class)
@@ -38,7 +35,7 @@ class MenuController extends AbstractController
                 ->where('c.id IN (:courseIds)')
                 ->setParameter('courseIds', $courseIds)
                 ->orderBy('p.dateCreation', 'DESC')
-                ->setMaxResults(10)
+                ->setMaxResults(3) // <= seulement 3 posts ici
                 ->getQuery()
                 ->getResult();
         }
@@ -47,5 +44,49 @@ class MenuController extends AbstractController
             'courses' => $userCourses,
             'recentPosts' => $recentPosts,
         ]);
+    }
+
+    #[Route('/menu/load-more-posts', name: 'menu_load_more_posts', methods: ['GET'])]
+    public function loadMorePosts(EntityManagerInterface $em): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté.');
+        }
+
+        $userCourses = $user->getCourses();
+        $courseIds = [];
+
+        foreach ($userCourses as $course) {
+            $courseIds[] = $course->getId();
+        }
+
+        $posts = [];
+        if (!empty($courseIds)) {
+            $posts = $em->getRepository(Post::class)
+                ->createQueryBuilder('p')
+                ->join('p.course', 'c')
+                ->where('c.id IN (:courseIds)')
+                ->setParameter('courseIds', $courseIds)
+                ->orderBy('p.dateCreation', 'DESC')
+                ->getQuery()
+                ->getResult();
+        }
+
+        // Préparer un tableau JSON
+        $data = [];
+        foreach ($posts as $post) {
+            $data[] = [
+                'date' => $post->getDateCreation()->format('d/m/Y H:i'),
+                'firstName' => $post->getUser()->getFirstName(),
+                'lastName' => $post->getUser()->getLastName(),
+                'type' => $post->getType(),
+                'title' => $post->getTitle(),
+                'courseName' => $post->getCourse()->getName(),
+            ];
+        }
+
+        return $this->json($data);
     }
 }
