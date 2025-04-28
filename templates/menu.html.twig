@@ -128,7 +128,7 @@
                     const response = await fetch('{{ path('menu_load_more_posts') }}');
                     const posts = await response.json();
 
-                    listGroup.innerHTML = ''; // On vide d'abord la liste actuelle
+                    listGroup.innerHTML = ''; // Vide l'ancienne liste
 
                     posts.forEach(post => {
                         const item = document.createElement('div');
@@ -136,18 +136,22 @@
                         item.style.backgroundColor = 'rgba(255,255,255,0.15)';
                         item.style.border = 'none';
                         item.style.marginBottom = '0.5rem';
+
                         item.innerHTML = `
-                        <small class="text-muted">${post.date}</small>
-                        <p class="mb-0" style="color: #fff;">
-                            ${post.firstName} ${post.lastName} a posté
-                            ${post.type === 'document' ? 'un fichier' : (post.type === 'link' ? 'un lien' : 'un message')}
-                            « ${post.title} » dans ${post.courseName}
-                        </p>
-                    `;
+                    <small class="text-muted">${post.date}</small>
+                    <p class="mb-0" style="color: #fff;">
+                        ${post.firstName} ${post.lastName} a posté
+                        ${post.type === 'document' ? 'un fichier' : (post.type === 'link' ? 'un lien' : 'un message')}
+                        « ${post.title} ${post.isImportant ? '<span title="Post Important">📌</span>' : ''} »
+                        dans ${post.courseName}
+                    </p>
+                `;
+
                         listGroup.appendChild(item);
                     });
 
-                    loadMoreBtn.style.display = 'none'; // On cache le bouton après avoir tout affiché
+                    loadMoreBtn.style.display = 'none'; // Cacher le bouton
+
                 } catch (error) {
                     console.error('Erreur lors du chargement des posts:', error);
                 }

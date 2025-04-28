@@ -95,13 +95,14 @@
                                 <button class="btn btn-warning btn-sm edit-user"
                                         data-id="{{ user.id }}"
                                         data-email="{{ user.email }}"
-                                        data-first-name="{{ user.firstName }}"
-                                        data-last-name="{{ user.lastName }}"
-                                        data-phone-number="{{ user.phoneNumber }}"
-                                        data-birth-date="{{ user.birthDate ? user.birthDate|date('Y-m-d') : '' }}"
+                                        data-firstname="{{ user.firstName }}"
+                                        data-lastname="{{ user.lastName }}"
+                                        data-phonenumber="{{ user.phoneNumber }}"
+                                        data-birthdate="{{ user.birthDate ? user.birthDate|date('Y-m-d') : '' }}"
                                         data-role="{{ user.role }}">
                                     Modifier
                                 </button>
+
                             </div>
                         </li>
                     {% else %}
@@ -152,7 +153,7 @@
             <div class="card-body">
                 <div class="list-group" id="recentPosts">
                     {% if recentPosts|length > 0 %}
-                        {% for post in recentPosts|slice(0, 3) %}
+                        {% for post in recentPosts %}
                             <div class="list-group-item" style="background-color: rgba(255,255,255,0.15); border: none; margin-bottom: 0.5rem; color: #fff;">
                                 <small class="text-muted">{{ post.dateCreation|date('d/m/Y H:i') }}</small>
                                 <p class="mb-0">
@@ -174,10 +175,6 @@
                     {% else %}
                         <p style="color: #fff;">Aucune activité récente.</p>
                     {% endif %}
-                </div>
-
-                <div class="text-center mt-3">
-                    <button id="loadMoreBtn" class="btn btn-outline-light">Charger plus d'actualités</button>
                 </div>
             </div>
         </div>
@@ -203,7 +200,7 @@
                                         <option value="ROLE_ELEVE">Élève</option>
                                         <option value="ROLE_PROF">Professeur</option>
                                         <option value="ROLE_ADMIN">Administrateur</option>
-                                        <option value="ROLE_PROF_ADMIN">Prof et Administrateur</option>
+                                        <option value="ROLE_PROF_ADMIN">Professeur + Administrateur</option>
                                     </select>
                                 {% elseif field == 'BirthDate' %}
                                     <input type="date" class="form-control" id="edit{{ field }}" readonly>
@@ -223,22 +220,6 @@
                             <label>Nouveau mot de passe (laisser vide si pas de changement)</label>
                             <input type="password" class="form-control" id="editPassword">
                         </div>
-
-                        <!-- Liste des élèves à assigner -->
-                        <div class="mb-3">
-                            <label>Assigner des élèves à une UE :</label>
-                            <div class="border p-2" style="max-height: 200px; overflow-y: auto;">
-                                {% for student in students %}
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="eleve{{ student.id }}" name="assignedStudents" value="{{ student.id }}">
-                                        <label class="form-check-label" for="student{{ student.id }}">
-                                            {{ student.firstName }} {{ student.lastName }} ({{ student.email }})
-                                        </label>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -426,13 +407,26 @@
 
                     fields.forEach(field => {
                         const lowerField = field.charAt(0).toLowerCase() + field.slice(1);
-                        document.getElementById('current' + field).textContent = button.getAttribute('data-' + lowerField);
-                        document.getElementById('edit' + field).value = button.getAttribute('data-' + lowerField);
+                        const currentSpan = document.getElementById('current' + field);
+                        const input = document.getElementById('edit' + field);
+
+                        const value = button.getAttribute('data-' + lowerField) || '';
+
+                        if (currentSpan) {
+                            currentSpan.textContent = value;
+                        }
+                        if (input) {
+                            input.value = value;
+                        }
                     });
+
+                    document.getElementById('editPassword').value = '';
 
                     new bootstrap.Modal(document.getElementById('editUserModal')).show();
                 });
             });
+
+
 
             document.querySelectorAll('.edit-course').forEach(button => {
                 button.addEventListener('click', () => {
@@ -448,20 +442,27 @@
             const createUserBtn = document.getElementById('createUserButton');
             if (createUserBtn) {
                 createUserBtn.addEventListener('click', async () => {
-                    const userData = {
-                        email: document.getElementById('newEmail').value,
-                        password: document.getElementById('newPassword').value,
-                        firstName: document.getElementById('newFirstName').value,
-                        lastName: document.getElementById('newLastName').value,
-                        phoneNumber: document.getElementById('newPhoneNumber').value,
-                        birthDate: document.getElementById('newBirthDate').value,
-                        role: document.getElementById('newRole').value
-                    };
+                    const email = document.getElementById('newEmail').value;
+                    const password = document.getElementById('newPassword').value;
+                    const firstName = document.getElementById('newFirstName').value;
+                    const lastName = document.getElementById('newLastName').value;
+                    const phoneNumber = document.getElementById('newPhoneNumber').value;
+                    const birthDate = document.getElementById('newBirthDate').value;
+                    const role = document.getElementById('newRole').value;
 
-                    if (Object.values(userData).some(v => !v)) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                    if (!emailRegex.test(email)) {
+                        alert('Veuillez entrer une adresse email valide.');
+                        return;
+                    }
+
+                    if (!email || !password || !firstName || !lastName || !phoneNumber || !birthDate || !role) {
                         alert('Merci de remplir tous les champs.');
                         return;
                     }
+
+                    const userData = { email, password, firstName, lastName, phoneNumber, birthDate, role };
 
                     try {
                         const response = await fetch('/admin/create-user', {
@@ -584,54 +585,24 @@
                     alert('Erreur de communication avec le serveur.');
                 }
             });
-
-            // -------- Load more posts --------
-            const loadMoreBtn = document.getElementById('loadMoreBtn');
-            if (loadMoreBtn) {
-                loadMoreBtn.addEventListener('click', async () => {
-                    try {
-                        const response = await fetch('{{ path('admin_load_more_posts') }}', {
-                            method: 'GET',
-                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                        });
-
-                        const posts = await response.json();
-                        const container = document.getElementById('recentPosts');
-
-                        container.innerHTML = '';
-
-                        posts.forEach(post => {
-                            const div = document.createElement('div');
-                            div.className = 'list-group-item';
-                            div.style.backgroundColor = 'rgba(255,255,255,0.15)';
-                            div.style.border = 'none';
-                            div.style.marginBottom = '0.5rem';
-                            div.style.color = '#fff';
-
-                            div.innerHTML = `
-                        <small class="text-muted">${post.date}</small>
-                        <p class="mb-0">
-                            ${post.firstName} ${post.lastName} a posté
-                            ${post.type === 'document' ? 'un fichier' : post.type === 'link' ? 'un lien' : 'un message'}
-                            « ${post.title} » dans ${post.courseName}
-                            ${post.pinned ? '📌' : ''}
-                        </p>
-                    `;
-
-                            container.appendChild(div);
-                        });
-
-                        loadMoreBtn.style.display = 'none';
-                    } catch (error) {
-                        console.error('Erreur AJAX :', error);
-                        alert('Erreur de chargement.');
-                    }
-                });
-            }
         });
+        function enableEdit(fieldId) {
+            const input = document.getElementById(fieldId);
+            const validateBtn = document.getElementById('validate-' + fieldId.replace('edit', ''));
+
+            input.removeAttribute('readonly');
+            input.removeAttribute('disabled');
+            validateBtn.classList.remove('d-none');
+        }
+
+        function validateEdit(fieldId) {
+            const input = document.getElementById(fieldId);
+            const validateBtn = document.getElementById('validate-' + fieldId.replace('edit', ''));
+
+            input.setAttribute('readonly', 'readonly');
+            input.setAttribute('disabled', 'disabled');
+            validateBtn.classList.add('d-none');
+        }
+
     </script>
-
-
-
-
 {% endblock %}

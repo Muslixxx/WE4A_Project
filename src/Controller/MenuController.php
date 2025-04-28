@@ -88,7 +88,6 @@ class MenuController extends AbstractController
                 'courseName' => $post->getCourse()->getName(),
             ];
         }
-
         return $this->json($data);
     }
 }

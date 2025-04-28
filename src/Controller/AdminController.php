@@ -10,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -25,7 +24,6 @@ class AdminController extends AbstractController
             ->createQueryBuilder('p')
             ->orderBy('p.isImportant', 'DESC')
             ->addOrderBy('p.dateCreation', 'DESC')
-            ->setMaxResults(3)
             ->getQuery()
             ->getResult();
 
@@ -51,13 +49,16 @@ class AdminController extends AbstractController
 
         $data = [];
         foreach ($posts as $post) {
+            $user = $post->getUser();
+            $course = $post->getCourse();
+
             $data[] = [
-                'date' => $post->getDateCreation()->format('d/m/Y H:i'),
-                'firstName' => $post->getUser()->getFirstName(),
-                'lastName' => $post->getUser()->getLastName(),
+                'date' => $post->getDateCreation()?->format('d/m/Y H:i') ?? '',
+                'firstName' => $user ? $user->getFirstName() : '',
+                'lastName' => $user ? $user->getLastName() : '',
                 'type' => $post->getType(),
                 'title' => $post->getTitle(),
-                'courseName' => $post->getCourse()->getName(),
+                'courseName' => $course ? $course->getName() : '',
                 'isImportant' => $post->getIsImportant(),
             ];
         }
@@ -65,8 +66,8 @@ class AdminController extends AbstractController
         return $this->json($data);
     }
 
+
     #[Route('/admin/delete-user/{id}', name: 'admin_delete_user', methods: ['POST'])]
-    #[IsGranted('ROLE_ADMIN')]
     public function deleteUser(int $id, EntityManagerInterface $em): JsonResponse
     {
         $user = $em->getRepository(User::class)->find($id);
@@ -81,7 +82,6 @@ class AdminController extends AbstractController
     }
 
     #[Route('/admin/delete-course/{id}', name: 'admin_delete_course', methods: ['POST'])]
-    #[IsGranted('ROLE_ADMIN')]
     public function deleteCourse(int $id, EntityManagerInterface $em): JsonResponse
     {
         $course = $em->getRepository(Course::class)->find($id);
@@ -96,10 +96,14 @@ class AdminController extends AbstractController
     }
 
     #[Route('/admin/update-user/{id}', name: 'admin_update_user', methods: ['POST'])]
-    #[IsGranted('ROLE_ADMIN')]
-    public function updateUser(int $id, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): JsonResponse
-    {
+    public function updateUser(
+        int $id,
+        Request $request,
+        EntityManagerInterface $em,
+        UserPasswordHasherInterface $passwordHasher
+    ): JsonResponse {
         $user = $em->getRepository(User::class)->find($id);
+
         if (!$user) {
             return new JsonResponse(['status' => 'error', 'message' => 'Utilisateur non trouvé.'], 404);
         }
@@ -139,8 +143,8 @@ class AdminController extends AbstractController
         return new JsonResponse(['status' => 'success']);
     }
 
+
     #[Route('/admin/create-user', name: 'admin_create_user', methods: ['POST'])]
-    #[IsGranted('ROLE_ADMIN')]
     public function createUser(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -168,7 +172,6 @@ class AdminController extends AbstractController
     }
 
     #[Route('/admin/create-course', name: 'admin_create_course', methods: ['POST'])]
-    #[IsGranted('ROLE_ADMIN')]
     public function createCourse(Request $request, EntityManagerInterface $em): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -197,7 +200,6 @@ class AdminController extends AbstractController
     }
 
     #[Route('/admin/update-course/{id}', name: 'admin_update_course', methods: ['POST'])]
-    #[IsGranted('ROLE_ADMIN')]
     public function updateCourse(int $id, Request $request, EntityManagerInterface $em): JsonResponse
     {
         $course = $em->getRepository(Course::class)->find($id);
