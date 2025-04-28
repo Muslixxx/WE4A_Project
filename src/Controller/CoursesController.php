@@ -25,9 +25,24 @@ class CoursesController extends AbstractController
             ->getQuery()
             ->getResult();
 
+        $users = $course->getUsers();
+
+        $professeurs = [];
+        $eleves = [];
+
+        foreach ($users as $user) {
+            if (in_array($user->getRole(), ['ROLE_PROF', 'ROLE_PROF_ADMIN'])) {
+                $professeurs[] = $user;
+            } elseif ($user->getRole() === 'ROLE_ELEVE') {
+                $eleves[] = $user;
+            }
+        }
+
         return $this->render('ue/detail.html.twig', [
             'course' => $course,
             'posts' => $posts,
+            'professeurs' => $professeurs,
+            'eleves' => $eleves,
         ]);
     }
 
@@ -59,19 +74,4 @@ class CoursesController extends AbstractController
 
         return new JsonResponse(['status' => 'success']);
     }
-    #[Route('/course/pin-post/{id}', name: 'course_toggle_pin_post', methods: ['POST'])]
-    public function togglePinPost(Post $post, EntityManagerInterface $em): JsonResponse
-    {
-        // Vérifie que seul les profs peuvent épingler
-        $user = $this->getUser();
-        if (!$user || !in_array($user->getRole(), ['ROLE_PROF', 'ROLE_PROF_ADMIN'])) {
-            return new JsonResponse(['status' => 'error', 'message' => 'Accès refusé.'], 403);
-        }
-
-        $post->setPinned(!$post->isPinned());
-        $em->flush();
-
-        return new JsonResponse(['status' => 'success']);
-    }
-
 }

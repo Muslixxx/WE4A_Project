@@ -103,34 +103,44 @@
 
         <!-- Membres de l'UE -->
         <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
-            <div class="card-header" style="background: transparent; border-bottom: none;">
-                <h2>Membres de l'UE</h2>
-                <div class="mt-2">
-                    <label for="filterRole" style="margin-right: 8px;">Trier par :</label>
-                    <select id="filterRole" class="form-select" style="max-width: 200px; display: inline-block;">
+            <div class="card-header d-flex justify-content-between align-items-center" style="background: transparent; border-bottom: none;">
+                <h2 style="font-family: 'Luckiest Guy', cursive;">Membres de l'UE</h2>
+                <div class="d-flex align-items-center">
+                    <label for="filterRole" class="me-2">Filtrer :</label>
+                    <select id="filterRole" class="form-select" style="width: auto; min-width: 150px;">
                         <option value="Tous" selected>Tous</option>
-                        <option value="Professeur">Professeur</option>
-                        <option value="Étudiant">Étudiant</option>
+                        <option value="Professeur">Professeurs</option>
+                        <option value="Étudiant">Étudiants</option>
                     </select>
                 </div>
             </div>
             <div class="card-body">
-                {% if course.members is defined and course.members|length > 0 %}
+                {% if course.users|length > 0 %}
                     <div class="table-responsive">
-                        <table id="membersTable" class="table text-white" style="background-color: #bbdefb; border: 2px solid #2196f3;">
-                            <thead style="background-color: #90caf9;">
-                            <tr>
-                                <th style="border: 1px solid #2196f3;">Nom</th>
-                                <th style="border: 1px solid #2196f3;">Prénom</th>
-                                <th style="border: 1px solid #2196f3;">Rôle</th>
+                        <table id="membersTable" class="table table-borderless text-white" style="background-color: #39acff; border-radius: 15px; overflow: hidden;">
+                            <thead style="background-color: #ffffff; color: #000;">
+                            <tr class="text-center">
+                                <th style="padding: 1rem;">Nom</th>
+                                <th style="padding: 1rem;">Prénom</th>
+                                <th style="padding: 1rem;">Email</th>
+                                <th style="padding: 1rem;">Rôle</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            {% for member in course.members %}
-                                <tr class="member-row" data-role="{{ member.role }}">
-                                    <td style="border: 1px solid #2196f3;">{{ member.lastName }}</td>
-                                    <td style="border: 1px solid #2196f3;">{{ member.firstName }}</td>
-                                    <td style="border: 1px solid #2196f3;">{{ member.role }}</td>
+                            <tbody id="membersBody">
+                            {% for user in course.users %}
+                                <tr class="text-center">
+                                    <td style="padding: 1rem;">{{ user.lastName }}</td>
+                                    <td style="padding: 1rem;">{{ user.firstName }}</td>
+                                    <td style="padding: 1rem;">{{ user.email }}</td>
+                                    <td style="padding: 1rem;">
+                                        {% if 'ROLE_PROFESSEUR' in user.roles %}
+                                            Professeur
+                                        {% elseif 'ROLE_ETUDIANT' in user.roles %}
+                                            Étudiant
+                                        {% else %}
+                                            Autre
+                                        {% endif %}
+                                    </td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -141,6 +151,8 @@
                 {% endif %}
             </div>
         </div>
+
+
 
         <!-- Modal Créer un post -->
         <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
@@ -200,6 +212,8 @@
 
 {% block javascripts %}
     <script>
+        const createPostUrl = "{{ path('course_create_post', {'id': course.id}) }}";
+
         document.addEventListener('DOMContentLoaded', () => {
             const submitButton = document.getElementById('submitPost');
 
@@ -208,7 +222,6 @@
                     const title = document.getElementById('postTitle').value.trim();
                     const type = document.getElementById('contentType').value;
                     const isImportant = document.getElementById('isImportant').value;
-                    const courseId = {{ course.id }};
 
                     let description = '';
 
@@ -220,7 +233,6 @@
                         const fileInput = document.getElementById('postFile');
                         if (fileInput.files.length > 0) {
                             const file = fileInput.files[0];
-                            // Pour simplifier pour l’instant on envoie juste son nom (on peut améliorer avec un vrai upload plus tard)
                             description = file.name;
                         } else {
                             alert('Merci de sélectionner un fichier.');
@@ -234,7 +246,7 @@
                     }
 
                     try {
-                        const response = await fetch('{{ path('course_create_post', {'id': course.id}) }}', {
+                        const response = await fetch(createPostUrl, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -263,54 +275,72 @@
                         alert('Erreur de communication avec le serveur.');
                     }
                 });
-
             }
         });
-
-        document.getElementById('contentType').addEventListener('change', function () {
-            const selectedType = this.value;
-
-            document.getElementById('descriptionTextGroup').classList.add('d-none');
-            document.getElementById('descriptionLinkGroup').classList.add('d-none');
-            document.getElementById('descriptionFileGroup').classList.add('d-none');
-
-            if (selectedType === 'text') {
-                document.getElementById('descriptionTextGroup').classList.remove('d-none');
-            } else if (selectedType === 'link') {
-                document.getElementById('descriptionLinkGroup').classList.remove('d-none');
-            } else if (selectedType === 'document') {
-                document.getElementById('descriptionFileGroup').classList.remove('d-none');
-            }
-        });
-
-    </script>
-    <script>
         document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.toggle-pin').forEach(button => {
-                button.addEventListener('click', async () => {
-                    const postId = button.getAttribute('data-post-id');
+            const filterRole = document.getElementById('filterRole');
+            const membersBody = document.getElementById('membersBody');
 
-                    try {
-                        const response = await fetch(`/course/pin-post/${postId}`, {
-                            method: 'POST',
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
-                        });
-                        const result = await response.json();
+            const members = [
+                {% for user in course.users %}
+                {
+                    lastName: "{{ user.lastName|e('js') }}",
+                    firstName: "{{ user.firstName|e('js') }}",
+                    email: "{{ user.email|e('js') }}",
+                    role: "{{ user.role|e('js') }}"
+                },
+                {% endfor %}
+            ];
 
-                        if (result.status === 'success') {
-                            location.reload(); // Recharge la page pour voir les changements
-                        } else {
-                            alert('Erreur : ' + result.message);
-                        }
-                    } catch (error) {
-                        console.error('Erreur lors de l\'épingle :', error);
-                        alert('Erreur de communication avec le serveur.');
-                    }
+            function formatRole(role) {
+                if (role.includes('PROF')) {
+                    return 'Professeur';
+                } else if (role.includes('ELEVE')) {
+                    return 'Élève';
+                } else {
+                    return 'Autre';
+                }
+            }
+
+            function renderMembers(filter) {
+                membersBody.innerHTML = '';
+
+                const filtered = members.filter(member => {
+                    if (filter === 'Tous') return true;
+                    if (filter === 'Professeur') return member.role.includes('PROF');
+                    if (filter === 'Étudiant') return member.role.includes('ELEVE');
+                    return true;
                 });
+
+                if (filtered.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td colspan="4" class="text-center p-4">Aucun membre trouvé</td>`;
+                    membersBody.appendChild(row);
+                    return;
+                }
+
+                filtered.forEach(member => {
+                    const row = document.createElement('tr');
+                    row.className = "text-center";
+                    row.innerHTML = `
+                <td style="padding: 1rem;">${member.lastName}</td>
+                <td style="padding: 1rem;">${member.firstName}</td>
+                <td style="padding: 1rem;">${member.email}</td>
+                <td style="padding: 1rem;">${formatRole(member.role)}</td>
+            `;
+                    membersBody.appendChild(row);
+                });
+            }
+
+            // *** C'est ici qu'on force "Tous" au chargement ***
+            filterRole.value = 'Tous';
+            renderMembers('Tous');
+
+            filterRole.addEventListener('change', (e) => {
+                renderMembers(e.target.value);
             });
         });
     </script>
+
 
 {% endblock %}
