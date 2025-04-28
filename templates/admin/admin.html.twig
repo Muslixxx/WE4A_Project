@@ -165,7 +165,7 @@
                                         un message
                                     {% endif %}
                                     « {{ post.title }} » dans {{ post.course.name }}
-                                    {% if post.pinned %}
+                                    {% if post.isImportant %}
                                         📌
                                     {% endif %}
                                 </p>
@@ -299,7 +299,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- Modal Créer une UE -->
     <div class="modal fade" id="createCourseModal" tabindex="-1" aria-labelledby="createCourseModalLabel" aria-hidden="true">

@@ -20,7 +20,7 @@ class CoursesController extends AbstractController
             ->createQueryBuilder('p')
             ->where('p.course = :course')
             ->setParameter('course', $course)
-            ->orderBy('p.pinned', 'DESC')
+            ->orderBy('p.isImportant', 'DESC')
             ->addOrderBy('p.dateCreation', 'DESC')
             ->getQuery()
             ->getResult();
@@ -54,6 +54,10 @@ class CoursesController extends AbstractController
             return new JsonResponse(['status' => 'error', 'message' => 'Utilisateur non connecté.'], 403);
         }
 
+        if (!$request->isXmlHttpRequest()) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Requête non valide.'], 400);
+        }
+
         $data = json_decode($request->getContent(), true);
 
         if (!$data || !isset($data['title'], $data['description'], $data['type'], $data['is_important'])) {
@@ -73,5 +77,44 @@ class CoursesController extends AbstractController
         $em->flush();
 
         return new JsonResponse(['status' => 'success']);
+    }
+
+    #[Route('/course/post/{id}/delete', name: 'course_delete_post', methods: ['POST', 'DELETE'])]
+    public function deletePost(Post $post, EntityManagerInterface $em): Response
+    {
+        $user = $this->getUser();
+        if (!$user || ($user !== $post->getUser() && !in_array('ROLE_PROF_ADMIN', $user->getRoles()))) {
+            throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à supprimer ce post.');
+        }
+
+        $courseId = $post->getCourse()->getId();
+
+        $em->remove($post);
+        $em->flush();
+
+        return $this->redirectToRoute('course_detail', ['id' => $courseId]);
+    }
+
+    #[Route('/course/post/{id}/toggle-important', name: 'course_toggle_important', methods: ['POST'])]
+    public function toggleImportantPost(Request $request, Post $post, EntityManagerInterface $em): JsonResponse
+    {
+        $user = $this->getUser();
+        if (!$user || (!in_array('ROLE_PROF', $user->getRoles()) && !in_array('ROLE_PROF_ADMIN', $user->getRoles()))) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Accès refusé.'], 403);
+        }
+
+        if (!$request->isXmlHttpRequest()) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Requête non valide.'], 400);
+        }
+
+        $post->setIsImportant(!$post->isImportant());
+
+        $em->persist($post);
+        $em->flush();
+
+        return new JsonResponse([
+            'status' => 'success',
+            'isImportant' => $post->isImportant()
+        ]);
     }
 }

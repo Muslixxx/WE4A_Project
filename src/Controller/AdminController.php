@@ -23,30 +23,28 @@ class AdminController extends AbstractController
         $courses = $em->getRepository(Course::class)->findAll();
         $recentPosts = $em->getRepository(Post::class)
             ->createQueryBuilder('p')
-            ->orderBy('p.pinned', 'DESC')
+            ->orderBy('p.isImportant', 'DESC')
             ->addOrderBy('p.dateCreation', 'DESC')
             ->setMaxResults(3)
             ->getQuery()
             ->getResult();
 
-        // On filtre pour ne prendre que les étudiants
         $students = $em->getRepository(User::class)->findBy(['role' => 'ROLE_ELEVE']);
 
         return $this->render('admin/admin.html.twig', [
             'users' => $users,
             'courses' => $courses,
             'recentPosts' => $recentPosts,
-            'students' => $students, // <- C'est ça qui manquait
+            'students' => $students,
         ]);
     }
-
 
     #[Route('/admin/load-more-posts', name: 'admin_load_more_posts', methods: ['GET'])]
     public function loadMorePosts(EntityManagerInterface $em): JsonResponse
     {
         $posts = $em->getRepository(Post::class)
             ->createQueryBuilder('p')
-            ->orderBy('p.pinned', 'DESC')
+            ->orderBy('p.isImportant', 'DESC')
             ->addOrderBy('p.dateCreation', 'DESC')
             ->getQuery()
             ->getResult();
@@ -60,7 +58,7 @@ class AdminController extends AbstractController
                 'type' => $post->getType(),
                 'title' => $post->getTitle(),
                 'courseName' => $post->getCourse()->getName(),
-                'pinned' => $post->isPinned(),
+                'isImportant' => $post->getIsImportant(),
             ];
         }
 
@@ -99,12 +97,8 @@ class AdminController extends AbstractController
 
     #[Route('/admin/update-user/{id}', name: 'admin_update_user', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function updateUser(
-        int $id,
-        Request $request,
-        EntityManagerInterface $em,
-        UserPasswordHasherInterface $passwordHasher
-    ): JsonResponse {
+    public function updateUser(int $id, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): JsonResponse
+    {
         $user = $em->getRepository(User::class)->find($id);
         if (!$user) {
             return new JsonResponse(['status' => 'error', 'message' => 'Utilisateur non trouvé.'], 404);
@@ -187,7 +181,6 @@ class AdminController extends AbstractController
         $course->setName($data['name']);
         $course->setDescription($data['description']);
 
-        // Lier les élèves s'ils sont spécifiés
         if (!empty($data['students']) && is_array($data['students'])) {
             foreach ($data['students'] as $studentId) {
                 $student = $em->getRepository(User::class)->find($studentId);

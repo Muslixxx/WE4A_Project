@@ -38,9 +38,6 @@ class Post
     #[ORM\JoinColumn(nullable: false)]
     private ?Course $course = null;
 
-    #[ORM\Column(type: 'boolean')]
-    private $pinned = false;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -50,18 +47,6 @@ class Post
     {
         $this->id = $id;
 
-        return $this;
-    }
-
-
-    public function isPinned(): bool
-    {
-        return $this->pinned;
-    }
-
-    public function setPinned(bool $pinned): self
-    {
-        $this->pinned = $pinned;
         return $this;
     }
 
