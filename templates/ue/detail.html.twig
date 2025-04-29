@@ -98,7 +98,7 @@
                 <h2 style="font-family: 'Luckiest Guy', cursive; color: #ff6f61;">Posts</h2>
                 {% if app.user.role in ['ROLE_PROF', 'ROLE_PROF_ADMIN'] %}
                     <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#createPostModal">
-                        Créer un post ➕
+                        ➕ Créer un post
                     </button>
                 {% endif %}
             </div>
@@ -140,7 +140,7 @@
                                             {% if post.user.id == app.user.id %}
                                                 <form method="post" action="{{ path('course_delete_post', {'id': post.id}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');">
                                                     <input type="hidden" name="_method" value="DELETE">
-                                                    <button class="btn-danger btn-sm toggle-important mb-2" type="submit">🗑️ Retirer</button>
+                                                    <button class="btn-danger btn-sm toggle-important" type="submit">🗑️ Retirer</button>
                                                 </form>
                                             {% endif %}
                                         </td>
