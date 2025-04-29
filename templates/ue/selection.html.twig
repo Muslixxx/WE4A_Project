@@ -1,14 +1,21 @@
 {% extends 'base.html.twig' %}
+
+{# Définition du titre de la page #}
 {% block title %}Sélection des UE{% endblock %}
 
+{# Détermine dynamiquement le nombre maximal d'UE selon le rôle utilisateur #}
 {% set maxUE = (app.user.role == 'ROLE_PROF' or app.user.role == 'ROLE_PROF_ADMIN') ? 3 : 5 %}
 
 {% block body %}
     <div class="container py-4">
         <div class="p-4" style="background-color: #42a5f5; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+
+            {# Titre principal #}
             <h1 style="font-family: 'Luckiest Guy', cursive; font-size: 2.2rem; color: white; text-align: center;">
                 Sélection des UE
             </h1>
+
+            {# Message d'information selon le rôle utilisateur #}
             <p class="text-center text-white">
                 {% if app.user.role == 'ROLE_ELEVE' %}
                     Vous pouvez sélectionner jusqu'à 5 UE.
@@ -19,10 +26,14 @@
                 {% endif %}
             </p>
 
+            {# Bloc : UE disponibles pour sélection #}
             <h3 class="text-white mt-4">UE disponibles</h3>
             <div class="mb-3">
                 {% for course in courses %}
+                    {# Calcul du nombre de professeurs inscrits dans ce cours #}
                     {% set profCount = course.users|filter(u => u.role == 'ROLE_PROF')|length %}
+
+                    {# Affiche uniquement les UE non encore sélectionnées et respectant la contrainte de max profs #}
                     {% if course not in userCourses and profCount < 3 %}
                         <form action="{{ path('ue_selection') }}" method="post" class="d-inline-block mb-2 me-2">
                             <input type="hidden" name="course_id" value="{{ course.id }}">
@@ -37,18 +48,21 @@
                 {% endfor %}
             </div>
 
-
+            {# Bloc : UE déjà sélectionnées par l'utilisateur #}
             <h3 class="text-white mt-4">UE sélectionnées</h3>
             <ul class="list-group">
                 {% if userCourses is not empty %}
                     {% for course in userCourses %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                            <strong>{{ course.name }}</strong>
-                            <span class="badge bg-info text-dark ms-2">
-                                {{ course.users|filter(u => u.role == 'ROLE_ELEVE')|length }} élèves
+                            <span>
+                                <strong>{{ course.name }}</strong>
+                                {# Badge indiquant le nombre d'élèves inscrits dans ce cours #}
+                                <span class="badge bg-info text-dark ms-2">
+                                    {{ course.users|filter(u => u.role == 'ROLE_ELEVE')|length }} élèves
+                                </span>
                             </span>
-                        </span>
+
+                            {# Bouton pour retirer une UE sélectionnée #}
                             <form action="{{ path('ue_selection') }}" method="post" style="margin: 0;">
                                 <input type="hidden" name="course_id" value="{{ course.id }}">
                                 <input type="hidden" name="action" value="remove">
@@ -57,6 +71,7 @@
                         </li>
                     {% endfor %}
                 {% else %}
+                    {# Message si aucune UE n'est sélectionnée #}
                     <li class="list-group-item text-muted">Aucune UE sélectionnée.</li>
                 {% endif %}
             </ul>

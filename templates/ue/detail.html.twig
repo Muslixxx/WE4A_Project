@@ -304,8 +304,10 @@
 
 {% block javascripts %}
     <script>
+        // === URL d'envoi pour la création de post (injectée via Twig) ===
         const createPostUrl = "{{ path('course_create_post', {'id': course.id}) }}";
 
+        // === Création d'un post depuis la modale ===
         document.addEventListener('DOMContentLoaded', () => {
             const submitButton = document.getElementById('submitPost');
 
@@ -317,6 +319,7 @@
 
                     let description = '';
 
+                    // Récupération du champ de description en fonction du type
                     if (type === 'text') {
                         description = document.getElementById('postText').value.trim();
                     } else if (type === 'link') {
@@ -325,20 +328,22 @@
                         const fileInput = document.getElementById('postFile');
                         if (fileInput.files.length > 0) {
                             const file = fileInput.files[0];
-                            description = file.name;
+                            description = file.name; // Juste le nom, le fichier n'est pas uploadé ici
                         } else {
                             alert('Merci de sélectionner un fichier.');
                             return;
                         }
                     }
 
+                    // Vérifie que tous les champs sont remplis
                     if (!title || !description) {
                         alert('Merci de remplir tous les champs.');
                         return;
                     }
 
+                    // Envoi AJAX vers le backend pour créer le post
                     try {
-                        const response = await fetch(createPostUrl, { // ✅ utiliser createPostUrl ici
+                        const response = await fetch(createPostUrl, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -352,7 +357,7 @@
                             })
                         });
 
-                        const result = await response.json();  // ✅ parser la réponse correctement
+                        const result = await response.json();
 
                         if (response.ok && result.status === 'success') {
                             alert('Post créé avec succès.');
@@ -369,10 +374,13 @@
                 });
             }
         });
+
+        // === Filtrage des membres de l'UE par rôle ===
         document.addEventListener('DOMContentLoaded', () => {
             const filterRole = document.getElementById('filterRole');
             const membersBody = document.getElementById('membersBody');
 
+            // Construction d'un tableau JS des membres via Twig
             const members = [
                 {% for user in course.users %}
                 {
@@ -384,6 +392,7 @@
                 {% endfor %}
             ];
 
+            // Convertit un rôle en nom lisible
             function formatRole(role) {
                 if (role.includes('PROF')) {
                     return 'Professeur';
@@ -394,6 +403,7 @@
                 }
             }
 
+            // Affiche la liste des membres filtrés
             function renderMembers(filter) {
                 membersBody.innerHTML = '';
 
@@ -411,27 +421,31 @@
                     return;
                 }
 
+                // Ajoute les lignes HTML correspondantes
                 filtered.forEach(member => {
                     const row = document.createElement('tr');
                     row.className = "text-center";
                     row.innerHTML = `
-                <td style="padding: 1rem;">${member.lastName}</td>
-                <td style="padding: 1rem;">${member.firstName}</td>
-                <td style="padding: 1rem;">${member.email}</td>
-                <td style="padding: 1rem;">${formatRole(member.role)}</td>
-            `;
+                        <td style="padding: 1rem;">${member.lastName}</td>
+                        <td style="padding: 1rem;">${member.firstName}</td>
+                        <td style="padding: 1rem;">${member.email}</td>
+                        <td style="padding: 1rem;">${formatRole(member.role)}</td>
+                    `;
                     membersBody.appendChild(row);
                 });
             }
 
-            // *** C'est ici qu'on force "Tous" au chargement ***
+            // Initialise la vue avec "Tous"
             filterRole.value = 'Tous';
             renderMembers('Tous');
 
+            // Réagit au changement de filtre
             filterRole.addEventListener('change', (e) => {
                 renderMembers(e.target.value);
             });
         });
+
+        // === Boutons "épingler / désépingler" un post ===
         document.addEventListener('DOMContentLoaded', () => {
             const toggleButtons = document.querySelectorAll('.toggle-important');
             toggleButtons.forEach(button => {
@@ -467,8 +481,11 @@
                 });
             });
         });
-        const createContentUrl = "{{ path('course_create_content', {'id': course.id}) }}"; // Nouvelle route qu'on va faire.
 
+        // === URL pour création de contenu (document ou ressource) ===
+        const createContentUrl = "{{ path('course_create_content', {'id': course.id}) }}";
+
+        // === Création de contenu dans l'UE ===
         document.addEventListener('DOMContentLoaded', () => {
             const submitContentButton = document.getElementById('submitContent');
             submitContentButton.addEventListener('click', async () => {
@@ -483,6 +500,8 @@
                 const formData = new FormData();
                 formData.append('name', name);
                 formData.append('type', type);
+
+                // Selon le type, on ajoute un lien ou un fichier
                 if (type === 'ressource') {
                     const media = document.getElementById('contentMedia').value.trim();
                     formData.append('media', media);
@@ -491,6 +510,7 @@
                     formData.append('file', fileInput.files[0]);
                 }
 
+                // Envoi AJAX au backend
                 const response = await fetch(createContentUrl, {
                     method: 'POST',
                     headers: {
@@ -510,11 +530,14 @@
                 }
             });
         });
+
+        // === Affichage conditionnel des champs "document" ou "ressource" ===
         document.addEventListener('DOMContentLoaded', () => {
             const typeSelect = document.getElementById('contentTypeSelect');
             const linkGroup = document.getElementById('contentLinkGroup');
             const fileGroup = document.getElementById('contentFileGroup');
 
+            // Affiche/masque les bons champs selon le type sélectionné
             function updateFieldsVisibility() {
                 const selectedType = typeSelect.value;
 
@@ -527,13 +550,10 @@
                 }
             }
 
+            // Met à jour les champs au chargement et lors des changements
             typeSelect.addEventListener('change', updateFieldsVisibility);
-
-            // Initial call to set visibility on load
-            updateFieldsVisibility();
+            updateFieldsVisibility(); // Initialisation
         });
-
     </script>
-
-
 {% endblock %}
+

@@ -98,12 +98,7 @@
 
                 // Changer l'icône en fonction de l'état
                 togglePasswordIcon.classList.toggle('bi-eye');
-                togglePasswordIcon.classList.toggle('bi-eye-slash');
-
-                togglePasswordButton.setAttribute(
-                    'aria-label',
-                    isPasswordHidden ? 'Masquer le mot de passe' : 'Afficher le mot de passe'
-                );
+                togglePasswordIcon.classList.toggle('bi-eye-slash'); // l'oeil apparait mal à cause d'un conflit CSS
             });
         });
     </script>

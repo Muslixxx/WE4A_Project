@@ -1,11 +1,17 @@
 {% extends 'base.html.twig' %}
 
+{# Titre de l'onglet dans le navigateur #}
 {% block title %}Accueil{% endblock %}
-{% set fixed_page = true %}
-{% set show_navbar = false %}
+
+{# Paramètres spécifiques à cette page #}
+{% set fixed_page = true %} {# Pas de scroll vertical, page fixe #}
+{% set show_navbar = false %} {# Masquer la barre de navigation #}
 
 {% block body %}
+    {# Conteneur principal centré verticalement et horizontalement #}
     <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh; padding: 2rem;">
+
+        {# Carte stylisée pour l'accueil #}
         <div style="
             background-color: #42a5f5;
             border-radius: 15px;
@@ -16,15 +22,21 @@
             padding: 2rem;
             text-align: center;
         ">
+
+            {# Titre principal avec une belle typo cartoon (Luckiest Guy) #}
             <h1 style="font-family: 'Luckiest Guy', cursive; font-size: 2.2rem; color: #fff; text-shadow: 2px 2px 0 #0003; margin-bottom: 1rem;">
                 Bienvenue sur Moodneuille
             </h1>
 
+            {# Texte d'introduction #}
             <p style="color: #fff; font-family: 'Comic Neue', cursive; margin-bottom: 2rem; font-size: 1.2rem;">
                 Veuillez choisir une action pour continuer.
             </p>
 
+            {# Section des boutons (Connexion et Présentation) #}
             <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap" style="margin-top: 1.5rem;">
+
+                {# Bouton Connexion vers page de login #}
                 <a href="{{ path('app_login') }}" style="
                     display: flex;
                     justify-content: center;
@@ -46,6 +58,7 @@
                     Connexion
                 </a>
                 <span style="font-size: 24px; color: #fff;">|</span>
+                {# Bouton Présentation vers page de présentation de l'app #}
                 <a href="{{ path('app_presentation') }}" style="
                     display: flex;
                     justify-content: center;
@@ -66,20 +79,28 @@
                 ">
                     Présentation
                 </a>
+
             </div>
+
         </div>
     </div>
 
+    {# Styles additionnels pour effets au survol des boutons #}
     <style>
+        /* Légère animation de translation au hover */
         a:hover {
             transform: translateY(-1px);
         }
+
+        /* Styles spécifiques aux boutons Connexion et Présentation */
         a[href="{{ path('app_login') }}"],
         a[href="{{ path('app_presentation') }}"] {
             background: #007bff !important;
             border: 2px solid #007bff !important;
             box-shadow: 0 0 0.2em #007bff;
         }
+
+        /* Changement de couleur et d'effet au survol */
         a[href="{{ path('app_login') }}"]:hover,
         a[href="{{ path('app_presentation') }}"]:hover {
             background: #0056b3 !important;

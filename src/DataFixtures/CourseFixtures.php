@@ -70,6 +70,7 @@ class CourseFixtures extends Fixture
             ]
         ];
 
+        //liaison des contents au courses
         foreach ($data as $courseName => $info) {
             $course = new Course();
             $course->setName($courseName);

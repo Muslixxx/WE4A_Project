@@ -1,9 +1,12 @@
 {% extends 'base.html.twig' %}
 
+{# Titre de la page #}
 {% block title %}Menu Principal{% endblock %}
 
+{# Corps de la page principale #}
 {% block body %}
     <style>
+        {# Style pour ajouter un effet d'overlay au survol des cartes de cours #}
         .custom-card {
             position: relative;
             overflow: hidden;
@@ -32,7 +35,8 @@
     </style>
 
     <div class="container d-flex flex-column align-items-center" style="min-height: 100vh; gap: 1rem; padding: 2rem;">
-        <!-- Carte de bienvenue -->
+
+        {# === Carte de bienvenue utilisateur === #}
         <div class="card w-100 bg-blue-darker" style="border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
             <div class="card-body text-center">
                 <h1 class="card-title" style="font-family: 'Luckiest Guy'; color: #fff;">
@@ -49,7 +53,7 @@
             </div>
         </div>
 
-        <!-- Section des cours dynamique -->
+        {# === Section affichage des cours auxquels l'utilisateur est inscrit === #}
         <div class="card w-100 bg-blue-darker" style="border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
             <div class="card-header text-center" style="background: transparent; border-bottom: none;">
                 <h2 style="color: #fff;">Cours</h2>
@@ -58,6 +62,7 @@
                 <div class="row justify-content-center">
                     {% for course in courses %}
                         <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex justify-content-center">
+                            {# Carte pour chaque cours avec overlay interactif #}
                             <div class="card custom-card" style="background-color: rgba(255,255,255,0.15); width: 100%;">
                                 <div class="card-content p-3 text-center">
                                     <h3 style="color: #fff;">{{ course.name }}</h3>
@@ -75,7 +80,7 @@
             </div>
         </div>
 
-        <!-- Section Activités récentes -->
+        {# === Section affichage des posts récents liés aux cours === #}
         <div class="card w-100 bg-blue-darker" style="border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
             <div class="card-header text-center" style="background: transparent; border-bottom: none;">
                 <h2 style="font-family: 'Luckiest Guy'; color: #fff;">Activités récentes</h2>
@@ -84,6 +89,7 @@
                 <div class="list-group">
                     {% if recentPosts|length > 0 %}
                         {% for post in recentPosts %}
+                            {# Affiche chaque post récent sous forme de carte stylisée #}
                             <div class="list-group-item" style="background-color: rgba(255,255,255,0.15); border: none; margin-bottom: 0.5rem;">
                                 <small class="text-muted">{{ post.dateCreation|date('d/m/Y H:i') }}</small>
                                 <p class="mb-0" style="color: #fff;">
@@ -108,12 +114,13 @@
                     {% endif %}
                 </div>
 
-                <!-- Bouton Charger Plus -->
+                {# Bouton charger pour afficher plus de post #}
                 <div class="text-center mt-3">
                     <button id="loadMoreBtn" class="btn btn-outline-light">Charger plus d'actualités</button>
                 </div>
             </div>
         </div>
+
     </div>
 {% endblock %}
 
@@ -128,7 +135,7 @@
                     const response = await fetch('{{ path('menu_load_more_posts') }}');
                     const posts = await response.json();
 
-                    listGroup.innerHTML = ''; // Vide l'ancienne liste
+                    listGroup.innerHTML = ''; // Vide l'affichage existant
 
                     posts.forEach(post => {
                         const item = document.createElement('div');
@@ -138,20 +145,18 @@
                         item.style.marginBottom = '0.5rem';
 
                         item.innerHTML = `
-                    <small class="text-muted">${post.date}</small>
-                    <p class="mb-0" style="color: #fff;">
-                        ${post.firstName} ${post.lastName} a posté
-                        ${post.type === 'document' ? 'un fichier' : (post.type === 'link' ? 'un lien' : 'un message')}
-                        « ${post.title} ${post.isImportant ? '<span title="Post Important">📌</span>' : ''} »
-                        dans ${post.courseName}
-                    </p>
-                `;
+                            <small class="text-muted">${post.date}</small>
+                            <p class="mb-0" style="color: #fff;">
+                                ${post.firstName} ${post.lastName} a posté
+                                ${post.type === 'document' ? 'un fichier' : (post.type === 'link' ? 'un lien' : 'un message')}
+                                « ${post.title} ${post.isImportant ? '<span title="Post Important">📌</span>' : ''} »
+                                dans ${post.courseName}
+                            </p>
+                        `;
 
                         listGroup.appendChild(item);
                     });
-
-                    loadMoreBtn.style.display = 'none'; // Cacher le bouton
-
+                    loadMoreBtn.style.display = 'none'; // Cache le bouton après chargement
                 } catch (error) {
                     console.error('Erreur lors du chargement des posts:', error);
                 }

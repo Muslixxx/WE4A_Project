@@ -74,63 +74,69 @@
 
 {% block javascripts %}
     {{ parent() }}
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Récupération des éléments DOM
             const passwordInput = document.getElementById('password');
             const editBtn = document.getElementById('editBtn');
             const validateBtn = document.getElementById('validateBtn');
             const cancelBtn = document.getElementById('cancelBtn');
             const saveBtn = document.getElementById('saveButton');
 
+            // Stockage temporaire du nouveau mot de passe
             let newPassword = '';
 
-            // Affiche les boutons de validation/annulation
+            // === ÉTAPE 1 : Affichage du champ mot de passe en édition ===
             editBtn.addEventListener('click', () => {
-                passwordInput.removeAttribute('readonly');
-                passwordInput.value = '';
-                passwordInput.focus();
-                passwordInput.style.backgroundColor = '#fff';
-                passwordInput.style.color = '#000';
+                passwordInput.removeAttribute('readonly');           // Autorise l'édition
+                passwordInput.value = '';                            // Vide le champ
+                passwordInput.focus();                               // Met le focus
+                passwordInput.style.backgroundColor = '#fff';        // Affiche en clair
+                passwordInput.style.color = '#000';                  // Texte noir
 
+                // Affiche les boutons "Valider" et "Annuler", cache "Modifier"
                 editBtn.classList.add('d-none');
                 validateBtn.classList.remove('d-none');
                 cancelBtn.classList.remove('d-none');
             });
 
-            // Valide le nouveau mot de passe
+            // === ÉTAPE 2 : Validation de la saisie ===
             validateBtn.addEventListener('click', () => {
-                newPassword = passwordInput.value.trim();
+                newPassword = passwordInput.value.trim();            // Récupère la saisie
                 if (newPassword.length < 6) {
                     alert("Le mot de passe doit contenir au moins 6 caractères.");
                     return;
                 }
 
-                passwordInput.setAttribute('readonly', true);
-                passwordInput.value = '********';
-                passwordInput.style.backgroundColor = 'rgba(255,255,255,0.2)';
-                passwordInput.style.color = '#fff';
+                passwordInput.setAttribute('readonly', true);        // Verrouille à nouveau le champ
+                passwordInput.value = '********';                    // Cache le nouveau mot de passe
+                passwordInput.style.backgroundColor = 'rgba(255,255,255,0.2)';  // Affichage grisé
+                passwordInput.style.color = '#fff';                  // Texte blanc
 
+                // Réactive "Modifier", cache "Valider" et "Annuler"
                 editBtn.classList.remove('d-none');
                 validateBtn.classList.add('d-none');
                 cancelBtn.classList.add('d-none');
             });
 
-            // Annule la modification
+            // === ÉTAPE 3 : Annulation de la modification ===
             cancelBtn.addEventListener('click', () => {
                 passwordInput.setAttribute('readonly', true);
-                passwordInput.value = '********';
+                passwordInput.value = '********';                    // Remet la valeur masquée
                 passwordInput.style.backgroundColor = 'rgba(255,255,255,0.2)';
                 passwordInput.style.color = '#fff';
-                newPassword = '';
+                newPassword = '';                                    // Réinitialise le mot de passe temporaire
 
+                // Réactive "Modifier", cache "Valider" et "Annuler"
                 editBtn.classList.remove('d-none');
                 validateBtn.classList.add('d-none');
                 cancelBtn.classList.add('d-none');
             });
 
-            // Sauvegarde
+            // === ÉTAPE 4 : Envoi du mot de passe au backend ===
             saveBtn.addEventListener('click', async (e) => {
-                e.preventDefault();
+                e.preventDefault(); // Empêche le comportement par défaut du bouton
 
                 if (newPassword.length >= 6) {
                     try {
@@ -140,14 +146,14 @@
                                 'Content-Type': 'application/json',
                                 'X-Requested-With': 'XMLHttpRequest',
                             },
-                            body: JSON.stringify({ password: newPassword })
+                            body: JSON.stringify({ password: newPassword }) // Envoie du mot de passe
                         });
 
                         const data = await response.json();
 
                         if (data.status === 'success') {
                             alert("Mot de passe mis à jour !");
-                            window.location.href = '{{ path("app_menu") }}';
+                            window.location.href = '{{ path("app_menu") }}'; // Redirection si succès
                         } else {
                             alert("Erreur : " + (data.message || "Impossible de mettre à jour le mot de passe."));
                         }

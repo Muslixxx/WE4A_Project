@@ -127,7 +127,7 @@
     </div>
 
     <style>
-        /* Petit effet de survol sur le bouton */
+        /* effet de hover sur le bouton */
         a:hover {
             background: #0056b3 !important;
             box-shadow: 0 0 0.3em #0056b3 !important;
@@ -145,7 +145,7 @@
             alert("Paramètres enregistrés !");
 
             // Récupère le rôle injecté depuis Symfony
-            const role = "{{ app.user.role }}"; // si tu utilises getRole()
+            const role = "{{ app.user.role }}";
 
             // Redirige selon le rôle
             if (role === 'ROLE_ADMIN') {
@@ -153,7 +153,7 @@
             } else if (role === 'ROLE_PROF' || role === 'ROLE_ELEVE') {
                 window.location.href = "{{ path('app_menu') }}";
             } else {
-                window.location.href = "{{ path('app_login') }}"; // sécurité fallback
+                window.location.href = "{{ path('app_login') }}"; // fallback de sécurité
             }
         });
     </script>

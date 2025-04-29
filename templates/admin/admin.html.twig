@@ -167,7 +167,6 @@
 
 
         <!-- Section Activités récentes -->
-
         <div class="card wide-card bg-blue-darker">
             <div class="card-header text-center" style="background: transparent; border-bottom: none;">
                 <h2 style="font-family: 'Luckiest Guy', cursive; color: #fff;">Activités récentes</h2>
@@ -384,7 +383,7 @@
                 switchTab(coursesTab, usersTab, coursesSection, usersSection);
             });
 
-            // -------- Gestion des suppressions --------
+            // -------- Gestion des suppressions des utilisateurs --------
             document.querySelectorAll('.delete-user').forEach(button => {
                 button.addEventListener('click', async () => {
                     const userId = button.getAttribute('data-id');
@@ -402,7 +401,7 @@
                     }
                 });
             });
-
+            // -------- Gestion suppression UEs --------
             document.querySelectorAll('.delete-course').forEach(button => {
                 button.addEventListener('click', async () => {
                     const courseId = button.getAttribute('data-id');
@@ -447,9 +446,7 @@
                     new bootstrap.Modal(document.getElementById('editUserModal')).show();
                 });
             });
-
-
-
+            // -------- Gestion modification des UEs --------
             document.querySelectorAll('.edit-course').forEach(button => {
                 button.addEventListener('click', () => {
                     document.getElementById('editCourseId').value = button.getAttribute('data-id');
@@ -459,8 +456,7 @@
                     new bootstrap.Modal(document.getElementById('editCourseModal')).show();
                 });
             });
-
-            // -------- Gestion création utilisateurs / UEs --------
+            // -------- Gestion création utilisateurs --------
             const createUserBtn = document.getElementById('createUserButton');
             if (createUserBtn) {
                 createUserBtn.addEventListener('click', async () => {
@@ -472,7 +468,7 @@
                     const birthDate = document.getElementById('newBirthDate').value;
                     const role = document.getElementById('newRole').value;
 
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; //un regex pour vérifier que l'adresse mail est au bon format
 
                     if (!emailRegex.test(email)) {
                         alert('Veuillez entrer une adresse email valide.');
@@ -508,7 +504,7 @@
                     }
                 });
             }
-
+            // -------- Gestion création UEs --------
             document.getElementById('createCourseButton').addEventListener('click', async () => {
                 const name = document.getElementById('newCourseName').value;
                 const description = document.getElementById('newCourseDescription').value;
@@ -575,7 +571,7 @@
                     alert('Erreur de communication avec le serveur.');
                 }
             });
-
+            // -------- Gestion edition de l'utilisateur: bouton pour sauvegarder définitivement la modification --------
             document.getElementById('saveCourseChanges').addEventListener('click', async () => {
                 const courseId = document.getElementById('editCourseId').value;
                 const name = document.getElementById('editCourseName').value;
@@ -608,6 +604,7 @@
                 }
             });
         });
+        // -------- Gestion edition de l'utilisateur: bouton pour activer la modification --------
         function enableEdit(fieldId) {
             const input = document.getElementById(fieldId);
             const validateBtn = document.getElementById('validate-' + fieldId.replace('edit', ''));
@@ -616,7 +613,7 @@
             input.removeAttribute('disabled');
             validateBtn.classList.remove('d-none');
         }
-
+        // -------- Gestion edition de l'utilisateur: bouton pour valider la modification --------
         function validateEdit(fieldId) {
             const input = document.getElementById(fieldId);
             const validateBtn = document.getElementById('validate-' + fieldId.replace('edit', ''));
