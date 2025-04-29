@@ -10,10 +10,12 @@
                 Sélection des UE
             </h1>
             <p class="text-center text-white">
-                {% if not app.user.role == 'ROLE_PROF' %}
+                {% if app.user.role == 'ROLE_ELEVE' %}
                     Vous pouvez sélectionner jusqu'à 5 UE.
-                {% else %}
+                {% elseif app.user.role == 'ROLE_PROF' or app.user.role == 'ROLE_PROF_ADMIN' %}
                     Vous pouvez choisir jusqu'à 3 UE parmi celles ayant moins de 3 professeurs inscrits.
+                {% else %}
+                    Rôle non reconnu. Contactez l'administrateur.
                 {% endif %}
             </p>
 
