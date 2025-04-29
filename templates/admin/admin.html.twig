@@ -22,17 +22,25 @@
             margin-bottom: 0.5rem;
             color: #fff;
         }
+
         .tab-menu {
             width: 100%;
             max-width: 600px;
             background-color: #001f3f;
             border-radius: 10px;
             display: flex;
-            justify-content: center;
-            padding: 0.5rem;
+            align-items: center;
+            padding: 1rem;
             gap: 1rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
             margin-bottom: 2rem;
+        }
+        /* Style du titre Catalogue */
+        .tab-menu h1 {
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0;
         }
 
         .tab-link {
@@ -69,8 +77,9 @@
 
 
     <div class="container-fluid d-flex flex-column align-items-center" style="min-height: 100vh; gap: 1rem; padding: 2rem; max-width: 1400px; margin: 0 auto;">
-
         <div class="tab-menu">
+            <h1>Catalogue</h1>
+
             <a href="#" id="users-tab" class="tab-link active">
                 <i class="bi bi-people-fill"></i> Utilisateurs
             </a>
