@@ -18,6 +18,7 @@ class UserFixture extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        // Création de l'administrateur
         $admin = new User();
         $admin->setEmail('admin@admin.com');
         $admin->setFirstName('Admin');
@@ -26,11 +27,40 @@ class UserFixture extends Fixture
         $admin->setBirthDate(new \DateTime('1990-01-01'));
         $admin->setRole('ROLE_ADMIN');
         $admin->setDateCreation(new \DateTime());
-
-        $hashedPassword = $this->passwordHasher->hashPassword($admin, 'admin1234');
-        $admin->setPassword($hashedPassword);
-
+        $admin->setPassword(
+            $this->passwordHasher->hashPassword($admin, 'admin1234')
+        );
         $manager->persist($admin);
+
+        // Création du professeur
+        $prof = new User();
+        $prof->setEmail('professeur@school.com');
+        $prof->setFirstName('Paul');
+        $prof->setLastName('Durand');
+        $prof->setPhoneNumber('0611111111');
+        $prof->setBirthDate(new \DateTime('1980-05-15'));
+        $prof->setRole('ROLE_PROF');
+        $prof->setDateCreation(new \DateTime());
+        $prof->setPassword(
+            $this->passwordHasher->hashPassword($prof, 'aaaaaa')
+        );
+        $manager->persist($prof);
+
+        // Création de l'élève
+        $eleve = new User();
+        $eleve->setEmail('eleve@school.com');
+        $eleve->setFirstName('Claire');
+        $eleve->setLastName('Martin');
+        $eleve->setPhoneNumber('0622222222');
+        $eleve->setBirthDate(new \DateTime('2005-09-10'));
+        $eleve->setRole('ROLE_ELEVE');
+        $eleve->setDateCreation(new \DateTime());
+        $eleve->setPassword(
+            $this->passwordHasher->hashPassword($eleve, 'aaaaaa')
+        );
+        $manager->persist($eleve);
+
+        // Envoi en base
         $manager->flush();
     }
 }
