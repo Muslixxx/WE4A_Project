@@ -44,20 +44,41 @@
                     </button>
                 {% endif %}
             </div>
+
             <div class="card-body">
                 {% if course.contents|length > 0 %}
                     <ul class="list-group list-group-flush">
                         {% for content in course.contents %}
                             <li class="list-group-item" style="background: transparent; color: white; border: none;">
-                                {{ content.name }} <span class="badge bg-info text-dark ms-2">{{ content.type }}</span>
+                                    <div>
+                                        <strong>{{ content.name }}</strong>
+                                        <span class="badge bg-info text-dark ms-2">{{ content.type }}</span>
+
+
+                                {% if content.media is not empty %}
+                                    {% set media = content.media|lower %}
+                                    {% if media ends with '.jpg' or media ends with '.jpeg' or media ends with '.png' or media ends with '.gif' %}
+                                        <img src="{{ content.media }}" alt="Image de contenu" style="max-width: 300px; height: auto; border-radius: 8px;">
+                                    {% else %}
+                                        <a href="{{ content.media }}" target="_blank" class="btn btn-sm btn-outline-light">🔗 Voir le lien</a>
+                                    {% endif %}
+                                {% endif %}
+                                        {% if app.user.role in ['ROLE_PROF', 'ROLE_PROF_ADMIN'] %}
+                                            <form method="post" action="{{ path('course_delete_content', {'id': content.id}) }}" style="display: inline;" onsubmit="return confirm('Supprimer cette ressource ?');">
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <button type="submit" class="btn btn-sm btn-danger">🗑️</button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
                             </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p class="text-center" style="margin-top: 1rem;">Aucun contenu disponible.</p>
+                    <p class="text-center mt-3">Aucun contenu disponible.</p>
                 {% endif %}
             </div>
         </div>
+
 
 
         <!-- Modal Créer un contenu -->
@@ -69,19 +90,33 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="contentForm">
+                        <form id="contentForm" enctype="multipart/form-data" method="post">
                             <div class="mb-3">
                                 <label for="contentName" class="form-label">Nom du contenu</label>
                                 <input type="text" class="form-control" id="contentName" required>
                             </div>
+
                             <div class="mb-3">
-                                <label for="contentType" class="form-label">Type</label>
+                                <label for="contentTypeSelect" class="form-label">Type</label>
                                 <select class="form-select" id="contentTypeSelect" required>
                                     <option value="ressource">Ressource</option>
                                     <option value="document">Document</option>
                                 </select>
                             </div>
+
+                            <!-- Champ pour lien (ressource) -->
+                            <div class="mb-3" id="contentLinkGroup">
+                                <label for="contentMedia" class="form-label">Lien vers une ressource</label>
+                                <input type="url" class="form-control" id="contentMedia" placeholder="https://exemple.com">
+                            </div>
+
+                            <!-- Champ pour fichier (document) -->
+                            <div class="mb-3 d-none" id="contentFileGroup">
+                                <label for="contentFile" class="form-label">Téléverser un document</label>
+                                <input type="file" class="form-control" id="contentFile" name="file">
+                            </div>
                         </form>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
@@ -436,46 +471,68 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const submitContentButton = document.getElementById('submitContent');
+            submitContentButton.addEventListener('click', async () => {
+                const name = document.getElementById('contentName').value.trim();
+                const type = document.getElementById('contentTypeSelect').value;
 
-            if (submitContentButton) {
-                submitContentButton.addEventListener('click', async () => {
-                    const name = document.getElementById('contentName').value.trim();
-                    const type = document.getElementById('contentTypeSelect').value;
+                if (!name || !type) {
+                    alert('Merci de remplir tous les champs obligatoires.');
+                    return;
+                }
 
-                    if (!name || !type) {
-                        alert('Merci de remplir tous les champs.');
-                        return;
-                    }
+                const formData = new FormData();
+                formData.append('name', name);
+                formData.append('type', type);
+                if (type === 'ressource') {
+                    const media = document.getElementById('contentMedia').value.trim();
+                    formData.append('media', media);
+                } else if (type === 'document') {
+                    const fileInput = document.getElementById('contentFile');
+                    formData.append('file', fileInput.files[0]);
+                }
 
-                    try {
-                        const response = await fetch(createContentUrl, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest'
-                            },
-                            body: JSON.stringify({
-                                name,
-                                type
-                            })
-                        });
-
-                        const result = await response.json();
-                        if (response.ok && result.status === 'success') {
-                            alert('Contenu ajouté avec succès.');
-                            document.getElementById('contentForm').reset();
-                            bootstrap.Modal.getInstance(document.getElementById('createContentModal')).hide();
-                            location.reload();
-                        } else {
-                            alert('Erreur serveur: ' + (result.message || 'Erreur inconnue.'));
-                        }
-                    } catch (error) {
-                        console.error('Erreur:', error);
-                        alert('Erreur de communication.');
-                    }
+                const response = await fetch(createContentUrl, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: formData
                 });
-            }
+
+                const result = await response.json();
+                if (response.ok && result.status === 'success') {
+                    alert('Contenu ajouté avec succès.');
+                    document.getElementById('contentForm').reset();
+                    bootstrap.Modal.getInstance(document.getElementById('createContentModal')).hide();
+                    location.reload();
+                } else {
+                    alert('Erreur serveur: ' + (result.message || 'Erreur inconnue.'));
+                }
+            });
         });
+        document.addEventListener('DOMContentLoaded', () => {
+            const typeSelect = document.getElementById('contentTypeSelect');
+            const linkGroup = document.getElementById('contentLinkGroup');
+            const fileGroup = document.getElementById('contentFileGroup');
+
+            function updateFieldsVisibility() {
+                const selectedType = typeSelect.value;
+
+                if (selectedType === 'document') {
+                    linkGroup.classList.add('d-none');
+                    fileGroup.classList.remove('d-none');
+                } else if (selectedType === 'ressource') {
+                    fileGroup.classList.add('d-none');
+                    linkGroup.classList.remove('d-none');
+                }
+            }
+
+            typeSelect.addEventListener('change', updateFieldsVisibility);
+
+            // Initial call to set visibility on load
+            updateFieldsVisibility();
+        });
+
     </script>
 
 

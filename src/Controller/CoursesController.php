@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class CoursesController extends AbstractController
 {
@@ -125,24 +127,85 @@ class CoursesController extends AbstractController
             return new JsonResponse(['status' => 'error', 'message' => 'Accès refusé.'], 403);
         }
 
-        if (!$request->isXmlHttpRequest()) {
-            return new JsonResponse(['status' => 'error', 'message' => 'Requête non valide.'], 400);
-        }
+        $name = $request->request->get('name');
+        $type = $request->request->get('type');
+        $media = $request->request->get('media'); // pour les ressources (lien)
 
-        $data = json_decode($request->getContent(), true);
-        if (!$data || !isset($data['name'], $data['type'])) {
-            return new JsonResponse(['status' => 'error', 'message' => 'Données invalides.'], 400);
+        /** @var UploadedFile|null $file */
+        $file = $request->files->get('file');
+
+        if (!$name || !$type) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Champs obligatoires manquants.'], 400);
         }
 
         $content = new \App\Entity\Content();
-        $content->setName($data['name']);
-        $content->setType($data['type']);
-        $em->persist($content);
+        $content->setName($name);
+        $content->setType($type);
 
+        if ($type === 'ressource') {
+            $content->setMedia($media ?: null);
+        }
+
+        if ($type === 'document' && $file) {
+            $uploadDir = $this->getParameter('uploads_directory');
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            $safeFilename = uniqid().'-'.pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $newFilename = $safeFilename.'.'.$file->guessExtension();
+
+            try {
+                $file->move($uploadDir, $newFilename);
+                $content->setMedia('/uploads/' . $newFilename);
+            } catch (FileException $e) {
+                return new JsonResponse(['status' => 'error', 'message' => 'Erreur lors de l\'upload.'], 500);
+            }
+        }
+
+        $em->persist($content);
         $course->addContent($content);
         $em->persist($course);
         $em->flush();
 
         return new JsonResponse(['status' => 'success']);
+    }
+    #[Route('/course/content/{id}/delete', name: 'course_delete_content', methods: ['POST', 'DELETE'])]
+    public function deleteContent(\App\Entity\Content $content, EntityManagerInterface $em): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user || (!in_array('ROLE_PROF', $user->getRoles()) && !in_array('ROLE_PROF_ADMIN', $user->getRoles()))) {
+            throw $this->createAccessDeniedException('Accès refusé.');
+        }
+
+        $courses = $content->getCourses();
+
+        if ($courses->isEmpty()) {
+            throw $this->createNotFoundException('Ce contenu n\'est associé à aucun cours.');
+        }
+
+        // Supprimer le fichier si document
+        if ($content->getType() === 'document' && $content->getMedia()) {
+            $filePath = $this->getParameter('kernel.project_dir') . '/public' . $content->getMedia();
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+
+        // Retirer le contenu de tous les cours liés
+        foreach ($courses as $course) {
+            $course->removeContent($content);
+            $em->persist($course); // sécurité
+        }
+
+        $em->remove($content);
+        $em->flush();
+
+        // Rediriger vers le premier cours lié
+        /** @var \App\Entity\Course $firstCourse */
+        $firstCourse = $courses->first();
+
+        return $this->redirectToRoute('course_detail', ['id' => $firstCourse->getId()]);
     }
 }
