@@ -117,4 +117,32 @@ class CoursesController extends AbstractController
             'isImportant' => $post->isImportant()
         ]);
     }
+    #[Route('/course/{id}/create-content', name: 'course_create_content', methods: ['POST'])]
+    public function createContentForCourse(Request $request, Course $course, EntityManagerInterface $em): JsonResponse
+    {
+        $user = $this->getUser();
+        if (!$user || (!in_array('ROLE_PROF', $user->getRoles()) && !in_array('ROLE_PROF_ADMIN', $user->getRoles()))) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Accès refusé.'], 403);
+        }
+
+        if (!$request->isXmlHttpRequest()) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Requête non valide.'], 400);
+        }
+
+        $data = json_decode($request->getContent(), true);
+        if (!$data || !isset($data['name'], $data['type'])) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Données invalides.'], 400);
+        }
+
+        $content = new \App\Entity\Content();
+        $content->setName($data['name']);
+        $content->setType($data['type']);
+        $em->persist($content);
+
+        $course->addContent($content);
+        $em->persist($course);
+        $em->flush();
+
+        return new JsonResponse(['status' => 'success']);
+    }
 }

@@ -36,19 +36,61 @@
 
         <!-- Contenu de l'UE -->
         <div class="card mb-4" style="background-color: #64b5f6; color: #fff;">
-            <div class="card-header"><h2>Contenu de l'UE</h2></div>
+            <div class="card-header d-flex justify-content-between align-items-center" style="background: transparent; border-bottom: none;">
+                <h2 style="margin: 0;">Contenu de l'UE</h2>
+                {% if app.user.role in ['ROLE_PROF', 'ROLE_PROF_ADMIN'] %}
+                    <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#createContentModal">
+                        ➕ Ajouter du contenu
+                    </button>
+                {% endif %}
+            </div>
             <div class="card-body">
                 {% if course.contents|length > 0 %}
-                    <ul>
+                    <ul class="list-group list-group-flush">
                         {% for content in course.contents %}
-                            <li>{{ content.name }} ({{ content.type }})</li>
+                            <li class="list-group-item" style="background: transparent; color: white; border: none;">
+                                {{ content.name }} <span class="badge bg-info text-dark ms-2">{{ content.type }}</span>
+                            </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p>Aucun contenu disponible.</p>
+                    <p class="text-center" style="margin-top: 1rem;">Aucun contenu disponible.</p>
                 {% endif %}
             </div>
         </div>
+
+
+        <!-- Modal Créer un contenu -->
+        <div class="modal fade" id="createContentModal" tabindex="-1" aria-labelledby="createContentModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" style="background-color: #f0f0f0;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createContentModalLabel">Ajouter un Contenu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="contentForm">
+                            <div class="mb-3">
+                                <label for="contentName" class="form-label">Nom du contenu</label>
+                                <input type="text" class="form-control" id="contentName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="contentType" class="form-label">Type</label>
+                                <select class="form-select" id="contentTypeSelect" required>
+                                    <option value="ressource">Ressource</option>
+                                    <option value="document">Document</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-primary" id="submitContent">Ajouter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <!-- Section Posts -->
         <div class="card mb-4" style="background-color: #64b5f6; color: #ffffff; border-radius: 15px;">
@@ -390,7 +432,50 @@
                 });
             });
         });
+        const createContentUrl = "{{ path('course_create_content', {'id': course.id}) }}"; // Nouvelle route qu'on va faire.
 
+        document.addEventListener('DOMContentLoaded', () => {
+            const submitContentButton = document.getElementById('submitContent');
+
+            if (submitContentButton) {
+                submitContentButton.addEventListener('click', async () => {
+                    const name = document.getElementById('contentName').value.trim();
+                    const type = document.getElementById('contentTypeSelect').value;
+
+                    if (!name || !type) {
+                        alert('Merci de remplir tous les champs.');
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch(createContentUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({
+                                name,
+                                type
+                            })
+                        });
+
+                        const result = await response.json();
+                        if (response.ok && result.status === 'success') {
+                            alert('Contenu ajouté avec succès.');
+                            document.getElementById('contentForm').reset();
+                            bootstrap.Modal.getInstance(document.getElementById('createContentModal')).hide();
+                            location.reload();
+                        } else {
+                            alert('Erreur serveur: ' + (result.message || 'Erreur inconnue.'));
+                        }
+                    } catch (error) {
+                        console.error('Erreur:', error);
+                        alert('Erreur de communication.');
+                    }
+                });
+            }
+        });
     </script>
 
 
