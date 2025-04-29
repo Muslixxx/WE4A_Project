@@ -4,7 +4,9 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+/**
+ * Contrôleur qui gère l'accès à la page des paramètres.
+ */
 class SettingsController extends AbstractController
 {
     #[Route('/settings', name: 'app_settings')]

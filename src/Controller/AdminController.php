@@ -13,13 +13,22 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+/**
+ * Contrôleur regroupant toutes les fonctionnalités d'administration :
+ * gestion des utilisateurs, des cours, et des posts.
+ */
 class AdminController extends AbstractController
 {
+    /**
+     * Page d'accueil de l'administration.
+     * Affiche tous les utilisateurs, cours, élèves et posts récents.
+     */
     #[Route('/admin', name: 'app_admin')]
     public function index(EntityManagerInterface $em): Response
     {
         $users = $em->getRepository(User::class)->findAll();
         $courses = $em->getRepository(Course::class)->findAll();
+
         $recentPosts = $em->getRepository(Post::class)
             ->createQueryBuilder('p')
             ->orderBy('p.isImportant', 'DESC')
@@ -37,6 +46,10 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * Endpoint utilisé pour charger dynamiquement plus de posts (AJAX).
+     * Retourne un tableau JSON formaté avec les métadonnées utiles.
+     */
     #[Route('/admin/load-more-posts', name: 'admin_load_more_posts', methods: ['GET'])]
     public function loadMorePosts(EntityManagerInterface $em): JsonResponse
     {
@@ -66,11 +79,14 @@ class AdminController extends AbstractController
         return $this->json($data);
     }
 
-
+    /**
+     * Supprime un utilisateur donné par son ID.
+     */
     #[Route('/admin/delete-user/{id}', name: 'admin_delete_user', methods: ['POST'])]
     public function deleteUser(int $id, EntityManagerInterface $em): JsonResponse
     {
         $user = $em->getRepository(User::class)->find($id);
+
         if (!$user) {
             return new JsonResponse(['status' => 'error', 'message' => 'Utilisateur non trouvé.'], 404);
         }
@@ -81,10 +97,14 @@ class AdminController extends AbstractController
         return new JsonResponse(['status' => 'success']);
     }
 
+    /**
+     * Supprime un cours (UE) donné par son ID.
+     */
     #[Route('/admin/delete-course/{id}', name: 'admin_delete_course', methods: ['POST'])]
     public function deleteCourse(int $id, EntityManagerInterface $em): JsonResponse
     {
         $course = $em->getRepository(Course::class)->find($id);
+
         if (!$course) {
             return new JsonResponse(['status' => 'error', 'message' => 'UE non trouvée.'], 404);
         }
@@ -95,6 +115,10 @@ class AdminController extends AbstractController
         return new JsonResponse(['status' => 'success']);
     }
 
+    /**
+     * Met à jour les informations d'un utilisateur.
+     * Tous les champs sont optionnels sauf l'identifiant.
+     */
     #[Route('/admin/update-user/{id}', name: 'admin_update_user', methods: ['POST'])]
     public function updateUser(
         int $id,
@@ -133,6 +157,8 @@ class AdminController extends AbstractController
         if (isset($data['role'])) {
             $user->setRole($data['role']);
         }
+
+        // Mise à jour du mot de passe si présent
         if (!empty($data['password'])) {
             $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
             $user->setPassword($hashedPassword);
@@ -143,7 +169,9 @@ class AdminController extends AbstractController
         return new JsonResponse(['status' => 'success']);
     }
 
-
+    /**
+     * Crée un nouvel utilisateur avec tous les champs requis.
+     */
     #[Route('/admin/create-user', name: 'admin_create_user', methods: ['POST'])]
     public function createUser(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): JsonResponse
     {
@@ -162,6 +190,7 @@ class AdminController extends AbstractController
         $user->setRole($data['role']);
         $user->setDateCreation(new \DateTime());
 
+        // Hachage du mot de passe
         $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
         $user->setPassword($hashedPassword);
 
@@ -171,6 +200,9 @@ class AdminController extends AbstractController
         return new JsonResponse(['status' => 'success']);
     }
 
+    /**
+     * Crée un cours avec option de rattachement à une liste d'élèves.
+     */
     #[Route('/admin/create-course', name: 'admin_create_course', methods: ['POST'])]
     public function createCourse(Request $request, EntityManagerInterface $em): JsonResponse
     {
@@ -184,6 +216,7 @@ class AdminController extends AbstractController
         $course->setName($data['name']);
         $course->setDescription($data['description']);
 
+        // Rattachement d’élèves à l’UE si précisé
         if (!empty($data['students']) && is_array($data['students'])) {
             foreach ($data['students'] as $studentId) {
                 $student = $em->getRepository(User::class)->find($studentId);
@@ -199,6 +232,9 @@ class AdminController extends AbstractController
         return new JsonResponse(['status' => 'success']);
     }
 
+    /**
+     * Met à jour un cours (nom, description).
+     */
     #[Route('/admin/update-course/{id}', name: 'admin_update_course', methods: ['POST'])]
     public function updateCourse(int $id, Request $request, EntityManagerInterface $em): JsonResponse
     {
