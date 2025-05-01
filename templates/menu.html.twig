@@ -94,13 +94,6 @@
                                 <small class="text-muted">{{ post.dateCreation|date('d/m/Y H:i') }}</small>
                                 <p class="mb-0" style="color: #fff;">
                                     {{ post.user.firstName }} {{ post.user.lastName }} a posté
-                                    {% if post.type == 'document' %}
-                                        un fichier
-                                    {% elseif post.type == 'link' %}
-                                        un lien
-                                    {% else %}
-                                        un message
-                                    {% endif %}
                                     « {{ post.title }}
                                     {% if post.isImportant %}
                                         <span title="Post Important">📌</span>
@@ -148,7 +141,6 @@
                             <small class="text-muted">${post.date}</small>
                             <p class="mb-0" style="color: #fff;">
                                 ${post.firstName} ${post.lastName} a posté
-                                ${post.type === 'document' ? 'un fichier' : (post.type === 'link' ? 'un lien' : 'un message')}
                                 « ${post.title} ${post.isImportant ? '<span title="Post Important">📌</span>' : ''} »
                                 dans ${post.courseName}
                             </p>

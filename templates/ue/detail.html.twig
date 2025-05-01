@@ -225,9 +225,9 @@
                                     <td style="padding: 1rem;">{{ user.firstName }}</td>
                                     <td style="padding: 1rem;">{{ user.email }}</td>
                                     <td style="padding: 1rem;">
-                                        {% if 'ROLE_PROFESSEUR' in user.roles %}
+                                        {% if 'ROLE_PROF' in user.roles %}
                                             Professeur
-                                        {% elseif 'ROLE_ETUDIANT' in user.roles %}
+                                        {% elseif 'ROLE_ELEVE' in user.roles %}
                                             Étudiant
                                         {% else %}
                                             Autre
@@ -265,23 +265,6 @@
                                 <textarea class="form-control" id="postText" rows="3" placeholder="Entrez votre texte"></textarea>
                             </div>
 
-                            <div class="mb-3 d-none" id="descriptionLinkGroup">
-                                <label for="postLink" class="form-label">Lien URL</label>
-                                <input type="url" class="form-control" id="postLink" placeholder="https://exemple.com">
-                            </div>
-
-                            <div class="mb-3 d-none" id="descriptionFileGroup">
-                                <label for="postFile" class="form-label">Fichier</label>
-                                <input type="file" class="form-control" id="postFile">
-                            </div>
-                            <div class="mb-3">
-                                <label for="contentType" class="form-label">Type</label>
-                                <select class="form-select" id="contentType">
-                                    <option value="text" selected>Texte</option>
-                                    <option value="link">Lien</option>
-                                    <option value="document">Document</option>
-                                </select>
-                            </div>
                             <div class="mb-3">
                                 <label for="isImportant" class="form-label">Important ?</label>
                                 <select class="form-select" id="isImportant">
@@ -314,34 +297,14 @@
             if (submitButton) {
                 submitButton.addEventListener('click', async () => {
                     const title = document.getElementById('postTitle').value.trim();
-                    const type = document.getElementById('contentType').value;
+                    const description = document.getElementById('postText').value.trim();
                     const isImportant = document.getElementById('isImportant').value;
 
-                    let description = '';
-
-                    // Récupération du champ de description en fonction du type
-                    if (type === 'text') {
-                        description = document.getElementById('postText').value.trim();
-                    } else if (type === 'link') {
-                        description = document.getElementById('postLink').value.trim();
-                    } else if (type === 'document') {
-                        const fileInput = document.getElementById('postFile');
-                        if (fileInput.files.length > 0) {
-                            const file = fileInput.files[0];
-                            description = file.name; // Juste le nom, le fichier n'est pas uploadé ici
-                        } else {
-                            alert('Merci de sélectionner un fichier.');
-                            return;
-                        }
-                    }
-
-                    // Vérifie que tous les champs sont remplis
                     if (!title || !description) {
                         alert('Merci de remplir tous les champs.');
                         return;
                     }
 
-                    // Envoi AJAX vers le backend pour créer le post
                     try {
                         const response = await fetch(createPostUrl, {
                             method: 'POST',
@@ -352,7 +315,6 @@
                             body: JSON.stringify({
                                 title,
                                 description,
-                                type,
                                 is_important: isImportant
                             })
                         });
@@ -374,6 +336,7 @@
                 });
             }
         });
+
 
         // === Filtrage des membres de l'UE par rôle ===
         document.addEventListener('DOMContentLoaded', () => {

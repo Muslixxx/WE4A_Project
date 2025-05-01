@@ -69,7 +69,6 @@ class AdminController extends AbstractController
                 'date' => $post->getDateCreation()?->format('d/m/Y H:i') ?? '',
                 'firstName' => $user ? $user->getFirstName() : '',
                 'lastName' => $user ? $user->getLastName() : '',
-                'type' => $post->getType(),
                 'title' => $post->getTitle(),
                 'courseName' => $course ? $course->getName() : '',
                 'isImportant' => $post->getIsImportant(),

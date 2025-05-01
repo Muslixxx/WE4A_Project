@@ -100,7 +100,6 @@ class MenuController extends AbstractController
                 'date' => $post->getDateCreation()->format('d/m/Y H:i'),
                 'firstName' => $post->getUser()->getFirstName(),
                 'lastName' => $post->getUser()->getLastName(),
-                'type' => $post->getType(),
                 'title' => $post->getTitle(),
                 'courseName' => $post->getCourse()->getName(),
             ];

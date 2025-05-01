@@ -79,7 +79,7 @@ class CoursesController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
 
-        if (!$data || !isset($data['title'], $data['description'], $data['type'], $data['is_important'])) {
+        if (!$data || !isset($data['title'], $data['description'], $data['is_important'])) {
             return new JsonResponse(['status' => 'error', 'message' => 'Données invalides.'], 400);
         }
 
@@ -87,7 +87,6 @@ class CoursesController extends AbstractController
         $post = new Post();
         $post->setTitle($data['title']);
         $post->setDescription($data['description']);
-        $post->setType($data['type']);
         $post->setIsImportant((bool) $data['is_important']);
         $post->setDateCreation(new \DateTimeImmutable());
         $post->setUser($user);

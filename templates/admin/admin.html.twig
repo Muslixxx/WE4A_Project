@@ -179,13 +179,6 @@
                                 <small class="text-muted">{{ post.dateCreation|date('d/m/Y H:i') }}</small>
                                 <p class="mb-0">
                                     {{ post.user.firstName }} {{ post.user.lastName }} a posté
-                                    {% if post.type == 'document' %}
-                                        un fichier
-                                    {% elseif post.type == 'link' %}
-                                        un lien
-                                    {% else %}
-                                        un message
-                                    {% endif %}
                                     « {{ post.title }} » dans {{ post.course.name }}
                                     {% if post.isImportant %}
                                         📌
