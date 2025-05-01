@@ -28,7 +28,7 @@ class UserFixture extends Fixture
         $admin->setRole('ROLE_ADMIN');
         $admin->setDateCreation(new \DateTime());
         $admin->setPassword(
-            $this->passwordHasher->hashPassword($admin, 'admin1234')
+            $this->passwordHasher->hashPassword($admin, 'aaaaaa')
         );
         $manager->persist($admin);
 
